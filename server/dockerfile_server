@@ -1,5 +1,5 @@
 FROM golang
 
-WORKDIR /usr/src/app
+WORKDIR /borg
 COPY . ./
 CMD ["go", "run", "cmd/server.go"]
