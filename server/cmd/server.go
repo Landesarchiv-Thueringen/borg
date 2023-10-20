@@ -47,5 +47,6 @@ func analyseFile(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "unable to save file",
 		})
+		return
 	}
 }

@@ -1,0 +1,16 @@
+# allwo readme
+!README.md
+
+# allow go project files
+!/go.mod
+!/go.sum
+
+# allow go source code
+!/**/*.go
+
+# allow borg server dockerfile
+!dockerfile_droid
+
+# allow droid zip and signature files
+!/bin/DROID_SignatureFile_V114.xml
+!/bin/droid-binary-6.7.0-bin.zip

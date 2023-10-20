@@ -1,0 +1,5 @@
+FROM golang
+
+WORKDIR /borg/tools/droid
+COPY . ./
+CMD ["go", "run", "cmd/droid-api.go"]
