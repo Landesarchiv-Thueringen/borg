@@ -1,4 +1,12 @@
+# allwo readme
 !README.md
+
+# allow go project files
 !/go.mod
 !/go.sum
+
+# allow go source code
 !/**/*.go
+
+# allow borg server dockerfile
+!dockerfile_server

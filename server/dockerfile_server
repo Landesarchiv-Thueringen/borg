@@ -1,0 +1,5 @@
+FROM golang
+
+WORKDIR /usr/src/app
+COPY . ./
+CMD ["go", "run", "cmd/server.go"]

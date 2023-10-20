@@ -7,3 +7,9 @@
 
 # allow project readme
 !/README.md
+
+# allow environment file
+!/.env
+
+# allow docker compose file
+!/docker-compose.yml
