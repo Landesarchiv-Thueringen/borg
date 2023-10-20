@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"os/exec"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -21,10 +22,21 @@ func main() {
 	// It's important that the cors configuration is used before declaring the routes.
 	router.Use(cors.New(corsConfig))
 	router.GET("", getDefaultResponse)
+	router.GET("/detect-file-format", detectFileFormat)
 	addr := "0.0.0.0:" + os.Getenv("DROID_API_CONTAINER_PORT")
 	router.Run(addr)
 }
 
 func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, defaultResponse)
+}
+
+func detectFileFormat(context *gin.Context) {
+	fileStorePath := context.Query("path")
+	_, err := os.Stat(fileStorePath)
+	if err != nil {
+		context.JSON(http.StatusUnprocessableEntity, err)
+	}
+	cmd := exec.Command("java", "-jar")
+	out, err := cmd.Output()
 }
