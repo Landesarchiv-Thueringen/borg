@@ -59,6 +59,10 @@ func analyseFile(context *gin.Context) {
 
 func runFileIdentificationTools(fileStorePath string) {
 	for _, tool := range serverConfig.FormatIdentificationTools {
-		log.Println(tool.ToolName)
+		response, err := http.Get(tool.Endpoint)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(response)
 	}
 }
