@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 )
 
 var defaultResponse = "borg server is running"
+var storePath = "/borg/filestore"
 var serverConfig config.ServerConfig
 
 func main() {
@@ -45,7 +47,8 @@ func analyseFile(context *gin.Context) {
 		return
 	}
 	// generate unique file name for storing
-	fileStorePath := "filestore/" + uuid.New().String() + "_" + file.Filename
+	fileName := uuid.New().String() + "_" + file.Filename
+	fileStorePath := filepath.Join(storePath, fileName)
 	err = context.SaveUploadedFile(file, fileStorePath)
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -54,12 +57,20 @@ func analyseFile(context *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
-	runFileIdentificationTools(fileStorePath)
+	runFileIdentificationTools(fileName)
 }
 
-func runFileIdentificationTools(fileStorePath string) {
+func runFileIdentificationTools(fileName string) {
 	for _, tool := range serverConfig.FormatIdentificationTools {
-		response, err := http.Get(tool.Endpoint)
+		req, err := http.NewRequest("GET", tool.Endpoint, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		query := req.URL.Query()
+		query.Add("path", fileName)
+		req.URL.RawQuery = query.Encode()
+		log.Println(req.URL.String())
+		response, err := http.Get(req.URL.String())
 		if err != nil {
 			log.Fatal(err)
 		}

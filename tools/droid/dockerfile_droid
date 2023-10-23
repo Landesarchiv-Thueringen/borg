@@ -1,9 +1,14 @@
-FROM golang:1.21.3-alpine3.18
-
-RUN apk update
-RUN apk add unzip openjdk11
+FROM golang:alpine AS build
 WORKDIR /borg/tools/droid
 COPY . ./
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -o droidapi cmd/droid-api.go
+
+FROM alpine:3.18 AS prod
+WORKDIR /borg/tools/droid
+COPY --from=build /borg/tools/droid/ .
+RUN apk update
+RUN apk add unzip openjdk11
 RUN unzip bin/droid-binary-6.7.0-bin.zip
 RUN chmod +x bin/droid-binary-6.7.0-bin/droid.sh
-CMD ["go", "run", "cmd/droid-api.go"]
+CMD ["./droidapi"]

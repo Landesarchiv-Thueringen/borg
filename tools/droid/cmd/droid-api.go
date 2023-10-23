@@ -5,12 +5,14 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 var defaultResponse = "droid API is running"
+var storePath = "/borg/filestore"
 
 func main() {
 	router := gin.Default()
@@ -33,16 +35,26 @@ func getDefaultResponse(context *gin.Context) {
 }
 
 func identifyFileFormat(context *gin.Context) {
-	fileStorePath := context.Query("path")
+	fileStorePath := filepath.Join(storePath, context.Query("path"))
+	log.Println(fileStorePath)
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
+		log.Println(err)
 		context.JSON(http.StatusUnprocessableEntity, err)
+		return
 	}
-	cmd := exec.Command("./bin/droid-binary-6.7.0-bin/droid.sh")
+	cmd := exec.Command(
+		"/bin/ash",
+		"/borg/tools/droid/bin/droid-binary-6.7.0-bin/droid.sh",
+		"-a",
+		fileStorePath,
+	)
+	log.Println(cmd.String())
 	out, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
 		context.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	log.Println(out)
 }

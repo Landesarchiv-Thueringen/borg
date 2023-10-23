@@ -1,4 +1,5 @@
 services:
+
   server:
     container_name: borg-server
     restart: unless-stopped
@@ -14,6 +15,7 @@ services:
       - BORG_SERVER_CONTAINER_PORT=${BORG_SERVER_CONTAINER_PORT}
     ports:
       - ${BORG_SERVER_HOST_PORT}:${BORG_SERVER_CONTAINER_PORT}
+
   droid-api:
     container_name: droid-api
     restart: unless-stopped
@@ -26,8 +28,6 @@ services:
     volumes:
       - "filestore:/borg/filestore"
     environment:
-      - HTTP_PROXY=${HTTP_PROXY}
-      - HTTPS_PROXY=${HTTPS_PROXY}
       - DROID_API_CONTAINER_PORT=${DROID_API_CONTAINER_PORT}
     ports:
       - ${DROID_API_HOST_PORT}:${DROID_API_CONTAINER_PORT}
