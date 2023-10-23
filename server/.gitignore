@@ -12,4 +12,4 @@
 !dockerfile_server
 
 # allow server config
-!config/server_config.yaml
+!config/server_config.yml

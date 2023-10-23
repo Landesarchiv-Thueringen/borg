@@ -1,4 +1,0 @@
-format-identification:
-  - droid:
-    toolName: DROID
-    apiEndpoint: localhost:3331/identify-file-format

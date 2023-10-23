@@ -1,6 +1,8 @@
 package main
 
 import (
+	"lath/borg/internal/config"
+	"log"
 	"net/http"
 	"os"
 
@@ -10,8 +12,10 @@ import (
 )
 
 var defaultResponse = "borg server is running"
+var serverConfig config.ServerConfig
 
 func main() {
+	serverConfig = config.ParseConfig()
 	router := gin.Default()
 	router.ForwardedByClientIP = true
 	router.SetTrustedProxies([]string{"*"})
@@ -50,4 +54,11 @@ func analyseFile(context *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
+	runFileIdentificationTools(fileStorePath)
+}
+
+func runFileIdentificationTools(fileStorePath string) {
+	for _, tool := range serverConfig.FormatIdentificationTools {
+		log.Println(tool.ToolName)
+	}
 }
