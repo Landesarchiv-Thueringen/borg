@@ -8,5 +8,8 @@
 # allow go source code
 !/**/*.go
 
-# allow borg server dockerfile
+# allow server dockerfile
 !dockerfile_server
+
+# allow server config
+!config/server_config.yaml

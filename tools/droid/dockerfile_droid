@@ -1,10 +1,9 @@
-FROM golang:bullseye
+FROM golang:1.21.3-alpine3.18
 
+RUN apk update
+RUN apk add unzip openjdk11
 WORKDIR /borg/tools/droid
 COPY . ./
-RUN apt-get update
-RUN apt-get install unzip
-RUN apt-get install -y openjdk-11-jre
 RUN unzip bin/droid-binary-6.7.0-bin.zip
-RUN chmod +x bin/droid-binary-6.7.0/droid.sh
+RUN chmod +x bin/droid-binary-6.7.0-bin/droid.sh
 CMD ["go", "run", "cmd/droid-api.go"]

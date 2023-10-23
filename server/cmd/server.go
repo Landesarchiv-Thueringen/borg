@@ -49,4 +49,5 @@ func analyseFile(context *gin.Context) {
 		})
 		return
 	}
+	defer os.Remove(fileStorePath)
 }
