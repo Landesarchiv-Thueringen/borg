@@ -7,3 +7,13 @@ formatIdentificationTools:
     toolName: "Tika"
     toolVersion: "2.9.0"
     endpoint: "http://tika-api:3000/extract-metadata"
+
+formatValidationTools:
+  -
+    toolName: "JHOVE - PDF Modul"
+    toolVersion: "1.28.0"
+    endpoint: "http://jhove-api:3000/pdf"
+    trigger:
+      -
+        feature: "mimeType"
+        regEx: "pdf"

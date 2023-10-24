@@ -13,8 +13,21 @@ type FormatIdentificationTool struct {
 	Endpoint    string `yaml:"endpoint"`
 }
 
+type ToolTrigger struct {
+	Feature string `yaml:"feature"`
+	RegEx   string `yaml:"regEx"`
+}
+
+type FormatValidationTool struct {
+	ToolName    string        `yaml:"toolName"`
+	ToolVersion string        `yaml:"toolVersion"`
+	Endpoint    string        `yaml:"endpoint"`
+	ToolTrigger []ToolTrigger `yaml:"trigger"`
+}
+
 type ServerConfig struct {
 	FormatIdentificationTools []FormatIdentificationTool `yaml:"formatIdentificationTools"`
+	FormatValidationTools     []FormatValidationTool     `yaml:"formatValidationTools"`
 }
 
 func ParseConfig() ServerConfig {

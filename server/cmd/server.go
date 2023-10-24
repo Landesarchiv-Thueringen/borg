@@ -7,11 +7,17 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
+
+type FileAnalysis struct {
+	FileIdentificationResults []ToolResponse `json:"fileIdentificationResults"`
+	FileValidationResults     []ToolResponse `json:"fileValidationResults"`
+}
 
 type ToolResponse struct {
 	ToolName          string             `json:"toolName"`
@@ -23,6 +29,12 @@ type ToolResponse struct {
 
 type ErrorResponse struct {
 	Message string `json:"message"`
+}
+
+type Feature struct {
+	Key   string  `json:"key"`
+	Value string  `json:"value"`
+	Score float64 `json:"score"`
 }
 
 var defaultResponse = "borg server is running"
@@ -71,12 +83,16 @@ func analyseFile(context *gin.Context) {
 	}
 	defer os.Remove(fileStorePath)
 	identificationResults := runFileIdentificationTools(fileName)
-	context.JSON(http.StatusOK, identificationResults)
+	validationResults := runFileValidationTools(fileName, identificationResults)
+	fileAnalysis := FileAnalysis{
+		FileIdentificationResults: identificationResults,
+		FileValidationResults:     validationResults,
+	}
+	context.JSON(http.StatusOK, fileAnalysis)
 }
 
 func runFileIdentificationTools(fileName string) []ToolResponse {
 	var responseChannels []chan ToolResponse
-
 	// for every identification tool
 	for _, tool := range serverConfig.FormatIdentificationTools {
 		rc := make(chan ToolResponse)
@@ -84,12 +100,53 @@ func runFileIdentificationTools(fileName string) []ToolResponse {
 		// request tool results concurrent
 		go getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName, rc)
 	}
+	// gather all tool responses
 	var results []ToolResponse
 	for _, rc := range responseChannels {
 		toolResponse := <-rc
 		results = append(results, toolResponse)
 	}
 	return results
+}
+
+func runFileValidationTools(fileName string, identificationResults []ToolResponse) []ToolResponse {
+	var responseChannels []chan ToolResponse
+	// for every validation tool
+	for _, tool := range serverConfig.FormatValidationTools {
+		// for every possible trigger of current validation tool
+		for _, trigger := range tool.ToolTrigger {
+			if checkToolTrigger(trigger, identificationResults) {
+				rc := make(chan ToolResponse)
+				responseChannels = append(responseChannels, rc)
+				// request tool results concurrent
+				go getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName, rc)
+				// don't check other triggers, tool response already requested
+				break
+			}
+		}
+	}
+	// gather all tool responses
+	var results []ToolResponse
+	for _, rc := range responseChannels {
+		toolResponse := <-rc
+		results = append(results, toolResponse)
+	}
+	return results
+}
+
+// returns true if the trigger fires
+func checkToolTrigger(trigger config.ToolTrigger, identificationResults []ToolResponse) bool {
+	regex := regexp.MustCompile(trigger.RegEx)
+	for _, toolResponse := range identificationResults {
+		if toolResponse.ExtractedFeatures != nil {
+			features := *toolResponse.ExtractedFeatures
+			featureValue := features[trigger.Feature]
+			if regex.MatchString(featureValue) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func getToolResponse(
