@@ -48,5 +48,21 @@ services:
     ports:
       - ${TIKA_API_HOST_PORT}:${TIKA_API_CONTAINER_PORT}
 
+  jhove-api:
+    container_name: jhove-api
+    restart: unless-stopped
+    build:
+      context: ./tools/jhove
+      dockerfile: dockerfile_jhove
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "filestore:/borg/filestore"
+    environment:
+      - JHOVE_API_CONTAINER_PORT=${JHOVE_API_CONTAINER_PORT}
+    ports:
+      - ${JHOVE_API_HOST_PORT}:${JHOVE_API_CONTAINER_PORT}
+
 volumes:
   filestore:

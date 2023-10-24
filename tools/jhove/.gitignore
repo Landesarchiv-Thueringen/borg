@@ -1,0 +1,15 @@
+# allwo readme
+!README.md
+
+# allow go project files
+!/go.mod
+!/go.sum
+
+# allow go source code
+!/**/*.go
+
+# allow tika dockerfile
+!dockerfile_jhove
+
+# allow tika jar
+!/bin/jhove_1.28.0.jar
