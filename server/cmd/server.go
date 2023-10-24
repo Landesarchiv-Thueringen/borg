@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"lath/borg/internal/config"
 	"log"
 	"net/http"
@@ -11,6 +12,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
+
+type ToolResponse struct {
+	ToolName          string
+	ToolOutput        *string
+	ExtractedFeatures *map[string]string
+	Error             *string
+}
+
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
 
 var defaultResponse = "borg server is running"
 var storePath = "/borg/filestore"
@@ -57,23 +69,69 @@ func analyseFile(context *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
-	runFileIdentificationTools(fileName)
+	identificationResults := runFileIdentificationTools(fileName)
+	log.Println(identificationResults)
 }
 
-func runFileIdentificationTools(fileName string) {
+func runFileIdentificationTools(fileName string) []ToolResponse {
+	var results []ToolResponse
+	// for every identification tool
 	for _, tool := range serverConfig.FormatIdentificationTools {
+		toolResponse := ToolResponse{
+			ToolName: tool.ToolName,
+		}
+		// create http get request
 		req, err := http.NewRequest("GET", tool.Endpoint, nil)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			errorMessage := "error creating request: " + tool.Endpoint
+			toolResponse.Error = &errorMessage
+			results = append(results, toolResponse)
+			continue
 		}
+		// add file path URL parameter
 		query := req.URL.Query()
 		query.Add("path", fileName)
 		req.URL.RawQuery = query.Encode()
-		log.Println(req.URL.String())
+		// send get request
 		response, err := http.Get(req.URL.String())
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			errorMessage := "error requesting: " + req.URL.String()
+			toolResponse.Error = &errorMessage
+			results = append(results, toolResponse)
+			continue
 		}
-		log.Println(response)
+		// process request response
+		processToolResponse(response, &toolResponse)
+		results = append(results, toolResponse)
+	}
+	return results
+}
+
+func processToolResponse(response *http.Response, toolResponse *ToolResponse) {
+	// identification tool request was successful
+	if response.StatusCode == http.StatusOK {
+		var parsedResponse ToolResponse
+		err := json.NewDecoder(response.Body).Decode(&parsedResponse)
+		if err != nil {
+			log.Println(err)
+			errorMessage := "error parsing tool response"
+			toolResponse.Error = &errorMessage
+		} else {
+			toolResponse.ToolOutput = parsedResponse.ToolOutput
+			toolResponse.ExtractedFeatures = parsedResponse.ExtractedFeatures
+		}
+	} else {
+		// error occurred during file identification
+		var errorResponse ErrorResponse
+		err := json.NewDecoder(response.Body).Decode(&errorResponse)
+		if err != nil {
+			log.Println(err)
+			errorMessage := "error parsing tool error response"
+			toolResponse.Error = &errorMessage
+		} else {
+			toolResponse.Error = &errorResponse.Message
+		}
 	}
 }
