@@ -78,37 +78,45 @@ func runFileIdentificationTools(fileName string) []ToolResponse {
 	var results []ToolResponse
 	// for every identification tool
 	for _, tool := range serverConfig.FormatIdentificationTools {
-		toolResponse := ToolResponse{
-			ToolName:    tool.ToolName,
-			ToolVersion: tool.ToolVersion,
-		}
-		// create http get request
-		req, err := http.NewRequest("GET", tool.Endpoint, nil)
-		if err != nil {
-			log.Println(err)
-			errorMessage := "error creating request: " + tool.Endpoint
-			toolResponse.Error = &errorMessage
-			results = append(results, toolResponse)
-			continue
-		}
-		// add file path URL parameter
-		query := req.URL.Query()
-		query.Add("path", fileName)
-		req.URL.RawQuery = query.Encode()
-		// send get request
-		response, err := http.Get(req.URL.String())
-		if err != nil {
-			log.Println(err)
-			errorMessage := "error requesting: " + req.URL.String()
-			toolResponse.Error = &errorMessage
-			results = append(results, toolResponse)
-			continue
-		}
-		// process request response
-		processToolResponse(response, &toolResponse)
+		toolResponse := getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName)
 		results = append(results, toolResponse)
 	}
 	return results
+}
+
+func getToolResponse(
+	toolName string,
+	toolVersion string,
+	endpoint string,
+	fileName string,
+) ToolResponse {
+	toolResponse := ToolResponse{
+		ToolName:    toolName,
+		ToolVersion: toolVersion,
+	}
+	// create http get request
+	req, err := http.NewRequest("GET", endpoint, nil)
+	if err != nil {
+		log.Println(err)
+		errorMessage := "error creating request: " + endpoint
+		toolResponse.Error = &errorMessage
+		return toolResponse
+	}
+	// add file path URL parameter
+	query := req.URL.Query()
+	query.Add("path", fileName)
+	req.URL.RawQuery = query.Encode()
+	// send get request
+	response, err := http.Get(req.URL.String())
+	if err != nil {
+		log.Println(err)
+		errorMessage := "error requesting: " + req.URL.String()
+		toolResponse.Error = &errorMessage
+		return toolResponse
+	}
+	// process request response
+	processToolResponse(response, &toolResponse)
+	return toolResponse
 }
 
 func processToolResponse(response *http.Response, toolResponse *ToolResponse) {
