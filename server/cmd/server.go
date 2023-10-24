@@ -14,10 +14,11 @@ import (
 )
 
 type ToolResponse struct {
-	ToolName          string
-	ToolOutput        *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolName          string             `json:"toolName"`
+	ToolVersion       string             `json:"toolVersion"`
+	ToolOutput        *string            `json:"toolOutput"`
+	ExtractedFeatures *map[string]string `json:"extractedFeatures"`
+	Error             *string            `json:"error"`
 }
 
 type ErrorResponse struct {
@@ -70,7 +71,7 @@ func analyseFile(context *gin.Context) {
 	}
 	defer os.Remove(fileStorePath)
 	identificationResults := runFileIdentificationTools(fileName)
-	log.Println(identificationResults)
+	context.JSON(http.StatusOK, identificationResults)
 }
 
 func runFileIdentificationTools(fileName string) []ToolResponse {
@@ -78,7 +79,8 @@ func runFileIdentificationTools(fileName string) []ToolResponse {
 	// for every identification tool
 	for _, tool := range serverConfig.FormatIdentificationTools {
 		toolResponse := ToolResponse{
-			ToolName: tool.ToolName,
+			ToolName:    tool.ToolName,
+			ToolVersion: tool.ToolVersion,
 		}
 		// create http get request
 		req, err := http.NewRequest("GET", tool.Endpoint, nil)

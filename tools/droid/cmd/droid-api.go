@@ -18,7 +18,7 @@ type ToolResponse struct {
 	ExtractedFeatures map[string]string
 }
 
-var defaultResponse = "droid API is running"
+var defaultResponse = "DROID API is running"
 var workDir = "/borg/tools/droid"
 var storeDir = "/borg/filestore"
 var signatureFilePath = filepath.Join(workDir, "bin/DROID_SignatureFile_V114.xml")

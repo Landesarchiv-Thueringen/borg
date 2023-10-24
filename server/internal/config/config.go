@@ -8,8 +8,9 @@ import (
 )
 
 type FormatIdentificationTool struct {
-	ToolName string `yaml:"toolName"`
-	Endpoint string `yaml:"endpoint"`
+	ToolName    string `yaml:"toolName"`
+	ToolVersion string `yaml:"toolVersion"`
+	Endpoint    string `yaml:"endpoint"`
 }
 
 type ServerConfig struct {

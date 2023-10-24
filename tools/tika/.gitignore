@@ -1,0 +1,15 @@
+# allwo readme
+!README.md
+
+# allow go project files
+!/go.mod
+!/go.sum
+
+# allow go source code
+!/**/*.go
+
+# allow tika dockerfile
+!dockerfile_tika
+
+# allow tika jar
+!/bin/tika-app-2.9.0.jar

@@ -32,5 +32,21 @@ services:
     ports:
       - ${DROID_API_HOST_PORT}:${DROID_API_CONTAINER_PORT}
 
+  tika-api:
+    container_name: tika-api
+    restart: unless-stopped
+    build:
+      context: ./tools/tika
+      dockerfile: dockerfile_tika
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "filestore:/borg/filestore"
+    environment:
+      - TIKA_API_CONTAINER_PORT=${TIKA_API_CONTAINER_PORT}
+    ports:
+      - ${TIKA_API_HOST_PORT}:${TIKA_API_CONTAINER_PORT}
+
 volumes:
   filestore:
