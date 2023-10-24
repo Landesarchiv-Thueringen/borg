@@ -140,8 +140,8 @@ func checkToolTrigger(trigger config.ToolTrigger, identificationResults []ToolRe
 	for _, toolResponse := range identificationResults {
 		if toolResponse.ExtractedFeatures != nil {
 			features := *toolResponse.ExtractedFeatures
-			featureValue := features[trigger.Feature]
-			if regex.MatchString(featureValue) {
+			featureValue, ok := features[trigger.Feature]
+			if ok && regex.MatchString(featureValue) {
 				return true
 			}
 		}

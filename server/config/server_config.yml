@@ -12,7 +12,7 @@ formatValidationTools:
   -
     toolName: "JHOVE - PDF Modul"
     toolVersion: "1.28.0"
-    endpoint: "http://jhove-api:3000/pdf"
+    endpoint: "http://jhove-api:3000/validate/pdf"
     trigger:
       -
         feature: "mimeType"

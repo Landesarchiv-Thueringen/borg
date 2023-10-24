@@ -1,8 +1,11 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
+	"os/exec"
+	"path/filepath"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -34,13 +37,53 @@ func main() {
 	// It's important that the cors configuration is used before declaring the routes.
 	router.Use(cors.New(corsConfig))
 	router.GET("", getDefaultResponse)
-	// router.GET("/extract-metadata", extractMetadata)
+	router.GET("validate/:module", validateFile)
 	addr := "0.0.0.0:" + os.Getenv("JHOVE_API_CONTAINER_PORT")
 	router.Run(addr)
 }
 
 func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, defaultResponse)
+}
+
+func validateFile(context *gin.Context) {
+	module := context.Param("module")
+	if module == "" {
+		errorMessage := "no JHOVE module declared"
+		log.Println(errorMessage)
+		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+			"message": errorMessage,
+		})
+		return
+	}
+	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+	_, err := os.Stat(fileStorePath)
+	if err != nil {
+		log.Println(err)
+		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "error processing file: " + fileStorePath,
+		})
+		return
+	}
+	cmd := exec.Command(
+		"./jhove/jhove",
+		"-m",
+		module+"-hul",
+		"-h",
+		"json",
+		fileStorePath,
+	)
+	log.Println(cmd.String())
+	jhoveOutput, err := cmd.Output()
+	if err != nil {
+		log.Println(err)
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"message": "error executing JHOVE command",
+		})
+		return
+	}
+	jhoveOutputString := string(jhoveOutput)
+	log.Println(jhoveOutputString)
 }
 
 // func extractMetadata(context *gin.Context) {

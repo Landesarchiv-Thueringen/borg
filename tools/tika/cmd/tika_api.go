@@ -58,7 +58,6 @@ func extractMetadata(context *gin.Context) {
 		})
 		return
 	}
-	log.Println(fileStorePath)
 	cmd := exec.Command(
 		"java",
 		"-jar",
@@ -67,7 +66,6 @@ func extractMetadata(context *gin.Context) {
 		"--json",
 		fileStorePath,
 	)
-	log.Println(cmd.String())
 	tikaOutput, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
