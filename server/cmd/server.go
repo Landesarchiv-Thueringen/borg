@@ -75,10 +75,18 @@ func analyseFile(context *gin.Context) {
 }
 
 func runFileIdentificationTools(fileName string) []ToolResponse {
-	var results []ToolResponse
+	var responseChannels []chan ToolResponse
+
 	// for every identification tool
 	for _, tool := range serverConfig.FormatIdentificationTools {
-		toolResponse := getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName)
+		rc := make(chan ToolResponse)
+		responseChannels = append(responseChannels, rc)
+		// request tool results concurrent
+		go getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName, rc)
+	}
+	var results []ToolResponse
+	for _, rc := range responseChannels {
+		toolResponse := <-rc
 		results = append(results, toolResponse)
 	}
 	return results
@@ -89,7 +97,8 @@ func getToolResponse(
 	toolVersion string,
 	endpoint string,
 	fileName string,
-) ToolResponse {
+	rc chan ToolResponse,
+) {
 	toolResponse := ToolResponse{
 		ToolName:    toolName,
 		ToolVersion: toolVersion,
@@ -100,7 +109,8 @@ func getToolResponse(
 		log.Println(err)
 		errorMessage := "error creating request: " + endpoint
 		toolResponse.Error = &errorMessage
-		return toolResponse
+		rc <- toolResponse
+		return
 	}
 	// add file path URL parameter
 	query := req.URL.Query()
@@ -112,11 +122,12 @@ func getToolResponse(
 		log.Println(err)
 		errorMessage := "error requesting: " + req.URL.String()
 		toolResponse.Error = &errorMessage
-		return toolResponse
+		rc <- toolResponse
+		return
 	}
 	// process request response
 	processToolResponse(response, &toolResponse)
-	return toolResponse
+	rc <- toolResponse
 }
 
 func processToolResponse(response *http.Response, toolResponse *ToolResponse) {
