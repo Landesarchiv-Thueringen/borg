@@ -93,7 +93,9 @@ func processTikaOutput(context *gin.Context, output string) {
 		ToolOutput: output,
 	}
 	if parsedTikaOutput.MimeType != nil {
-		extractedFeatures["mimeType"] = *parsedTikaOutput.MimeType
+		// removes charset from MIME-Type if existing, example: text/x-yaml; charset=ISO-8859-1
+		mimeType := strings.Split(*parsedTikaOutput.MimeType, ";")[0]
+		extractedFeatures["mimeType"] = mimeType
 	}
 	if parsedTikaOutput.Encoding != nil {
 		extractedFeatures["encoding"] = *parsedTikaOutput.Encoding

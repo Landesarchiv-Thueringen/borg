@@ -7,10 +7,20 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type ConfidenceConfig struct {
+	DefaultValue float64 `yaml:"defaultValue"`
+}
+
+type FeatureConfig struct {
+	Key        string           `yaml:"key"`
+	Confidence ConfidenceConfig `yaml:"confidence"`
+}
+
 type FormatIdentificationTool struct {
-	ToolName    string `yaml:"toolName"`
-	ToolVersion string `yaml:"toolVersion"`
-	Endpoint    string `yaml:"endpoint"`
+	ToolName    string          `yaml:"toolName"`
+	ToolVersion string          `yaml:"toolVersion"`
+	Endpoint    string          `yaml:"endpoint"`
+	Features    []FeatureConfig `yaml:"features"`
 }
 
 type ToolTrigger struct {
@@ -40,5 +50,6 @@ func ParseConfig() ServerConfig {
 	if err != nil {
 		log.Fatal("server config couldn't be parsed\n" + err.Error())
 	}
+	log.Println(config)
 	return config
 }

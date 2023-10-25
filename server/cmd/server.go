@@ -31,10 +31,15 @@ type ErrorResponse struct {
 	Message string `json:"message"`
 }
 
+type ToolConfidence struct {
+	ToolName   string  `json:"toolName"`
+	Confidence float64 `json:"confidence"`
+}
+
 type Feature struct {
-	Key   string  `json:"key"`
-	Value string  `json:"value"`
-	Score float64 `json:"score"`
+	Key   string           `json:"key"`
+	Value string           `json:"value"`
+	Tools []ToolConfidence `json:"tools"`
 }
 
 var defaultResponse = "borg server is running"
@@ -84,11 +89,13 @@ func analyseFile(context *gin.Context) {
 	defer os.Remove(fileStorePath)
 	identificationResults := runFileIdentificationTools(fileName)
 	validationResults := runFileValidationTools(fileName, identificationResults)
-	fileAnalysis := FileAnalysis{
-		FileIdentificationResults: identificationResults,
-		FileValidationResults:     validationResults,
-	}
-	context.JSON(http.StatusOK, fileAnalysis)
+	summary := summarizeToolResults(identificationResults, validationResults)
+	context.JSON(http.StatusOK, summary)
+	// fileAnalysis := FileAnalysis{
+	// 	FileIdentificationResults: identificationResults,
+	// 	FileValidationResults:     validationResults,
+	// }
+	// context.JSON(http.StatusOK, fileAnalysis)
 }
 
 func runFileIdentificationTools(fileName string) []ToolResponse {
@@ -212,4 +219,37 @@ func processToolResponse(response *http.Response, toolResponse *ToolResponse) {
 			toolResponse.Error = &errorResponse.Message
 		}
 	}
+}
+
+func summarizeToolResults(
+	identificationResults []ToolResponse,
+	validationResults []ToolResponse,
+) map[string]Feature {
+	summary := make(map[string]Feature)
+	for _, tool := range identificationResults {
+		for featureKey, featureValue := range *tool.ExtractedFeatures {
+			f, ok := summary[featureKey]
+			// feature exists in summary
+			if ok {
+				// add current tool to feature
+				toolConfidence := ToolConfidence{
+					ToolName:   tool.ToolName,
+					Confidence: 1.0,
+				}
+				f.Tools = append(f.Tools, toolConfidence)
+			} else {
+				// feature doesn't exist already in summary
+				tools := []ToolConfidence{
+					{ToolName: tool.ToolName, Confidence: 1.0},
+				}
+				feature := Feature{
+					Key:   featureKey,
+					Value: featureValue,
+					Tools: tools,
+				}
+				summary[featureKey] = feature
+			}
+		}
+	}
+	return summary
 }
