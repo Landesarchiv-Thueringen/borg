@@ -1,11 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -16,15 +20,24 @@ type ToolResponse struct {
 	ExtractedFeatures map[string]string
 }
 
-type TikaOutput struct {
-	MimeType *string `json:"Content-Type"`
-	Encoding *string `json:"Content-Encoding"`
-	Size     *string `json:"Content-Length"`
+type JhoveOutput struct {
+	Root *JhoveRoot `json:"jhove"`
+}
+
+type JhoveRoot struct {
+	RepInfo []JhoveRepInfo `json:"repInfo"`
+}
+
+type JhoveRepInfo struct {
+	FormatName    *string `json:"format"`
+	FormatVersion *string `json:"version"`
+	Validation    *string `json:"status"`
 }
 
 var defaultResponse = "JHOVE API is running"
-var workDir = "/borg/tools/jhove"
 var storeDir = "/borg/filestore"
+var wellFormedRegEx = regexp.MustCompile("Well-Formed")
+var validRegEx = regexp.MustCompile("Well-Formed and valid")
 
 func main() {
 	router := gin.Default()
@@ -73,7 +86,6 @@ func validateFile(context *gin.Context) {
 		"json",
 		fileStorePath,
 	)
-	log.Println(cmd.String())
 	jhoveOutput, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
@@ -83,64 +95,40 @@ func validateFile(context *gin.Context) {
 		return
 	}
 	jhoveOutputString := string(jhoveOutput)
-	log.Println(jhoveOutputString)
+	processJhoveOutput(context, jhoveOutputString)
 }
 
-// func extractMetadata(context *gin.Context) {
-// 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
-// 	_, err := os.Stat(fileStorePath)
-// 	if err != nil {
-// 		log.Println(err)
-// 		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-// 			"message": "error processing file: " + fileStorePath,
-// 		})
-// 		return
-// 	}
-// 	log.Println(fileStorePath)
-// 	cmd := exec.Command(
-// 		"java",
-// 		"-jar",
-// 		filepath.Join(workDir, "bin/tika-app-2.9.0.jar"),
-// 		"--metadata",
-// 		"--json",
-// 		fileStorePath,
-// 	)
-// 	log.Println(cmd.String())
-// 	tikaOutput, err := cmd.Output()
-// 	if err != nil {
-// 		log.Println(err)
-// 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-// 			"message": "error executing Tika command",
-// 		})
-// 		return
-// 	}
-// 	tikaOutputString := string(tikaOutput)
-// 	processTikaOutput(context, tikaOutputString)
-// }
-
-// func processTikaOutput(context *gin.Context, output string) {
-// 	var parsedTikaOutput TikaOutput
-// 	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedTikaOutput)
-// 	if err != nil {
-// 		log.Println(err)
-// 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-// 			"message": "unable parse Tika output",
-// 		})
-// 		return
-// 	}
-// 	extractedFeatures := make(map[string]string)
-// 	response := ToolResponse{
-// 		ToolOutput: output,
-// 	}
-// 	if parsedTikaOutput.MimeType != nil {
-// 		extractedFeatures["mimeType"] = *parsedTikaOutput.MimeType
-// 	}
-// 	if parsedTikaOutput.Encoding != nil {
-// 		extractedFeatures["encoding"] = *parsedTikaOutput.Encoding
-// 	}
-// 	if parsedTikaOutput.Size != nil {
-// 		extractedFeatures["size"] = *parsedTikaOutput.Size
-// 	}
-// 	response.ExtractedFeatures = extractedFeatures
-// 	context.JSON(http.StatusOK, response)
-// }
+func processJhoveOutput(context *gin.Context, output string) {
+	var parsedJhoveOutput JhoveOutput
+	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedJhoveOutput)
+	if err != nil {
+		log.Println(err)
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"message": "unable parse JHOVE output",
+		})
+		return
+	}
+	extractedFeatures := make(map[string]string)
+	response := ToolResponse{
+		ToolOutput:        output,
+		ExtractedFeatures: extractedFeatures,
+	}
+	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
+		repInfo := parsedJhoveOutput.Root.RepInfo[0]
+		if repInfo.FormatName != nil {
+			extractedFeatures["formatName"] = *repInfo.FormatName
+		}
+		if repInfo.FormatVersion != nil {
+			extractedFeatures["formatVersion"] = *repInfo.FormatVersion
+		}
+		if repInfo.Validation != nil {
+			extractedFeatures["wellFormed"] = strconv.FormatBool(
+				wellFormedRegEx.MatchString(*repInfo.Validation),
+			)
+			extractedFeatures["valid"] = strconv.FormatBool(
+				validRegEx.MatchString(*repInfo.Validation),
+			)
+		}
+	}
+	context.JSON(http.StatusOK, response)
+}

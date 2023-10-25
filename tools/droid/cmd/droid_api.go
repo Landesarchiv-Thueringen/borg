@@ -84,12 +84,12 @@ func identifyFileFormat(context *gin.Context) {
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput: droidOutputString,
+		ToolOutput:        droidOutputString,
+		ExtractedFeatures: extractedFeatures,
 	}
 	// TODO: implement returning multiple results
 	if len(formats) > 1 {
 		extractedFeatures["puid"] = formats[1][1]
 	}
-	response.ExtractedFeatures = extractedFeatures
 	context.JSON(http.StatusOK, response)
 }
