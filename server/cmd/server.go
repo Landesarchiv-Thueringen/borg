@@ -276,7 +276,7 @@ func summarizeToolResults(
 			}
 		}
 	}
-	summary = calculateFeatureValueScore(summary)
+	calculateFeatureValueScore(&summary)
 	return summary
 }
 
@@ -321,8 +321,8 @@ func getFeature(featureKey string, featureValue string, tool ToolResponse) Featu
 	return feature
 }
 
-func calculateFeatureValueScore(features map[string]Feature) map[string]Feature {
-	for featureKey, feauture := range features {
+func calculateFeatureValueScore(features *map[string]Feature) {
+	for featureKey, feauture := range *features {
 		totalFeatureConfidence := 0.0
 		totalValueConfidence := make(map[string]float64)
 		for _, featureValue := range feauture.Values {
@@ -332,11 +332,9 @@ func calculateFeatureValueScore(features map[string]Feature) map[string]Feature 
 				totalValueConfidence[featureValue.Value] += tool.Confidence
 			}
 		}
-
 		for valueIndex, featureValue := range feauture.Values {
-			features[featureKey].Values[valueIndex].Score =
+			(*features)[featureKey].Values[valueIndex].Score =
 				totalValueConfidence[featureValue.Value] / totalFeatureConfidence
 		}
 	}
-	return features
 }
