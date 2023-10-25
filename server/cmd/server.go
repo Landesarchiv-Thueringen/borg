@@ -20,11 +20,12 @@ type FileAnalysis struct {
 }
 
 type ToolResponse struct {
-	ToolName          string             `json:"toolName"`
-	ToolVersion       string             `json:"toolVersion"`
-	ToolOutput        *string            `json:"toolOutput"`
-	ExtractedFeatures *map[string]string `json:"extractedFeatures"`
-	Error             *string            `json:"error"`
+	ToolName          string                 `json:"toolName"`
+	ToolVersion       string                 `json:"toolVersion"`
+	FeatureConfig     []config.FeatureConfig `json:"-"`
+	ToolOutput        *string                `json:"toolOutput"`
+	ExtractedFeatures *map[string]string     `json:"extractedFeatures"`
+	Error             *string                `json:"error"`
 }
 
 type ErrorResponse struct {
@@ -36,10 +37,15 @@ type ToolConfidence struct {
 	Confidence float64 `json:"confidence"`
 }
 
-type Feature struct {
-	Key   string           `json:"key"`
+type FeatureValue struct {
 	Value string           `json:"value"`
+	Score float64          `json:"score"`
 	Tools []ToolConfidence `json:"tools"`
+}
+
+type Feature struct {
+	Key    string         `json:"key"`
+	Values []FeatureValue `json:"values"`
 }
 
 var defaultResponse = "borg server is running"
@@ -105,7 +111,14 @@ func runFileIdentificationTools(fileName string) []ToolResponse {
 		rc := make(chan ToolResponse)
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
-		go getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName, rc)
+		go getToolResponse(
+			tool.ToolName,
+			tool.ToolVersion,
+			tool.Endpoint,
+			tool.Features,
+			fileName,
+			rc,
+		)
 	}
 	// gather all tool responses
 	var results []ToolResponse
@@ -126,7 +139,14 @@ func runFileValidationTools(fileName string, identificationResults []ToolRespons
 				rc := make(chan ToolResponse)
 				responseChannels = append(responseChannels, rc)
 				// request tool results concurrent
-				go getToolResponse(tool.ToolName, tool.ToolVersion, tool.Endpoint, fileName, rc)
+				go getToolResponse(
+					tool.ToolName,
+					tool.ToolVersion,
+					tool.Endpoint,
+					tool.Features,
+					fileName,
+					rc,
+				)
 				// don't check other triggers, tool response already requested
 				break
 			}
@@ -160,12 +180,14 @@ func getToolResponse(
 	toolName string,
 	toolVersion string,
 	endpoint string,
+	toolFeatureConfig []config.FeatureConfig,
 	fileName string,
 	rc chan ToolResponse,
 ) {
 	toolResponse := ToolResponse{
-		ToolName:    toolName,
-		ToolVersion: toolVersion,
+		ToolName:      toolName,
+		ToolVersion:   toolVersion,
+		FeatureConfig: toolFeatureConfig,
 	}
 	// create http get request
 	req, err := http.NewRequest("GET", endpoint, nil)
@@ -226,30 +248,74 @@ func summarizeToolResults(
 	validationResults []ToolResponse,
 ) map[string]Feature {
 	summary := make(map[string]Feature)
+	// for every tool response
 	for _, tool := range identificationResults {
+		// for every extracted feature
 		for featureKey, featureValue := range *tool.ExtractedFeatures {
 			f, ok := summary[featureKey]
 			// feature exists in summary
 			if ok {
 				// add current tool to feature
-				toolConfidence := ToolConfidence{
-					ToolName:   tool.ToolName,
-					Confidence: 1.0,
+				valueExists := false
+				for _, v := range f.Values {
+					// extracted value exists already, that means another tool extracted the same value
+					if v.Value == featureValue {
+						// add tool to tools that extracted current value for feature
+						v.Tools = append(v.Tools, getToolConfidence(tool, featureKey))
+						valueExists = true
+						break
+					}
 				}
-				f.Tools = append(f.Tools, toolConfidence)
+				// value for key doesn't exist already --> add it to value list
+				if !valueExists {
+					f.Values = append(f.Values, getFeatureValue(featureKey, featureValue, tool))
+				}
 			} else {
-				// feature doesn't exist already in summary
-				tools := []ToolConfidence{
-					{ToolName: tool.ToolName, Confidence: 1.0},
-				}
-				feature := Feature{
-					Key:   featureKey,
-					Value: featureValue,
-					Tools: tools,
-				}
-				summary[featureKey] = feature
+				// feature doesn't exist already in summary --> add it to summary
+				summary[featureKey] = getFeature(featureKey, featureValue, tool)
 			}
 		}
 	}
 	return summary
+}
+
+func getToolConfidence(tool ToolResponse, featureKey string) ToolConfidence {
+	confidence := 1.0
+	for _, featureConfig := range tool.FeatureConfig {
+		if featureConfig.Key == featureKey {
+			confidence = featureConfig.Confidence.DefaultValue
+			break
+		}
+	}
+	toolConfidence := ToolConfidence{
+		ToolName:   tool.ToolName,
+		Confidence: confidence,
+	}
+	return toolConfidence
+}
+
+func getFeatureValue(featureKey string, featureValue string, tool ToolResponse) FeatureValue {
+	tools := []ToolConfidence{
+		getToolConfidence(tool, featureKey),
+	}
+	value := FeatureValue{
+		Value: featureValue,
+		Score: 0.0,
+		Tools: tools,
+	}
+	return value
+}
+
+func getFeature(featureKey string, featureValue string, tool ToolResponse) Feature {
+	tools := []ToolConfidence{
+		getToolConfidence(tool, featureKey),
+	}
+	values := []FeatureValue{
+		{Value: featureValue, Tools: tools},
+	}
+	feature := Feature{
+		Key:    featureKey,
+		Values: values,
+	}
+	return feature
 }

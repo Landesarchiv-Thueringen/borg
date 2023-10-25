@@ -29,10 +29,11 @@ type ToolTrigger struct {
 }
 
 type FormatValidationTool struct {
-	ToolName    string        `yaml:"toolName"`
-	ToolVersion string        `yaml:"toolVersion"`
-	Endpoint    string        `yaml:"endpoint"`
-	ToolTrigger []ToolTrigger `yaml:"trigger"`
+	ToolName    string          `yaml:"toolName"`
+	ToolVersion string          `yaml:"toolVersion"`
+	Endpoint    string          `yaml:"endpoint"`
+	ToolTrigger []ToolTrigger   `yaml:"trigger"`
+	Features    []FeatureConfig `yaml:"features"`
 }
 
 type ServerConfig struct {
@@ -50,6 +51,5 @@ func ParseConfig() ServerConfig {
 	if err != nil {
 		log.Fatal("server config couldn't be parsed\n" + err.Error())
 	}
-	log.Println(config)
 	return config
 }
