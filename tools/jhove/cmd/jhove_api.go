@@ -99,6 +99,7 @@ func validateFile(context *gin.Context) {
 }
 
 func processJhoveOutput(context *gin.Context, output string) {
+	log.Println(output)
 	var parsedJhoveOutput JhoveOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedJhoveOutput)
 	if err != nil {
@@ -115,9 +116,10 @@ func processJhoveOutput(context *gin.Context, output string) {
 	}
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
 		repInfo := parsedJhoveOutput.Root.RepInfo[0]
-		if repInfo.FormatName != nil {
-			extractedFeatures["formatName"] = *repInfo.FormatName
-		}
+		//  ignore until a identification tool extracts the format name also
+		// if repInfo.FormatName != nil {
+		// 	extractedFeatures["formatName"] = *repInfo.FormatName
+		// }
 		if repInfo.FormatVersion != nil {
 			extractedFeatures["formatVersion"] = *repInfo.FormatVersion
 		}

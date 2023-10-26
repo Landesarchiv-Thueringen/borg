@@ -19,9 +19,11 @@ type ToolResponse struct {
 }
 
 type TikaOutput struct {
-	MimeType *string `json:"Content-Type"`
-	Encoding *string `json:"Content-Encoding"`
-	Size     *string `json:"Content-Length"`
+	MimeType    *string `json:"Content-Type"`
+	Encoding    *string `json:"Content-Encoding"`
+	Size        *string `json:"Content-Length"`
+	PDFVersion  *string `json:"pdf:PDFVersion"`
+	PDFAVersion *string `json:"pdfa:PDFVersion"`
 }
 
 var defaultResponse = "Tika API is running"
@@ -102,6 +104,12 @@ func processTikaOutput(context *gin.Context, output string) {
 	}
 	if parsedTikaOutput.Size != nil {
 		extractedFeatures["size"] = *parsedTikaOutput.Size
+	}
+	if parsedTikaOutput.PDFVersion != nil {
+		extractedFeatures["formatVersion"] = *parsedTikaOutput.PDFVersion
+	}
+	if parsedTikaOutput.PDFAVersion != nil {
+		extractedFeatures["pdfaVersion"] = *parsedTikaOutput.PDFAVersion
 	}
 	response.ExtractedFeatures = extractedFeatures
 	context.JSON(http.StatusOK, response)

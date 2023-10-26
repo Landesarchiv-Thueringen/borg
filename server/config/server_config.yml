@@ -25,6 +25,14 @@ formatIdentificationTools:
         key: "size"
         confidence:
           defaultValue: 1.0
+      -
+        key: "formatVersion"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "pdfaVersion"
+        confidence:
+          defaultValue: 1.0
 
 formatValidationTools:
   -
@@ -44,10 +52,11 @@ formatValidationTools:
         key: "valid"
         confidence:
           defaultValue: 1.0
-      -
-        key: "formatName"
-        confidence:
-          defaultValue: 0.8
+      # ignore until a identification tool extracts the format name also
+      # -
+      #   key: "formatName"
+      #   confidence:
+      #     defaultValue: 0.8
       -
         key: "formatVersion"
         confidence:

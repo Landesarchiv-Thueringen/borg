@@ -249,7 +249,7 @@ func summarizeToolResults(
 ) map[string]Feature {
 	summary := make(map[string]Feature)
 	// for every tool response
-	for _, tool := range identificationResults {
+	for _, tool := range append(identificationResults, validationResults...) {
 		// for every extracted feature
 		for featureKey, featureValue := range *tool.ExtractedFeatures {
 			f, ok := summary[featureKey]
@@ -257,11 +257,13 @@ func summarizeToolResults(
 			if ok {
 				// add current tool to feature
 				valueExists := false
-				for _, v := range f.Values {
+				for i, v := range f.Values {
 					// extracted value exists already, that means another tool extracted the same value
 					if v.Value == featureValue {
 						// add tool to tools that extracted current value for feature
 						v.Tools = append(v.Tools, getToolConfidence(tool, featureKey))
+						// overwrite original tool list
+						summary[featureKey].Values[i].Tools = v.Tools
 						valueExists = true
 						break
 					}
