@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -46,6 +47,22 @@ type FeatureValue struct {
 type Feature struct {
 	Key    string         `json:"key"`
 	Values []FeatureValue `json:"values"`
+}
+
+// implement sorting interface for feature values
+type ByScore []FeatureValue
+
+func (featureValues ByScore) Len() int {
+	return len(featureValues)
+}
+
+func (featureValues ByScore) Less(i, j int) bool {
+	// sort reversed, biggest score first
+	return featureValues[i].Score > featureValues[j].Score
+}
+
+func (featureValues ByScore) Swap(i, j int) {
+	featureValues[i], featureValues[j] = featureValues[j], featureValues[i]
 }
 
 var defaultResponse = "borg server is running"
@@ -281,6 +298,7 @@ func summarizeToolResults(
 		}
 	}
 	calculateFeatureValueScore(&summary)
+	sortFeatureValues(&summary)
 	return summary
 }
 
@@ -323,6 +341,12 @@ func getFeature(featureKey string, featureValue string, tool ToolResponse) Featu
 		Values: values,
 	}
 	return feature
+}
+
+func sortFeatureValues(features *map[string]Feature) {
+	for featureKey := range *features {
+		sort.Sort(ByScore((*features)[featureKey].Values))
+	}
 }
 
 func calculateFeatureValueScore(features *map[string]Feature) {
