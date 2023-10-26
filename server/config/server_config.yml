@@ -54,7 +54,7 @@ formatValidationTools:
           defaultValue: 0.8
           conditions:
             -
-              identFeature: formatVersion
+              globalFeature: formatVersion
               regEx: "PDF/A"
               value: 0.5
 

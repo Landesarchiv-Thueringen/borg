@@ -34,8 +34,9 @@ type ErrorResponse struct {
 }
 
 type ToolConfidence struct {
-	ToolName   string  `json:"toolName"`
-	Confidence float64 `json:"confidence"`
+	ToolName      string                 `json:"toolName"`
+	Confidence    float64                `json:"confidence"`
+	FeatureConfig []config.FeatureConfig `json:"-"`
 }
 
 type FeatureValue struct {
@@ -264,9 +265,10 @@ func summarizeToolResults(
 	identificationResults []ToolResponse,
 	validationResults []ToolResponse,
 ) map[string]Feature {
+	tools := append(identificationResults, validationResults...)
 	summary := make(map[string]Feature)
 	// for every tool response
-	for _, tool := range append(identificationResults, validationResults...) {
+	for _, tool := range tools {
 		// for every extracted feature
 		for featureKey, featureValue := range *tool.ExtractedFeatures {
 			f, ok := summary[featureKey]
@@ -299,6 +301,7 @@ func summarizeToolResults(
 	}
 	calculateFeatureValueScore(&summary)
 	sortFeatureValues(&summary)
+	correctToolConfidence(&summary)
 	return summary
 }
 
@@ -311,9 +314,18 @@ func getToolConfidence(tool ToolResponse, featureKey string) ToolConfidence {
 		}
 	}
 	toolConfidence := ToolConfidence{
-		ToolName:   tool.ToolName,
-		Confidence: confidence,
+		ToolName:      tool.ToolName,
+		Confidence:    confidence,
+		FeatureConfig: tool.FeatureConfig,
 	}
+	return toolConfidence
+}
+
+func getCorrectedToolConfidence(
+	toolConfidence ToolConfidence,
+	scoredFeatures *map[string]Feature,
+) ToolConfidence {
+	toolConfidence.Confidence = 0.314
 	return toolConfidence
 }
 
@@ -343,12 +355,6 @@ func getFeature(featureKey string, featureValue string, tool ToolResponse) Featu
 	return feature
 }
 
-func sortFeatureValues(features *map[string]Feature) {
-	for featureKey := range *features {
-		sort.Sort(ByScore((*features)[featureKey].Values))
-	}
-}
-
 func calculateFeatureValueScore(features *map[string]Feature) {
 	for featureKey, feauture := range *features {
 		totalFeatureConfidence := 0.0
@@ -363,6 +369,23 @@ func calculateFeatureValueScore(features *map[string]Feature) {
 		for valueIndex, featureValue := range feauture.Values {
 			(*features)[featureKey].Values[valueIndex].Score =
 				totalValueConfidence[featureValue.Value] / totalFeatureConfidence
+		}
+	}
+}
+
+func sortFeatureValues(features *map[string]Feature) {
+	for featureKey := range *features {
+		sort.Sort(ByScore((*features)[featureKey].Values))
+	}
+}
+
+func correctToolConfidence(scoredFeatures *map[string]Feature) {
+	for featureKey, feature := range *scoredFeatures {
+		for featureValueIndex, featureValue := range feature.Values {
+			for toolIndex, toolConfidence := range featureValue.Tools {
+				(*scoredFeatures)[featureKey].Values[featureValueIndex].Tools[toolIndex] =
+					getCorrectedToolConfidence(toolConfidence, scoredFeatures)
+			}
 		}
 	}
 }
