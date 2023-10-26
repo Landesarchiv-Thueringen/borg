@@ -271,6 +271,8 @@ func summarizeToolResults(
 				// value for key doesn't exist already --> add it to value list
 				if !valueExists {
 					f.Values = append(f.Values, getFeatureValue(featureKey, featureValue, tool))
+					// overwrite feature in summary map
+					summary[featureKey] = f
 				}
 			} else {
 				// feature doesn't exist already in summary --> add it to summary

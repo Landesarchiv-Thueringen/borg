@@ -29,10 +29,6 @@ formatIdentificationTools:
         key: "formatVersion"
         confidence:
           defaultValue: 1.0
-      -
-        key: "pdfaVersion"
-        confidence:
-          defaultValue: 1.0
 
 formatValidationTools:
   -
@@ -52,12 +48,13 @@ formatValidationTools:
         key: "valid"
         confidence:
           defaultValue: 1.0
-      # ignore until a identification tool extracts the format name also
-      # -
-      #   key: "formatName"
-      #   confidence:
-      #     defaultValue: 0.8
       -
         key: "formatVersion"
         confidence:
           defaultValue: 0.8
+          conditions:
+            -
+              identFeature: formatVersion
+              regEx: "PDF/A"
+              value: 0.5
+

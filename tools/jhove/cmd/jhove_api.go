@@ -99,7 +99,6 @@ func validateFile(context *gin.Context) {
 }
 
 func processJhoveOutput(context *gin.Context, output string) {
-	log.Println(output)
 	var parsedJhoveOutput JhoveOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedJhoveOutput)
 	if err != nil {

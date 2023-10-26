@@ -105,11 +105,12 @@ func processTikaOutput(context *gin.Context, output string) {
 	if parsedTikaOutput.Size != nil {
 		extractedFeatures["size"] = *parsedTikaOutput.Size
 	}
-	if parsedTikaOutput.PDFVersion != nil {
-		extractedFeatures["formatVersion"] = *parsedTikaOutput.PDFVersion
-	}
+	// use PDF/A version if existing
 	if parsedTikaOutput.PDFAVersion != nil {
-		extractedFeatures["pdfaVersion"] = *parsedTikaOutput.PDFAVersion
+		extractedFeatures["formatVersion"] = "PDF/" + *parsedTikaOutput.PDFAVersion
+	} else if parsedTikaOutput.PDFVersion != nil {
+		// no PDF/A version --> use normal version info
+		extractedFeatures["formatVersion"] = *parsedTikaOutput.PDFVersion
 	}
 	response.ExtractedFeatures = extractedFeatures
 	context.JSON(http.StatusOK, response)
