@@ -12,7 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 export interface FileInformation {
   fileName: string;
   relativePath?: string;
-  size: number;
+  size: string;
   fileAnalysis: FileAnalysis;
 }
 

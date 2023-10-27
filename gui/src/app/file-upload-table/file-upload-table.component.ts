@@ -13,10 +13,11 @@ import {
   FileInformation, 
   FileAnalysisService,
 } from '../file-analysis/file-analysis.service';
+import { FileSizePipe } from '../utility/file-size/file-size.pipe';
 
 export interface FileUpload {
   fileName: string;
-  relativePath?: string;
+  relativePath: string;
   fileSize: number;
   uploadProgress?: number;
 }
@@ -33,7 +34,10 @@ export class FileUploadTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private fileAnalysisService: FileAnalysisService) {
+  constructor(
+    private fileAnalysisService: FileAnalysisService,
+    private fileSizePipe: FileSizePipe,  
+  ) {
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = [
       'fileName',
@@ -56,6 +60,7 @@ export class FileUploadTableComponent implements AfterViewInit {
       console.log(file);
       const fileUpload: FileUpload = {
         fileName: file.name,
+        relativePath: 'Einzeldatei',
         fileSize: file.size,
       }
       const data = this.dataSource.data
@@ -108,11 +113,10 @@ export class FileUploadTableComponent implements AfterViewInit {
       }
     } else if(event.type === HttpEventType.Response) {
         if (event.body) {
-          console.log(event.body);
           const fileData: FileInformation = {
             fileName: this.dataSource.data[fileIndex].fileName,
             relativePath: this.dataSource.data[fileIndex].relativePath,
-            size: this.dataSource.data[fileIndex].fileSize,
+            size: this.fileSizePipe.transform(this.dataSource.data[fileIndex].fileSize),
             fileAnalysis: event.body,
           }
           this.fileAnalysisService.addFileInfo(fileData);
