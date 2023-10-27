@@ -15,6 +15,7 @@ import (
 
 type ToolResponse struct {
 	ToolOutput        string
+	OutputFormat      string
 	ExtractedFeatures map[string]string
 }
 
@@ -85,6 +86,7 @@ func identifyFileFormat(context *gin.Context) {
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
 		ToolOutput:        droidOutputString,
+		OutputFormat:      "csv",
 		ExtractedFeatures: extractedFeatures,
 	}
 	// TODO: implement returning multiple results

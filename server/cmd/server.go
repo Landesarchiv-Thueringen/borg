@@ -16,8 +16,9 @@ import (
 )
 
 type FileAnalysis struct {
-	FileIdentificationResults []ToolResponse `json:"fileIdentificationResults"`
-	FileValidationResults     []ToolResponse `json:"fileValidationResults"`
+	Summary                   map[string]Feature `json:"summary"`
+	FileIdentificationResults []ToolResponse     `json:"fileIdentificationResults"`
+	FileValidationResults     []ToolResponse     `json:"fileValidationResults"`
 }
 
 type ToolResponse struct {
@@ -25,6 +26,7 @@ type ToolResponse struct {
 	ToolVersion       string                 `json:"toolVersion"`
 	FeatureConfig     []config.FeatureConfig `json:"-"`
 	ToolOutput        *string                `json:"toolOutput"`
+	OutputFormat      *string                `json:"outputFormat"`
 	ExtractedFeatures *map[string]string     `json:"extractedFeatures"`
 	Error             *string                `json:"error"`
 }
@@ -114,12 +116,12 @@ func analyseFile(context *gin.Context) {
 	identificationResults := runFileIdentificationTools(fileName)
 	validationResults := runFileValidationTools(fileName, identificationResults)
 	summary := summarizeToolResults(identificationResults, validationResults)
-	context.JSON(http.StatusOK, summary)
-	// fileAnalysis := FileAnalysis{
-	// 	FileIdentificationResults: identificationResults,
-	// 	FileValidationResults:     validationResults,
-	// }
-	// context.JSON(http.StatusOK, fileAnalysis)
+	fileAnalysis := FileAnalysis{
+		Summary:                   summary,
+		FileIdentificationResults: identificationResults,
+		FileValidationResults:     validationResults,
+	}
+	context.JSON(http.StatusOK, fileAnalysis)
 }
 
 func runFileIdentificationTools(fileName string) []ToolResponse {
@@ -245,6 +247,7 @@ func processToolResponse(response *http.Response, toolResponse *ToolResponse) {
 			toolResponse.Error = &errorMessage
 		} else {
 			toolResponse.ToolOutput = parsedResponse.ToolOutput
+			toolResponse.OutputFormat = parsedResponse.OutputFormat
 			toolResponse.ExtractedFeatures = parsedResponse.ExtractedFeatures
 		}
 	} else {
@@ -301,7 +304,10 @@ func summarizeToolResults(
 	}
 	calculateFeatureValueScore(&summary)
 	sortFeatureValues(&summary)
+	// only after first score calculation, can global feature conditions be applied
 	correctToolConfidence(&summary)
+	calculateFeatureValueScore(&summary)
+	sortFeatureValues(&summary)
 	return summary
 }
 
@@ -325,7 +331,21 @@ func getCorrectedToolConfidence(
 	toolConfidence ToolConfidence,
 	scoredFeatures *map[string]Feature,
 ) ToolConfidence {
-	toolConfidence.Confidence = 0.314
+	for _, featureConfig := range toolConfidence.FeatureConfig {
+		if len(featureConfig.Confidence.Conditions) > 0 {
+			for _, condition := range featureConfig.Confidence.Conditions {
+				scoredFeature, ok := (*scoredFeatures)[condition.GlobalFeature]
+				if ok {
+					regex := regexp.MustCompile(condition.RegEx)
+					// the first value has the highest score --> voted truth
+					if regex.MatchString(scoredFeature.Values[0].Value) {
+						toolConfidence.Confidence = condition.Value
+						return toolConfidence
+					}
+				}
+			}
+		}
+	}
 	return toolConfidence
 }
 

@@ -17,6 +17,7 @@ import (
 
 type ToolResponse struct {
 	ToolOutput        string
+	OutputFormat      string
 	ExtractedFeatures map[string]string
 }
 
@@ -111,6 +112,7 @@ func processJhoveOutput(context *gin.Context, output string) {
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
 		ToolOutput:        output,
+		OutputFormat:      "json",
 		ExtractedFeatures: extractedFeatures,
 	}
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {

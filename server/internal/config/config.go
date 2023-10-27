@@ -7,8 +7,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type ConfidenceCondition struct {
+	GlobalFeature string  `yaml:"globalFeature"`
+	RegEx         string  `yaml:"regEx"`
+	Value         float64 `yaml:"value"`
+}
+
 type ConfidenceConfig struct {
-	DefaultValue float64 `yaml:"defaultValue"`
+	DefaultValue float64               `yaml:"defaultValue"`
+	Conditions   []ConfidenceCondition `yaml:"conditions"`
 }
 
 type FeatureConfig struct {

@@ -15,6 +15,7 @@ import (
 
 type ToolResponse struct {
 	ToolOutput        string
+	OutputFormat      string
 	ExtractedFeatures map[string]string
 }
 
@@ -92,7 +93,9 @@ func processTikaOutput(context *gin.Context, output string) {
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput: output,
+		ToolOutput:        output,
+		OutputFormat:      "json",
+		ExtractedFeatures: extractedFeatures,
 	}
 	if parsedTikaOutput.MimeType != nil {
 		// removes charset from MIME-Type if existing, example: text/x-yaml; charset=ISO-8859-1
@@ -112,6 +115,5 @@ func processTikaOutput(context *gin.Context, output string) {
 		// no PDF/A version --> use normal version info
 		extractedFeatures["formatVersion"] = *parsedTikaOutput.PDFVersion
 	}
-	response.ExtractedFeatures = extractedFeatures
 	context.JSON(http.StatusOK, response)
 }

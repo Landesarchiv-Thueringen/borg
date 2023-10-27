@@ -44,10 +44,20 @@ formatValidationTools:
         key: "wellFormed"
         confidence:
           defaultValue: 1.0
+          conditions:
+            -
+              globalFeature: formatVersion
+              regEx: "PDF/A"
+              value: 0.5
       -
         key: "valid"
         confidence:
           defaultValue: 1.0
+          conditions:
+            -
+              globalFeature: formatVersion
+              regEx: "PDF/A"
+              value: 0.5
       -
         key: "formatVersion"
         confidence:
