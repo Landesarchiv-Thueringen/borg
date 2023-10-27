@@ -1,0 +1,59 @@
+<div class="file-upload-section">
+
+  <div class="file-upload-table mat-elevation-z8">
+
+    <div class="table-content">
+
+      <table mat-table [dataSource]="dataSource" matSort matSortActive="receivedAt" matSortDirection="desc">
+    
+        <!-- file name column -->
+        <ng-container matColumnDef="fileName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dateiname</th>
+          <td mat-cell *matCellDef="let file">{{file.fileName}}</td>
+        </ng-container>
+      
+        <!-- relative path column -->
+        <ng-container matColumnDef="relativePath">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Pfad</th>
+          <td mat-cell *matCellDef="let file">{{file.relativePath}}</td>
+        </ng-container>
+
+        <!-- file size column -->
+        <ng-container matColumnDef="fileSize">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dateigröße</th>
+          <td mat-cell *matCellDef="let file">{{file.fileSize|fileSize}}</td>
+        </ng-container>
+
+        <!-- upload progress column -->
+        <ng-container matColumnDef="uploadProgress">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Upload-Status</th>
+          <td mat-cell *matCellDef="let file" class="upload-progress">
+            <mat-progress-bar *ngIf="file.uploadProgress" mode="determinate" [value]=file.uploadProgress></mat-progress-bar>
+          </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+      </table>
+
+    </div>
+
+    <mat-toolbar class="table-toolbar">
+      <input #fileInput type="file" (change)="addFile($event)">
+      <button mat-button (click)="fileInput.click()" color="primary">
+        <mat-icon>upload_file</mat-icon>
+        Einzeldatei hinzufügen
+      </button>
+      <input #folderInput type="file" (change)="addFolder($event)" webkitdirectory>
+      <button mat-button (click)="folderInput.click()" color="primary">
+        <mat-icon>drive_folder_upload</mat-icon>
+        Ordner hinzufügen
+      </button>
+      <span class="spacer"></span>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons aria-label="Dateien auswählen"></mat-paginator>
+    </mat-toolbar>
+    
+  </div>
+
+</div>
