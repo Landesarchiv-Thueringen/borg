@@ -54,10 +54,23 @@ export interface ToolConfidence {
 export class FileAnalysisService {
   files: FileInformation[];
   fileInfos: BehaviorSubject<FileInformation[]>;
+  featureOrder: Map<string, number>;
 
   constructor(private httpClient: HttpClient) {
     this.files = [];
     this.fileInfos = new BehaviorSubject<FileInformation[]>(this.files);
+    this.featureOrder = new Map<string, number>([
+      ['relativePath', 1],
+      ['fileName', 2],
+      ['fileSize', 3],
+      ['puid', 4],
+      ['mimeType', 5],
+      ['formatVersion', 6],
+      ['encoding', 7],
+      ['', 101],
+      ['wellFormed', 1001],
+      ['valid', 1002],
+    ]);
   }
 
   analyzeFile(file: File): Observable<HttpEvent<FileAnalysis>> {
@@ -77,5 +90,9 @@ export class FileAnalysisService {
 
   getFileInfo(): Observable<FileInformation[]> {
     return this.fileInfos.asObservable();
+  }
+
+  getFeatureOrder(): Map<string, number> {
+    return this.featureOrder;
   }
 }

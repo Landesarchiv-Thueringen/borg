@@ -26,7 +26,7 @@ export class FileAttributePipe implements PipeTransform {
         return 'Validierung';
       }
       case 'wellFormed': {
-        return 'wohlgeformt';
+        return 'Wohlgeformt';
       }
       case 'encoding': {
         return 'Kodierung';
