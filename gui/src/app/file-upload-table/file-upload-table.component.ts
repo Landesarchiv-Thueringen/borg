@@ -9,8 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 // project
 import { 
-  FileAnalysis, 
-  FileInformation, 
+  ToolResults, 
+  FileResult, 
   FileAnalysisService,
 } from '../file-analysis/file-analysis.service';
 import { FileSizePipe } from '../utility/file-size/file-size.pipe';
@@ -98,13 +98,13 @@ export class FileUploadTableComponent implements AfterViewInit {
       error: (error: any) => {
         console.error(error);
       },
-      next: (httpEvent: HttpEvent<FileAnalysis>) => {
+      next: (httpEvent: HttpEvent<ToolResults>) => {
         this.handleHttpEvent(httpEvent, fileIndex);
       }
     });
   }
 
-  private handleHttpEvent(event: HttpEvent<FileAnalysis>, fileIndex: number): void {
+  private handleHttpEvent(event: HttpEvent<ToolResults>, fileIndex: number): void {
     if (event.type === HttpEventType.UploadProgress) {
       if (event.total && event.total > 0.0) {
         this.dataSource.data[fileIndex].uploadProgress = Math.round(
@@ -113,13 +113,13 @@ export class FileUploadTableComponent implements AfterViewInit {
       }
     } else if(event.type === HttpEventType.Response) {
         if (event.body) {
-          const fileData: FileInformation = {
+          const fileData: FileResult = {
             fileName: this.dataSource.data[fileIndex].fileName,
             relativePath: this.dataSource.data[fileIndex].relativePath,
             size: this.fileSizePipe.transform(this.dataSource.data[fileIndex].fileSize),
-            fileAnalysis: event.body,
+            toolResults: event.body,
           }
-          this.fileAnalysisService.addFileInfo(fileData);
+          this.fileAnalysisService.addFileResult(fileData);
         }
     }
   }

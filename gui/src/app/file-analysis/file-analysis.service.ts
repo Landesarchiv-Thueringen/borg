@@ -9,14 +9,21 @@ import { environment } from '../../environments/environment';
 // utility
 import { BehaviorSubject } from 'rxjs';
 
-export interface FileInformation {
+export interface FileUpload {
+  fileName: string;
+  relativePath: string;
+  fileSize: number;
+  uploadProgress?: number;
+}
+
+export interface FileResult {
   fileName: string;
   relativePath?: string;
   size: string;
-  fileAnalysis: FileAnalysis;
+  toolResults: ToolResults;
 }
 
-export interface FileAnalysis {
+export interface ToolResults {
   fileIdentificationResults: ToolResult[];
   fileValidationResults: ToolResult[];
   summary: Summary;
@@ -52,13 +59,15 @@ export interface ToolConfidence {
   providedIn: 'root'
 })
 export class FileAnalysisService {
-  files: FileInformation[];
-  fileInfos: BehaviorSubject<FileInformation[]>;
+  fileUploads: FileUpload[];
+  fileResults: FileResult[];
+  fileResultsSubject: BehaviorSubject<FileResult[]>;
   featureOrder: Map<string, number>;
 
   constructor(private httpClient: HttpClient) {
-    this.files = [];
-    this.fileInfos = new BehaviorSubject<FileInformation[]>(this.files);
+    this.fileUploads = [];
+    this.fileResults = [];
+    this.fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
     this.featureOrder = new Map<string, number>([
       ['relativePath', 1],
       ['fileName', 2],
@@ -73,23 +82,22 @@ export class FileAnalysisService {
     ]);
   }
 
-  analyzeFile(file: File): Observable<HttpEvent<FileAnalysis>> {
+  analyzeFile(file: File): Observable<HttpEvent<ToolResults>> {
     const formData = new FormData();
     formData.append('file', file);
-    console.log(environment.apiEndpoint);
-    return this.httpClient.post<FileAnalysis>(environment.apiEndpoint, formData, {
+    return this.httpClient.post<ToolResults>(environment.apiEndpoint, formData, {
       reportProgress: true,
       observe: 'events'
     });
   }
 
-  addFileInfo(i: FileInformation): void {
-    this.files.push(i);
-    this.fileInfos.next(this.files);
+  addFileResult(i: FileResult): void {
+    this.fileResults.push(i);
+    this.fileResultsSubject.next(this.fileResults);
   }
 
-  getFileInfo(): Observable<FileInformation[]> {
-    return this.fileInfos.asObservable();
+  getFileResults(): Observable<FileResult[]> {
+    return this.fileResultsSubject.asObservable();
   }
 
   getFeatureOrder(): Map<string, number> {

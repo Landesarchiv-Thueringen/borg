@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import { FileInformation, FileAnalysisService } from '../file-analysis.service';
+import { FileResult, FileAnalysisService } from '../file-analysis.service';
 
 export interface FileOverview {
   [key: string]: string;
@@ -26,9 +26,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   constructor(private fileAnalysisService: FileAnalysisService) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = ['fileName', 'relativePath', 'fileSize'];
-    this.fileAnalysisService.getFileInfo().subscribe({
+    this.fileAnalysisService.getFileResults().subscribe({
       // error can't occure --> no error handling
-      next: (fileInfos: FileInformation[]) => {
+      next: (fileInfos: FileResult[]) => {
         console.log(fileInfos);
         this.processFileInformations(fileInfos);
       },
@@ -39,12 +39,12 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  processFileInformations(fileInfos: FileInformation[]): void {
+  processFileInformations(fileInfos: FileResult[]): void {
     const featureKeys: string[] = ['fileName', 'relativePath', 'fileSize'];
     const data: FileOverview[] = [];
     for (let fileInfo of fileInfos) {
       let fileOverview: FileOverview = {};
-      for (let featureKey in fileInfo.fileAnalysis.summary) {
+      for (let featureKey in fileInfo.toolResults.summary) {
         featureKeys.push(featureKey);
         fileOverview['fileName'] = fileInfo.fileName;
         fileOverview['relativePath'] = fileInfo.relativePath
@@ -52,7 +52,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           : '';
         fileOverview['fileSize'] = fileInfo.size;
         fileOverview[featureKey] =
-          fileInfo.fileAnalysis.summary[featureKey].values[0].value;
+          fileInfo.toolResults.summary[featureKey].values[0].value;
       }
       data.push(fileOverview);
     }
