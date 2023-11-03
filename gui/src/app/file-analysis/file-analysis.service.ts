@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 
 // utility
 import { BehaviorSubject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface FileUpload {
   fileName: string;
@@ -19,7 +20,7 @@ export interface FileUpload {
 export interface FileResult {
   fileName: string;
   relativePath?: string;
-  size: string;
+  fileSize: number;
   toolResults: ToolResults;
 }
 
@@ -61,12 +62,14 @@ export interface ToolConfidence {
 export class FileAnalysisService {
   fileUploads: FileUpload[];
   fileResults: FileResult[];
+  fileUploadsSubject: BehaviorSubject<FileUpload[]>;
   fileResultsSubject: BehaviorSubject<FileResult[]>;
   featureOrder: Map<string, number>;
 
   constructor(private httpClient: HttpClient) {
     this.fileUploads = [];
     this.fileResults = [];
+    this.fileUploadsSubject = new BehaviorSubject<FileUpload[]>(this.fileUploads);
     this.fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
     this.featureOrder = new Map<string, number>([
       ['relativePath', 1],
@@ -91,13 +94,39 @@ export class FileAnalysisService {
     });
   }
 
-  addFileResult(i: FileResult): void {
-    this.fileResults.push(i);
+  addFileResult(
+    fileName: string, 
+    relativePath: string, 
+    fileSize: number,
+    toolResults: ToolResults,
+  ): void {
+    const fileResult: FileResult = {
+      fileName: fileName,
+      relativePath: relativePath,
+      fileSize: fileSize,
+      toolResults: toolResults,
+    }
+    this.fileResults.push(fileResult);
     this.fileResultsSubject.next(this.fileResults);
   }
 
   getFileResults(): Observable<FileResult[]> {
     return this.fileResultsSubject.asObservable();
+  }
+
+  addFileUpload(fileName: string, relativePath: string, fileSize: number): FileUpload {
+    const fileUpload: FileUpload = {
+      fileName: fileName,
+      relativePath: relativePath,
+      fileSize: fileSize,
+    }
+    this.fileUploads.push(fileUpload)
+    this.fileUploadsSubject.next(this.fileUploads);
+    return fileUpload;
+  }
+
+  getFileUploads(): Observable<FileUpload[]> {
+    return this.fileUploadsSubject.asObservable();
   }
 
   getFeatureOrder(): Map<string, number> {

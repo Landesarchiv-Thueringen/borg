@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 // project
 import { FileResult, FileAnalysisService } from '../file-analysis.service';
+import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
 
 export interface FileOverview {
   [key: string]: string;
@@ -23,13 +24,15 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private fileAnalysisService: FileAnalysisService) {
+  constructor(
+    private fileAnalysisService: FileAnalysisService,
+    private fileSizePipe: FileSizePipe,
+  ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = ['fileName', 'relativePath', 'fileSize'];
     this.fileAnalysisService.getFileResults().subscribe({
       // error can't occure --> no error handling
       next: (fileInfos: FileResult[]) => {
-        console.log(fileInfos);
         this.processFileInformations(fileInfos);
       },
     });
@@ -50,7 +53,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
         fileOverview['relativePath'] = fileInfo.relativePath
           ? fileInfo.relativePath
           : '';
-        fileOverview['fileSize'] = fileInfo.size;
+        fileOverview['fileSize'] = this.fileSizePipe.transform(fileInfo.fileSize);
         fileOverview[featureKey] =
           fileInfo.toolResults.summary[featureKey].values[0].value;
       }

@@ -10,17 +10,11 @@ import { MatTableDataSource } from '@angular/material/table';
 // project
 import { 
   ToolResults, 
-  FileResult, 
+  FileResult,
+  FileUpload,
   FileAnalysisService,
 } from '../file-analysis/file-analysis.service';
 import { FileSizePipe } from '../utility/file-size/file-size.pipe';
-
-export interface FileUpload {
-  fileName: string;
-  relativePath: string;
-  fileSize: number;
-  uploadProgress?: number;
-}
 
 @Component({
   selector: 'app-file-upload-table',
@@ -40,11 +34,17 @@ export class FileUploadTableComponent implements AfterViewInit {
   ) {
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = [
-      'fileName',
       'relativePath',
+      'fileName',
       'fileSize',
       'uploadProgress',
     ];
+    this.fileAnalysisService.getFileUploads().subscribe({
+      // error can't occure --> no error handling
+      next: (fileUploads: FileUpload[]) => {
+        this.dataSource.data = fileUploads;
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -57,17 +57,16 @@ export class FileUploadTableComponent implements AfterViewInit {
     const files: FileList | null = input.files;
     if (files && files.length === 1) {
       const file = files[0];
-      console.log(file);
-      const fileUpload: FileUpload = {
-        fileName: file.name,
-        relativePath: 'Einzeldatei',
-        fileSize: file.size,
-      }
+      const fileUpload = this.fileAnalysisService.addFileUpload(
+        file.name, 
+        'Einzeldatei', 
+        file.size,
+      );
+
       const data = this.dataSource.data
       const fileDataIndex = data.length;
-      data.push(fileUpload)
-      this.uploadFile(file, fileDataIndex);
-      this.dataSource.data = data
+
+      this.uploadFile(file, fileUpload);
     }
   }
 
@@ -78,48 +77,45 @@ export class FileUploadTableComponent implements AfterViewInit {
       const data = this.dataSource.data
       for (let fileIndex = 0; fileIndex < files.length; ++fileIndex) {
         const file = files[fileIndex];
-        console.log(file);
-        const fileUpload: FileUpload = {
-          fileName: file.name,
-          // remove file name from path
-          relativePath: file.webkitRelativePath.replace(new RegExp(file.name + '$'), ''),
-          fileSize: file.size,
-        }
+        const fileUpload = this.fileAnalysisService.addFileUpload(
+          file.name, 
+          file.webkitRelativePath.replace(new RegExp(file.name + '$'), ''), 
+          file.size,
+        );
+
         const fileDataIndex = data.length;
-        data.push(fileUpload);
-        this.uploadFile(file, fileDataIndex);
+
+        this.uploadFile(file, fileUpload);
       }
-      this.dataSource.data = data
     }
   }
 
-  uploadFile(file: File, fileIndex: number): void {
+  uploadFile(file: File, fileUpload: FileUpload): void {
     this.fileAnalysisService.analyzeFile(file).subscribe({
       error: (error: any) => {
         console.error(error);
       },
       next: (httpEvent: HttpEvent<ToolResults>) => {
-        this.handleHttpEvent(httpEvent, fileIndex);
+        this.handleHttpEvent(httpEvent, fileUpload);
       }
     });
   }
 
-  private handleHttpEvent(event: HttpEvent<ToolResults>, fileIndex: number): void {
+  private handleHttpEvent(event: HttpEvent<ToolResults>, fileUpload: FileUpload): void {
     if (event.type === HttpEventType.UploadProgress) {
       if (event.total && event.total > 0.0) {
-        this.dataSource.data[fileIndex].uploadProgress = Math.round(
+        fileUpload.uploadProgress = Math.round(
           100 * (event.loaded / event.total)
         );
       }
     } else if(event.type === HttpEventType.Response) {
         if (event.body) {
-          const fileData: FileResult = {
-            fileName: this.dataSource.data[fileIndex].fileName,
-            relativePath: this.dataSource.data[fileIndex].relativePath,
-            size: this.fileSizePipe.transform(this.dataSource.data[fileIndex].fileSize),
-            toolResults: event.body,
-          }
-          this.fileAnalysisService.addFileResult(fileData);
+          this.fileAnalysisService.addFileResult(
+            fileUpload.fileName,
+            fileUpload.relativePath,
+            fileUpload.fileSize,
+            event.body,
+          );
         }
     }
   }

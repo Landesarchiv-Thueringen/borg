@@ -23,7 +23,7 @@ export class FileAttributePipe implements PipeTransform {
         return 'PUID';
       }
       case 'valid': {
-        return 'Validierung';
+        return 'Valide';
       }
       case 'wellFormed': {
         return 'Wohlgeformt';

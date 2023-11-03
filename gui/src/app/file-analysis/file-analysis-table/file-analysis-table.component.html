@@ -8,7 +8,7 @@
 
             <ng-container *ngFor="let tableColumn of tableColumnList" matColumnDef={{tableColumn}}>
                 <th mat-header-cell *matHeaderCellDef>{{tableColumn|fileAttribute}}</th>
-                <td mat-cell *matCellDef="let fileInfo">
+                <td mat-cell *matCellDef="let fileInfo" [ngClass]="{'name-cell': tableColumn === 'fileName', 'path-cell' : tableColumn === 'relativePath' }">
                     <mat-icon *ngIf="fileInfo[tableColumn] === 'true'">check</mat-icon>
                     <mat-icon *ngIf="fileInfo[tableColumn] === 'false'">cross</mat-icon>
                     <div *ngIf="fileInfo[tableColumn] !== 'false' && fileInfo[tableColumn] !== 'true'">{{fileInfo[tableColumn]}}</div>

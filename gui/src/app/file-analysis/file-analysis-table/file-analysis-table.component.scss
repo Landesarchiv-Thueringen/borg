@@ -17,6 +17,16 @@
 
       .table-content {
         overflow: scroll;
+
+        .path-cell {
+          max-width: 15.0em!important;
+          word-break: break-word;
+        }
+
+        .name-cell {
+          max-width: 15.0em!important;
+          word-break: break-word;
+        }
       }
 
       .table-toolbar {
