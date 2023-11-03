@@ -22,7 +22,6 @@ type ToolResponse struct {
 type TikaOutput struct {
 	MimeType    *string `json:"Content-Type"`
 	Encoding    *string `json:"Content-Encoding"`
-	Size        *string `json:"Content-Length"`
 	PDFVersion  *string `json:"pdf:PDFVersion"`
 	PDFAVersion *string `json:"pdfa:PDFVersion"`
 }
@@ -104,9 +103,6 @@ func processTikaOutput(context *gin.Context, output string) {
 	}
 	if parsedTikaOutput.Encoding != nil {
 		extractedFeatures["encoding"] = *parsedTikaOutput.Encoding
-	}
-	if parsedTikaOutput.Size != nil {
-		extractedFeatures["size"] = *parsedTikaOutput.Size
 	}
 	// use PDF/A version if existing
 	if parsedTikaOutput.PDFAVersion != nil {

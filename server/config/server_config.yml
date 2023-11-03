@@ -22,10 +22,6 @@ formatIdentificationTools:
         confidence:
           defaultValue: 1.0
       -
-        key: "size"
-        confidence:
-          defaultValue: 1.0
-      -
         key: "formatVersion"
         confidence:
           defaultValue: 1.0
