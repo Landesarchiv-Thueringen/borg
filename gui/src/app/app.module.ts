@@ -18,6 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip'; 
 
 // project
 import { AppRoutingModule } from './app-routing.module';
@@ -50,6 +51,7 @@ import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/
     MatSortModule,
     MatTableModule,
     MatToolbarModule,
+    MatTooltipModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'de' },

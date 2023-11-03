@@ -8,7 +8,6 @@ import { environment } from '../../environments/environment';
 
 // utility
 import { BehaviorSubject } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface FileUpload {
   fileName: string;

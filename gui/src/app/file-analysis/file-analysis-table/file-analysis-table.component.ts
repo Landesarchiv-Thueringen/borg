@@ -6,11 +6,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import { FileResult, FileAnalysisService } from '../file-analysis.service';
+import { FileResult, FileAnalysisService, Feature } from '../file-analysis.service';
 import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
 
 export interface FileOverview {
-  [key: string]: string;
+  [key: string]: FileAttribute;
+}
+
+export interface FileAttribute {
+  value: string;
+  feature?: Feature;
+  tooltip?: string;
 }
 
 @Component({
@@ -49,13 +55,17 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       let fileOverview: FileOverview = {};
       for (let featureKey in fileInfo.toolResults.summary) {
         featureKeys.push(featureKey);
-        fileOverview['fileName'] = fileInfo.fileName;
+        fileOverview['fileName'] = { value: fileInfo.fileName };
         fileOverview['relativePath'] = fileInfo.relativePath
-          ? fileInfo.relativePath
-          : '';
-        fileOverview['fileSize'] = this.fileSizePipe.transform(fileInfo.fileSize);
+          ? { value: fileInfo.relativePath }
+          : { value: '' };
+        fileOverview['fileSize'] = { value: this.fileSizePipe.transform(fileInfo.fileSize) };
         fileOverview[featureKey] =
-          fileInfo.toolResults.summary[featureKey].values[0].value;
+        { 
+          value: fileInfo.toolResults.summary[featureKey].values[0].value,
+          feature: fileInfo.toolResults.summary[featureKey],
+          tooltip: this.getFeatureTooltip(fileInfo.toolResults.summary[featureKey]),
+        };
       }
       data.push(fileOverview);
     }
@@ -82,5 +92,16 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       }
       return 0
     });
+  }
+
+  getFeatureTooltip(feature: Feature): string {
+    let tooltip = '';
+    for (let featureValue of feature.values) {
+      for (let tool of featureValue.tools) {
+        tooltip += ' ' + tool.toolName + '(' + tool.confidence + ')'
+      }
+      tooltip += ': ' + featureValue.value + '\n\n'
+    }
+    return tooltip;
   }
 }
