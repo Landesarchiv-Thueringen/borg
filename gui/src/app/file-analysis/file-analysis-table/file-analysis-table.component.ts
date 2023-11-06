@@ -12,6 +12,7 @@ import {
   Feature,
 } from '../file-analysis.service';
 import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
+import { NotificationService } from 'src/app/utility/notification/notification.service';
 
 export interface FileOverview {
   [key: string]: FileFeature;
@@ -36,7 +37,8 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   constructor(
     private fileAnalysisService: FileAnalysisService,
-    private fileSizePipe: FileSizePipe
+    private fileSizePipe: FileSizePipe,
+    private notificationService: NotificationService,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = ['fileName', 'relativePath', 'fileSize'];
@@ -75,6 +77,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
         };
       }
       data.push(fileOverview);
+      // TODO: check performance issues with many notifications
+      this.notificationService.show('Formaterkennung, -validierung abgeschlossen: ' 
+        + fileInfo.fileName);
     }
     this.dataSource.data = data;
     const features = [...new Set(featureKeys)];

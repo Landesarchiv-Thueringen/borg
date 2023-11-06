@@ -15,6 +15,7 @@ import {
   MatPaginatorIntl,
 } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar'; 
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -48,6 +49,7 @@ import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/
     MatIconModule,
     MatPaginatorModule,
     MatProgressBarModule,
+    MatSnackBarModule,
     MatSortModule,
     MatTableModule,
     MatToolbarModule,
