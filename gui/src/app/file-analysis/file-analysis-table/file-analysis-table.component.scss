@@ -27,6 +27,11 @@
           max-width: 15.0em!important;
           word-break: break-word;
         }
+
+        .mime-type-cell {
+          max-width: 10.0em!important;
+          word-break: break-word;
+        }
       }
 
       .table-toolbar {
@@ -50,7 +55,5 @@
 }
 
 ::ng-deep .attribute-tooltip {
-  background-color: aquamarine !important;
   white-space: pre-wrap;
-  font-weight: 700;
 }

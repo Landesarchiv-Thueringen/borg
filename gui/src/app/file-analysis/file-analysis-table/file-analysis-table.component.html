@@ -12,7 +12,7 @@
             *matCellDef="let fileInfo"
             [matTooltip]="fileInfo[tableColumn] ? fileInfo[tableColumn].tooltip : null"
             matTooltipClass='attribute-tooltip'
-            [ngClass]="{'name-cell': tableColumn === 'fileName', 'path-cell' : tableColumn === 'relativePath' }">
+            [ngClass]="{'name-cell': tableColumn === 'fileName', 'path-cell' : tableColumn === 'relativePath', 'mime-type-cell' : tableColumn === 'mimeType'}">
             <mat-icon *ngIf="fileInfo[tableColumn] && fileInfo[tableColumn].value === 'true'">check</mat-icon>
             <mat-icon *ngIf="fileInfo[tableColumn] && fileInfo[tableColumn].value === 'false'">close</mat-icon>
             <div *ngIf="fileInfo[tableColumn] && fileInfo[tableColumn].value !== 'false' && fileInfo[tableColumn].value !== 'true'">

@@ -118,7 +118,9 @@ func processJhoveOutput(context *gin.Context, output string) {
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
 		repInfo := parsedJhoveOutput.Root.RepInfo[0]
 		if repInfo.FormatVersion != nil {
-			if repInfo.FormatName != nil {
+			// if format name was extracted and version doesn't contain it already
+			if repInfo.FormatName != nil &&
+				!strings.Contains(*repInfo.FormatVersion, *repInfo.FormatName) {
 				extractedFeatures["formatVersion"] = *repInfo.FormatName + " " + *repInfo.FormatVersion
 			} else {
 				extractedFeatures["formatVersion"] = *repInfo.FormatVersion

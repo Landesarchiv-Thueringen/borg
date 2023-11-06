@@ -35,6 +35,9 @@ formatValidationTools:
       -
         feature: "mimeType"
         regEx: "pdf"
+      -
+        feature: "puid"
+        regEx: "fmt/18" # PDF 1.4
     features:
       -
         key: "wellFormed"
@@ -63,4 +66,106 @@ formatValidationTools:
               globalFeature: formatVersion
               regEx: "PDF/A"
               value: 0.5
-
+  -
+    toolName: "JHOVE - HTML"
+    toolVersion: "1.28.0"
+    endpoint: "http://jhove-api:3000/validate/html"
+    trigger:
+      -
+        feature: "mimeType"
+        regEx: "html"
+      -
+        feature: "puid"
+        regEx: "fmt/98" # HTML 3.2
+      -
+        feature: "puid"
+        regEx: "fmt/99" # HTML 4.0
+      -
+        feature: "puid"
+        regEx: "fmt/100" # HTML 4.01
+      # 06.11.2023: JHOVE HTML-Hul doesn"t support HTML 5
+    features:
+      -
+        key: "wellFormed"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "valid"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "formatVersion"
+        confidence:
+          defaultValue: 0.8
+  -
+    toolName: "JHOVE - TIFF"
+    toolVersion: "1.28.0"
+    endpoint: "http://jhove-api:3000/validate/tiff"
+    trigger:
+      -
+        feature: "mimeType"
+        regEx: "tiff"
+      -
+        feature: "puid"
+        regEx: "fmt/153" # TIFF
+    features:
+      -
+        key: "wellFormed"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "valid"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "formatVersion"
+        confidence:
+          defaultValue: 0.8
+  -
+    toolName: "JHOVE - JPEG"
+    toolVersion: "1.28.0"
+    endpoint: "http://jhove-api:3000/validate/jpeg"
+    trigger:
+      -
+        feature: "mimeType"
+        regEx: "jpeg"
+      -
+        feature: "puid"
+        regEx: "fmt/43" # JPEG
+    features:
+      -
+        key: "wellFormed"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "valid"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "formatVersion"
+        confidence:
+          defaultValue: 0.8
+  -
+    toolName: "JHOVE - JPEG2000"
+    toolVersion: "1.28.0"
+    endpoint: "http://jhove-api:3000/validate/jpeg2000"
+    trigger:
+      -
+        feature: "mimeType"
+        regEx: "jp2"
+      -
+        feature: "puid"
+        regEx: "x-fmt/392" # JP2 (JPEG 2000 part 1)
+    features:
+      -
+        key: "wellFormed"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "valid"
+        confidence:
+          defaultValue: 1.0
+      -
+        key: "formatVersion"
+        confidence:
+          defaultValue: 0.8
