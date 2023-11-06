@@ -10,11 +10,11 @@ import { MatTableDataSource } from '@angular/material/table';
 // project
 import { 
   ToolResults, 
-  FileResult,
   FileUpload,
   FileAnalysisService,
 } from '../file-analysis/file-analysis.service';
 import { FileSizePipe } from '../utility/file-size/file-size.pipe';
+import { NotificationService } from 'src/app/utility/notification/notification.service';
 
 @Component({
   selector: 'app-file-upload-table',
@@ -30,7 +30,8 @@ export class FileUploadTableComponent implements AfterViewInit {
 
   constructor(
     private fileAnalysisService: FileAnalysisService,
-    private fileSizePipe: FileSizePipe,  
+    private fileSizePipe: FileSizePipe,
+    private notificationService: NotificationService,
   ) {
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = [
@@ -116,6 +117,8 @@ export class FileUploadTableComponent implements AfterViewInit {
             fileUpload.fileSize,
             event.body,
           );
+          this.notificationService.show('Formaterkennung, -validierung abgeschlossen: ' 
+            + fileUpload.fileName);
         }
     }
   }
