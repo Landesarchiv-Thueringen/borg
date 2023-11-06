@@ -272,7 +272,7 @@ func summarizeToolResults(
 	summary := make(map[string]Feature)
 	// for every tool response
 	for _, tool := range tools {
-		// if no extracted attributes exist for tool
+		// if no extracted features exist for tool
 		if tool.ExtractedFeatures == nil {
 			// continue with next tool
 			continue
@@ -392,12 +392,12 @@ func calculateFeatureValueScore(features *map[string]Feature) {
 			}
 		}
 		for valueIndex, featureValue := range feauture.Values {
-			// if only one tool has extracted the attribute
+			// if only one tool has extracted the feature
 			if totalValueConfidence[featureValue.Value] == totalFeatureConfidence {
 				// total confidence is equal to tool confidence
 				(*features)[featureKey].Values[valueIndex].Score = totalValueConfidence[featureValue.Value]
 			} else {
-				// if multiple tools have extracted the attributed, calculate the ratio
+				// if multiple tools have extracted the feature, calculate the ratio
 				(*features)[featureKey].Values[valueIndex].Score =
 					totalValueConfidence[featureValue.Value] / totalFeatureConfidence
 			}

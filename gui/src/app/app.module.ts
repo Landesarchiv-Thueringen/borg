@@ -24,7 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
-import { FileAttributePipe } from './utility/localization/file-attribut-de.pipe';
+import { FileFeaturePipe } from './utility/localization/file-attribut-de.pipe';
 import { FileSizePipe } from './utility/file-size/file-size.pipe';
 import { FileUploadTableComponent } from './file-upload-table/file-upload-table.component';
 import { PaginatorDeService } from './utility/localization/paginator-de.service';
@@ -34,7 +34,7 @@ import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/
   declarations: [
     AppComponent,
     MainNavigationComponent,
-    FileAttributePipe,
+    FileFeaturePipe,
     FileSizePipe,
     FileUploadTableComponent,
     FileAnalysisTableComponent,

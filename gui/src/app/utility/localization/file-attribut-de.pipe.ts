@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'fileAttribute'})
-export class FileAttributePipe implements PipeTransform {
+@Pipe({name: 'fileFeature'})
+export class FileFeaturePipe implements PipeTransform {
   transform(value: string): string {
     switch (value) {
       case 'fileName': {

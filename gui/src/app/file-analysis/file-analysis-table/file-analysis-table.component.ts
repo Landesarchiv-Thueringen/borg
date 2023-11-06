@@ -14,10 +14,10 @@ import {
 import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
 
 export interface FileOverview {
-  [key: string]: FileAttribute;
+  [key: string]: FileFeature;
 }
 
-export interface FileAttribute {
+export interface FileFeature {
   value: string;
   feature?: Feature;
   tooltip?: string;
