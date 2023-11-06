@@ -272,6 +272,11 @@ func summarizeToolResults(
 	summary := make(map[string]Feature)
 	// for every tool response
 	for _, tool := range tools {
+		// if no extracted attributes exist for tool
+		if tool.ExtractedFeatures == nil {
+			// continue with next tool
+			continue
+		}
 		// for every extracted feature
 		for featureKey, featureValue := range *tool.ExtractedFeatures {
 			f, ok := summary[featureKey]
