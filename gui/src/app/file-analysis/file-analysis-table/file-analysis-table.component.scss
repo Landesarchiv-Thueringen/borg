@@ -48,3 +48,9 @@
     }
   }
 }
+
+::ng-deep .attribute-tooltip {
+  background-color: aquamarine !important;
+  white-space: pre-wrap;
+  font-weight: 700;
+}

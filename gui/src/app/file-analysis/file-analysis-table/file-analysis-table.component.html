@@ -12,7 +12,6 @@
                     *matCellDef="let fileInfo"
                     [matTooltip]="fileInfo[tableColumn].tooltip"
                     matTooltipClass='attribute-tooltip'
-                    matTooltipPosition="left"
                     [ngClass]="{'name-cell': tableColumn === 'fileName', 'path-cell' : tableColumn === 'relativePath' }">
                     <mat-icon *ngIf="fileInfo[tableColumn].value === 'true'">check</mat-icon>
                     <mat-icon *ngIf="fileInfo[tableColumn].value === 'false'">cross</mat-icon>
