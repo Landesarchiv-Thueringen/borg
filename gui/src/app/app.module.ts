@@ -2,6 +2,7 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DecimalPipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
@@ -19,7 +20,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip'; 
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // project
 import { AppRoutingModule } from './app-routing.module';
@@ -58,6 +59,7 @@ import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/
   providers: [
     { provide: LOCALE_ID, useValue: 'de' },
     { provide: MatPaginatorIntl, useClass: PaginatorDeService },
+    DecimalPipe,
     FileSizePipe,
   ],
   bootstrap: [AppComponent],
