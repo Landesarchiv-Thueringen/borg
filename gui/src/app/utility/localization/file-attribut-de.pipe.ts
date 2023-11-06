@@ -29,7 +29,7 @@ export class FileFeaturePipe implements PipeTransform {
         return 'Wohlgeformt';
       }
       case 'encoding': {
-        return 'Kodierung';
+        return 'Zeichenkodierung';
       }
     }
     return value;
