@@ -64,5 +64,21 @@ services:
     ports:
       - ${JHOVE_API_HOST_PORT}:${JHOVE_API_CONTAINER_PORT}
 
+  verapdf-api:
+    container_name: verapdf-api
+    restart: unless-stopped
+    build:
+      context: ./tools/verapdf
+      dockerfile: dockerfile_verapdf
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "filestore:/borg/filestore"
+    environment:
+      - VERAPDF_API_CONTAINER_PORT=${VERAPDF_API_CONTAINER_PORT}
+    ports:
+      - ${VERAPDF_API_HOST_PORT}:${VERAPDF_API_CONTAINER_PORT}
+
 volumes:
   filestore:

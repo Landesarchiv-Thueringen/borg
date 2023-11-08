@@ -16,15 +16,15 @@ formatIdentificationTools:
       -
         key: "mimeType"
         confidence:
-          defaultValue: 1.0
+          defaultValue: 0.9
       -
         key: "encoding"
         confidence:
-          defaultValue: 1.0
+          defaultValue: 0.9
       -
         key: "formatVersion"
         confidence:
-          defaultValue: 1.0
+          defaultValue: 0.9
 
 formatValidationTools:
   -
@@ -169,3 +169,33 @@ formatValidationTools:
         key: "formatVersion"
         confidence:
           defaultValue: 0.8
+  -
+    toolName: "veraPDF - PDF/A-2b"
+    toolVersion: "1.24.1"
+    endpoint: "http://verapdf-api:3000/validate/2b"
+    trigger:
+      -
+        feature: "formatVersion"
+        regEx: "PDF/A-2b"
+      -
+        feature: "puid"
+        regEx: "fmt/477" # PDF/A-2b
+    features:
+      -
+        key: "valid"
+        confidence:
+          defaultValue: 1.0
+  -
+    toolName: "veraPDF - PDF/UA"
+    toolVersion: "1.24.1"
+    endpoint: "http://verapdf-api:3000/validate/ua1"
+    trigger:
+      -
+        # PDF/UA has no entry in the PRONOM database
+        feature: "mimeType"
+        regEx: "pdf"
+    features:
+      -
+        key: "valid"
+        confidence:
+          defaultValue: 1.0
