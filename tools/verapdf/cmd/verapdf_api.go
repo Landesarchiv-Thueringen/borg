@@ -118,6 +118,8 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 		OutputFormat:      "json",
 		ExtractedFeatures: extractedFeatures,
 	}
+	log.Println(veraPDFOutput.Report.Jobs != nil)
+	log.Println(len(veraPDFOutput.Report.Jobs))
 	if veraPDFOutput.Report.Jobs != nil && len(veraPDFOutput.Report.Jobs) > 0 {
 		extractedFeatures["valid"] = strconv.FormatBool(
 			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant,

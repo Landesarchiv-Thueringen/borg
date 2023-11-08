@@ -78,7 +78,15 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     }
     this.dataSource.data = data;
     const features = [...new Set(featureKeys)];
-    this.tableColumnList = this.sortFeatures(features);
+    const selectedFeatures = this.selectFeatures(features);
+    this.tableColumnList = this.sortFeatures(selectedFeatures);
+  }
+
+  selectFeatures(features: string[]): string[] {
+    const overviewFeatures: string[] = this.fileAnalysisService.getOverviewFeatures();
+    return features.filter((feature: string) => {
+      return overviewFeatures.includes(feature);
+    });
   }
 
   sortFeatures(features: string[]): string[] {

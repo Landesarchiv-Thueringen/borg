@@ -28,7 +28,7 @@ formatIdentificationTools:
 
 formatValidationTools:
   -
-    toolName: "JHOVE-Modul: PDF"
+    toolName: "JHOVE-PDF-Modul"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/pdf"
     trigger:
@@ -85,7 +85,7 @@ formatValidationTools:
               regEx: "PDF/A"
               value: 0.5
   -
-    toolName: "JHOVE-Modul: HTML"
+    toolName: "JHOVE-HTML-Modul"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/html"
     trigger:
@@ -116,7 +116,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "JHOVE-Modul: TIFF"
+    toolName: "JHOVE-TIFF-Modul"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/tiff"
     trigger:
@@ -140,7 +140,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "JHOVE-Modul: JPEG"
+    toolName: "JHOVE-JPEG-Modul"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/jpeg"
     trigger:
@@ -164,7 +164,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "JHOVE-Modul: JPEG2000"
+    toolName: "JHOVE-JPEG2000-Modul"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/jpeg2000"
     trigger:
@@ -188,7 +188,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "veraPDF-Profil: PDF/A-1a"
+    toolName: "veraPDF-PDF/A-1a-Profil"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/1a"
     trigger:
@@ -204,7 +204,7 @@ formatValidationTools:
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-Profil: PDF/A-1b"
+    toolName: "veraPDF-PDF/A-1b-Profil"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/1b"
     trigger:
@@ -220,7 +220,7 @@ formatValidationTools:
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-Profil: PDF/A-2a"
+    toolName: "veraPDF-PDF/A-2a-Profil"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/2a"
     trigger:
@@ -236,7 +236,7 @@ formatValidationTools:
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-Profil: PDF/A-2b"
+    toolName: "veraPDF-PDF/A-2b-Profil"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/2b"
     trigger:
@@ -252,7 +252,7 @@ formatValidationTools:
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-Profil: PDF/A-2u"
+    toolName: "veraPDF-PDF/A-2u-Profil"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/2u"
     trigger:
@@ -268,7 +268,7 @@ formatValidationTools:
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-Profil: PDF/UA"
+    toolName: "veraPDF-PDF/UA-Profil"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/ua1"
     trigger:

@@ -64,12 +64,22 @@ export class FileAnalysisService {
   fileUploadsSubject: BehaviorSubject<FileUpload[]>;
   fileResultsSubject: BehaviorSubject<FileResult[]>;
   featureOrder: Map<string, number>;
+  overviewFeatures: string[];
 
   constructor(private httpClient: HttpClient) {
     this.fileUploads = [];
     this.fileResults = [];
     this.fileUploadsSubject = new BehaviorSubject<FileUpload[]>(this.fileUploads);
     this.fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
+    this.overviewFeatures = [
+      'relativePath',
+      'fileName',
+      'fileSize',
+      'puid',
+      'mimeType',
+      'formatVersion',
+      'valid',
+    ];
     this.featureOrder = new Map<string, number>([
       ['relativePath', 1],
       ['fileName', 2],
@@ -130,5 +140,9 @@ export class FileAnalysisService {
 
   getFeatureOrder(): Map<string, number> {
     return this.featureOrder;
+  }
+
+  getOverviewFeatures(): string[] {
+    return this.overviewFeatures;
   }
 }
