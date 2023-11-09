@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -15,9 +16,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        string
-	OutputFormat      string
-	ExtractedFeatures map[string]string
+	ToolOutput        *string
+	OutputFormat      *string
+	ExtractedFeatures *map[string]string
+	Error             *string
 }
 
 type VeraPDFOutput struct {
@@ -40,6 +42,7 @@ type ValidationResult struct {
 var defaultResponse = "veraPDF API is running"
 var workDir = "/borg/tools/verapdf"
 var storeDir = "/borg/filestore"
+var outputFormat = "json"
 
 func main() {
 	router := gin.Default()
@@ -66,18 +69,21 @@ func validateFile(context *gin.Context) {
 	if profile == "" {
 		errorMessage := "no veraPDF profile declared"
 		log.Println(errorMessage)
-		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": errorMessage,
-		})
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
-		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "error processing file: " + fileStorePath,
-		})
+		log.Println(err.Error())
+		errorMessage := "error processing file: " + fileStorePath
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	cmd := exec.Command(
@@ -90,12 +96,18 @@ func validateFile(context *gin.Context) {
 		"-v",
 		fileStorePath,
 	)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
 	veraPDFOutput, err := cmd.Output()
-	// exit status 1: file for profile invalid but validation job succesfull XD
+	// exit status 1: file for profile invalid but validation job succesfull
 	if err != nil && err.Error() != "exit status 1" {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "error executing veraPDF command",
-		})
+		log.Println(err.Error())
+		log.Println(stderr.String())
+		errorMessage := "error executint verPDF\n" + stderr.String()
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	veraPDFOutputString := string(veraPDFOutput)
@@ -106,20 +118,22 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 	var veraPDFOutput VeraPDFOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&veraPDFOutput)
 	if err != nil {
-		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "unable parse veraPDF output",
-		})
+		log.Println(err.Error())
+		errorMessage := "unable parse veraPDF output"
+		response := ToolResponse{
+			ToolOutput:   &output,
+			OutputFormat: &outputFormat,
+			Error:        &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        output,
-		OutputFormat:      "json",
-		ExtractedFeatures: extractedFeatures,
+		ToolOutput:        &output,
+		OutputFormat:      &outputFormat,
+		ExtractedFeatures: &extractedFeatures,
 	}
-	log.Println(veraPDFOutput.Report.Jobs != nil)
-	log.Println(len(veraPDFOutput.Report.Jobs))
 	if veraPDFOutput.Report.Jobs != nil && len(veraPDFOutput.Report.Jobs) > 0 {
 		extractedFeatures["valid"] = strconv.FormatBool(
 			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant,
