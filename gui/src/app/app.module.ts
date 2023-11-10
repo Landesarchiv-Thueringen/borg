@@ -66,6 +66,7 @@ import { FileOverviewComponent } from './file-overview/file-overview.component';
     { provide: LOCALE_ID, useValue: 'de' },
     { provide: MatPaginatorIntl, useClass: PaginatorDeService },
     DecimalPipe,
+    FileFeaturePipe,
     FileSizePipe,
   ],
   bootstrap: [AppComponent],
