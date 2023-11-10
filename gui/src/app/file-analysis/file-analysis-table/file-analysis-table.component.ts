@@ -2,6 +2,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 
 // material
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -12,6 +13,7 @@ import {
   Feature,
 } from '../file-analysis.service';
 import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
+import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
 
 export interface FileOverview {
   [key: string]: FileFeature;
@@ -30,16 +32,19 @@ export interface FileFeature {
 })
 export class FileAnalysisTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileOverview>;
+  generatedTableColumnList: string[];
   tableColumnList: string[];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
+    private dialog: MatDialog,
     private fileAnalysisService: FileAnalysisService,
     private fileSizePipe: FileSizePipe,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
-    this.tableColumnList = ['fileName', 'relativePath', 'fileSize'];
+    this.tableColumnList = [];
+    this.generatedTableColumnList = ['fileName', 'relativePath', 'fileSize'];
     this.fileAnalysisService.getFileResults().subscribe({
       // error can't occure --> no error handling
       next: (fileInfos: FileResult[]) => {
@@ -79,7 +84,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this.dataSource.data = data;
     const features = [...new Set(featureKeys)];
     const selectedFeatures = this.selectFeatures(features);
-    this.tableColumnList = this.sortFeatures(selectedFeatures);
+    const sortedFeatures = this.sortFeatures(selectedFeatures);
+    this.generatedTableColumnList = sortedFeatures;
+    this.tableColumnList = sortedFeatures.concat(['actions']);
   }
 
   selectFeatures(features: string[]): string[] {
@@ -121,5 +128,13 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       tooltip += '\n';
     }
     return tooltip;
+  }
+
+  openDetails(fileOverview: FileOverview): void {
+    this.dialog.open(FileOverviewComponent, {
+      data: {
+        fileOverview: fileOverview
+      }
+    });
   }
 }

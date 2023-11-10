@@ -10,7 +10,9 @@ registerLocaleData(localeDe);
 
 // material
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog'; 
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu'; 
 import {
   MatPaginatorModule,
   MatPaginatorIntl,
@@ -31,6 +33,7 @@ import { FileSizePipe } from './utility/file-size/file-size.pipe';
 import { FileUploadTableComponent } from './file-upload-table/file-upload-table.component';
 import { PaginatorDeService } from './utility/localization/paginator-de.service';
 import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
+import { FileOverviewComponent } from './file-overview/file-overview.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,7 @@ import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/
     FileSizePipe,
     FileUploadTableComponent,
     FileAnalysisTableComponent,
+    FileOverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,9 @@ import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/
     BrowserAnimationsModule,
     HttpClientModule,
     MatButtonModule,
+    MatDialogModule,
     MatIconModule,
+    MatMenuModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatSnackBarModule,
