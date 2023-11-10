@@ -5,10 +5,10 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 // project
-import { FileOverview } from '../file-analysis/file-analysis-table/file-analysis-table.component';
+import { FileResult } from '../file-analysis/file-analysis.service';
 
 export interface DialogData {
-  fileOverview: FileOverview;
+  fileResult: FileResult;
 }
 
 @Component({
@@ -17,8 +17,9 @@ export interface DialogData {
   styleUrls: ['./file-overview.component.scss']
 })
 export class FileOverviewComponent {
-  readonly fileOverview: FileOverview;
+  readonly fileResult: FileResult;
   constructor(@Inject(MAT_DIALOG_DATA) private data: DialogData) {
-    this.fileOverview = data.fileOverview;
+    this.fileResult = data.fileResult;
+    console.log(this.fileResult);
   }
 }

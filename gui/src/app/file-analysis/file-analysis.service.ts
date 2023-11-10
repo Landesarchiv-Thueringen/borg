@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 
 // utility
 import { BehaviorSubject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface FileUpload {
   fileName: string;
@@ -17,6 +18,7 @@ export interface FileUpload {
 }
 
 export interface FileResult {
+  id: string;
   fileName: string;
   relativePath?: string;
   fileSize: number;
@@ -110,6 +112,7 @@ export class FileAnalysisService {
     toolResults: ToolResults,
   ): void {
     const fileResult: FileResult = {
+      id: uuidv4(),
       fileName: fileName,
       relativePath: relativePath,
       fileSize: fileSize,
@@ -117,6 +120,12 @@ export class FileAnalysisService {
     }
     this.fileResults.push(fileResult);
     this.fileResultsSubject.next(this.fileResults);
+  }
+
+  getFileResult(id: string): FileResult|undefined {
+    return this.fileResults.find((fileResult: FileResult) => {
+      return fileResult.id === id;
+    });
   }
 
   getFileResults(): Observable<FileResult[]> {

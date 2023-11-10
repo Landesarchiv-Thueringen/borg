@@ -79,6 +79,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           ),
         };
       }
+      fileOverview['id'] = { value: fileInfo.id };
       data.push(fileOverview);
     }
     this.dataSource.data = data;
@@ -131,10 +132,16 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   }
 
   openDetails(fileOverview: FileOverview): void {
-    this.dialog.open(FileOverviewComponent, {
-      data: {
-        fileOverview: fileOverview
-      }
-    });
+    const id = fileOverview['id']?.value;
+    const fileResult =  this.fileAnalysisService.getFileResult(id);
+    if (fileResult) {
+      this.dialog.open(FileOverviewComponent, {
+        data: {
+          fileResult: fileResult
+        }
+      });
+    } else {
+      console.error('file result not found');
+    }
   }
 }
