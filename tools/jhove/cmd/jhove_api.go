@@ -16,9 +16,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        string
-	OutputFormat      string
-	ExtractedFeatures map[string]string
+	ToolOutput        *string
+	OutputFormat      *string
+	ExtractedFeatures *map[string]string
+	Error             *string
 }
 
 type JhoveOutput struct {
@@ -39,6 +40,7 @@ var defaultResponse = "JHOVE API is running"
 var storeDir = "/borg/filestore"
 var wellFormedRegEx = regexp.MustCompile("Well-Formed")
 var validRegEx = regexp.MustCompile("Well-Formed and valid")
+var outputFormat = "json"
 
 func main() {
 	router := gin.Default()
@@ -65,18 +67,22 @@ func validateFile(context *gin.Context) {
 	if module == "" {
 		errorMessage := "no JHOVE module declared"
 		log.Println(errorMessage)
-		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": errorMessage,
-		})
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
+		errorMessage := "error processing file: " + fileStorePath
+		log.Println(errorMessage)
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "error processing file: " + fileStorePath,
-		})
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	cmd := exec.Command(
@@ -84,15 +90,18 @@ func validateFile(context *gin.Context) {
 		"-m",
 		module+"-hul",
 		"-h",
-		"json",
+		outputFormat,
 		fileStorePath,
 	)
 	jhoveOutput, err := cmd.Output()
 	if err != nil {
+		errorMessage := "error executing JHOVE command"
+		log.Println(errorMessage)
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "error executing JHOVE command",
-		})
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	jhoveOutputString := string(jhoveOutput)
@@ -103,17 +112,22 @@ func processJhoveOutput(context *gin.Context, output string) {
 	var parsedJhoveOutput JhoveOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedJhoveOutput)
 	if err != nil {
+		errorMessage := "unable parse JHOVE output"
+		log.Println(errorMessage)
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "unable parse JHOVE output",
-		})
+		response := ToolResponse{
+			ToolOutput:   &output,
+			OutputFormat: &outputFormat,
+			Error:        &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        output,
-		OutputFormat:      "json",
-		ExtractedFeatures: extractedFeatures,
+		ToolOutput:        &output,
+		OutputFormat:      &outputFormat,
+		ExtractedFeatures: &extractedFeatures,
 	}
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
 		repInfo := parsedJhoveOutput.Root.RepInfo[0]

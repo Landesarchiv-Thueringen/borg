@@ -78,8 +78,9 @@ func validateFile(context *gin.Context) {
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
-		log.Println(err.Error())
 		errorMessage := "error processing file: " + fileStorePath
+		log.Println(errorMessage)
+		log.Println(err.Error())
 		response := ToolResponse{
 			Error: &errorMessage,
 		}
@@ -92,7 +93,7 @@ func validateFile(context *gin.Context) {
 		"-f",
 		profile,
 		"--format",
-		"json",
+		outputFormat,
 		"-v",
 		fileStorePath,
 	)
@@ -118,8 +119,9 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 	var veraPDFOutput VeraPDFOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&veraPDFOutput)
 	if err != nil {
-		log.Println(err.Error())
 		errorMessage := "unable parse veraPDF output"
+		log.Println(errorMessage)
+		log.Println(err.Error())
 		response := ToolResponse{
 			ToolOutput:   &output,
 			OutputFormat: &outputFormat,

@@ -14,9 +14,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        string
-	OutputFormat      string
-	ExtractedFeatures map[string]string
+	ToolOutput        *string
+	OutputFormat      *string
+	ExtractedFeatures *map[string]string
+	Error             *string
 }
 
 type TikaOutput struct {
@@ -29,6 +30,7 @@ type TikaOutput struct {
 var defaultResponse = "Tika API is running"
 var workDir = "/borg/tools/tika"
 var storeDir = "/borg/filestore"
+var outputFormat = "json"
 
 func main() {
 	router := gin.Default()
@@ -54,10 +56,13 @@ func extractMetadata(context *gin.Context) {
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
+		errorMessage := "error processing file: " + fileStorePath
+		log.Println(errorMessage)
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "error processing file: " + fileStorePath,
-		})
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	cmd := exec.Command(
@@ -65,15 +70,18 @@ func extractMetadata(context *gin.Context) {
 		"-jar",
 		filepath.Join(workDir, "bin/tika-app-2.9.0.jar"),
 		"--metadata",
-		"--json",
+		"--"+outputFormat,
 		fileStorePath,
 	)
 	tikaOutput, err := cmd.Output()
 	if err != nil {
+		errorMessage := "error executing Tika command"
+		log.Println(errorMessage)
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "error executing Tika command",
-		})
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	tikaOutputString := string(tikaOutput)
@@ -84,17 +92,22 @@ func processTikaOutput(context *gin.Context, output string) {
 	var parsedTikaOutput TikaOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedTikaOutput)
 	if err != nil {
+		errorMessage := "unable parse Tika output"
+		log.Println(errorMessage)
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "unable parse Tika output",
-		})
+		response := ToolResponse{
+			ToolOutput:   &output,
+			OutputFormat: &outputFormat,
+			Error:        &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        output,
-		OutputFormat:      "json",
-		ExtractedFeatures: extractedFeatures,
+		ToolOutput:        &output,
+		OutputFormat:      &outputFormat,
+		ExtractedFeatures: &extractedFeatures,
 	}
 	if parsedTikaOutput.MimeType != nil {
 		// removes charset from MIME-Type if existing, example: text/x-yaml; charset=ISO-8859-1

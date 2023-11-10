@@ -5,6 +5,7 @@ import (
 	"lath/borg/internal/config"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -29,10 +30,6 @@ type ToolResponse struct {
 	OutputFormat      *string                `json:"outputFormat"`
 	ExtractedFeatures *map[string]string     `json:"extractedFeatures"`
 	Error             *string                `json:"error"`
-}
-
-type ErrorResponse struct {
-	Message string `json:"message"`
 }
 
 type ToolConfidence struct {
@@ -237,29 +234,29 @@ func getToolResponse(
 }
 
 func processToolResponse(response *http.Response, toolResponse *ToolResponse) {
-	// identification tool request was successful
+	// tool request was successful
 	if response.StatusCode == http.StatusOK {
 		var parsedResponse ToolResponse
 		err := json.NewDecoder(response.Body).Decode(&parsedResponse)
 		if err != nil {
-			log.Println(err)
 			errorMessage := "error parsing tool response"
+			log.Println(errorMessage)
+			log.Println(err)
 			toolResponse.Error = &errorMessage
 		} else {
 			toolResponse.ToolOutput = parsedResponse.ToolOutput
 			toolResponse.OutputFormat = parsedResponse.OutputFormat
 			toolResponse.ExtractedFeatures = parsedResponse.ExtractedFeatures
+			toolResponse.Error = parsedResponse.Error
 		}
 	} else {
-		// error occurred during file identification
-		var errorResponse ErrorResponse
-		err := json.NewDecoder(response.Body).Decode(&errorResponse)
-		if err != nil {
-			log.Println(err)
-			errorMessage := "error parsing tool error response"
-			toolResponse.Error = &errorMessage
-		} else {
-			toolResponse.Error = &errorResponse.Message
+		// tool request was not successful
+		errorMessage := "tool request error"
+		toolResponse.Error = &errorMessage
+		bytes, err := httputil.DumpResponse(response, true)
+		if err == nil {
+			responseString := string(bytes)
+			toolResponse.ToolOutput = &responseString
 		}
 	}
 }

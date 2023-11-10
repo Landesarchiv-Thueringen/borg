@@ -14,9 +14,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        string
-	OutputFormat      string
-	ExtractedFeatures map[string]string
+	ToolOutput        *string
+	OutputFormat      *string
+	ExtractedFeatures *map[string]string
+	Error             *string
 }
 
 var defaultResponse = "DROID API is running"
@@ -24,6 +25,7 @@ var workDir = "/borg/tools/droid"
 var storeDir = "/borg/filestore"
 var signatureFilePath = filepath.Join(workDir, "bin/DROID_SignatureFile_V114.xml")
 var containerSignatureFilePath = filepath.Join(workDir, "bin/container-signature-20230822.xml")
+var outputFormat = "csv"
 
 func main() {
 	router := gin.Default()
@@ -50,9 +52,11 @@ func identifyFileFormat(context *gin.Context) {
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "error processing file: " + fileStorePath,
-		})
+		errorMessage := "error processing file: " + fileStorePath
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	cmd := exec.Command(
@@ -68,28 +72,34 @@ func identifyFileFormat(context *gin.Context) {
 	droidOutput, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "error executing DROID command",
-		})
+		errorMessage := "error executing DROID command"
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	droidOutputString := string(droidOutput)
 	csvReader := csv.NewReader(strings.NewReader(droidOutputString))
 	formats, err := csvReader.ReadAll()
 	if err != nil {
-		log.Println(err)
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"message": "unable to DROID csv output",
-		})
+		log.Println(err.Error())
+		errorMessage := "unable to DROID csv output"
+		response := ToolResponse{
+			ToolOutput:   &droidOutputString,
+			OutputFormat: &outputFormat,
+			Error:        &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        droidOutputString,
-		OutputFormat:      "csv",
-		ExtractedFeatures: extractedFeatures,
+		ToolOutput:        &droidOutputString,
+		OutputFormat:      &outputFormat,
+		ExtractedFeatures: &extractedFeatures,
 	}
-	// TODO: implement returning multiple results
+	// TODO: discuss returning multiple results
 	if len(formats) > 1 {
 		extractedFeatures["puid"] = formats[1][1]
 	}
