@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import { FileAnalysisService } from '../file-analysis/file-analysis.service';
+import { FileAnalysisService, Summary } from '../file-analysis/file-analysis.service';
 import { FeatureValue, FileResult, ToolResult } from '../file-analysis/file-analysis.service';
 
 interface DialogData {
@@ -44,7 +44,6 @@ export class FileOverviewComponent {
   initTableData(): void {
     if (this.fileResult.toolResults.summary) {
       const summary = this.fileResult.toolResults.summary;
-      const rows: FileFeatures[] = [];
       const toolNames: string[] = [];
       const featureNames: string[] = [];
       const toolResults: ToolResult[] =
@@ -59,30 +58,49 @@ export class FileOverviewComponent {
       for (let featureKey in summary) {
         featureNames.push(featureKey);
       }
-      const sortedFeatures: string[] = this.fileAnalysisService.sortFeatures(featureNames);
-      this.tableColumnList = ['Werkzeug', ...sortedFeatures];
-      for (let toolName of toolNames) {
-        const featureValues: FileFeatures = {};
-        featureValues['Werkzeug'] = {
-          value: toolName,
-        }
-        for (let featureName of featureNames) {
-          for (let featureValue of summary[featureName].values) {
-            if (this.featureOfTool(featureValue, toolName)) {
-              const value: string = featureValue.value;
-              const confidence: number = featureValue.score
-              featureValues[featureName] = {
-                value: value,
-                confidence: confidence,
-              };
-            }
-          }
-        }
-        rows.push(featureValues);
-      }
-      this.dataSource.data = rows;
+      this.dataSource.data = this.getTableRows(summary, toolNames, featureNames);
       console.log(this.tableColumnList);
     }
+  }
+
+  getTableRows(summary: Summary, toolNames: string[], featureNames: string[]): FileFeatures[] {
+    const rows: FileFeatures[] = [this.getCumulativeResult(summary, featureNames)];
+    const sortedFeatures: string[] = this.fileAnalysisService.sortFeatures(featureNames);
+    this.tableColumnList = ['Werkzeug', ...sortedFeatures];
+    for (let toolName of toolNames) {
+      const featureValues: FileFeatures = {};
+      featureValues['Werkzeug'] = {
+        value: toolName,
+      }
+      for (let featureName of featureNames) {
+        for (let featureValue of summary[featureName].values) {
+          if (this.featureOfTool(featureValue, toolName)) {
+            featureValues[featureName] = {
+              value: featureValue.value,
+              confidence: featureValue.score,
+            };
+          }
+        }
+      }
+      rows.push(featureValues);
+    }
+    return rows;
+  }
+
+  getCumulativeResult(summary: Summary, featureNames: string[]): FileFeatures {
+    const features: FileFeatures = {};
+    features['Werkzeug'] = {
+      value: 'Gesamtergebnis',
+    }
+    for (let featureName of featureNames) {
+      // result with highest confidence
+      const featureValue = summary[featureName].values[0]
+      features[featureName] = {
+        value: featureValue.value,
+        confidence: featureValue.score,
+      };
+    }
+    return features;
   }
 
   featureOfTool(featureValue: FeatureValue, toolName: string): boolean {
