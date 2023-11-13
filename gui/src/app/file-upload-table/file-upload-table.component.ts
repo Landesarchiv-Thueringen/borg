@@ -13,7 +13,7 @@ import {
   FileUpload,
   FileAnalysisService,
 } from '../file-analysis/file-analysis.service';
-import { FileSizePipe } from '../utility/file-size/file-size.pipe';
+import { FileSizePipe } from '../utility/formatting/file-size.pipe';
 import { NotificationService } from 'src/app/utility/notification/notification.service';
 
 @Component({
@@ -119,6 +119,7 @@ export class FileUploadTableComponent implements AfterViewInit {
           );
           this.notificationService.show('Formaterkennung, -validierung abgeschlossen: ' 
             + fileUpload.fileName);
+          console.log(event.body);
         }
     }
   }

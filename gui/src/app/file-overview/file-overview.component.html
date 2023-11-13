@@ -16,7 +16,7 @@
           <ng-container *ngIf="fileInfo[tableColumn]?.value !== 'false' && fileInfo[tableColumn]?.value !== 'true'">
             <span *ngIf="fileInfo[tableColumn]">{{fileInfo[tableColumn].value}}</span>
           </ng-container>
-          <span *ngIf="fileInfo[tableColumn]?.confidence" class="confidence-value">
+          <span *ngIf="fileInfo[tableColumn]?.confidence || fileInfo[tableColumn]?.confidence === 0.0" class="confidence-value">
             ({{ fileInfo[tableColumn].confidence | percent }})
           </span>
         </div>

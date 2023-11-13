@@ -174,4 +174,11 @@ export class FileAnalysisService {
   getOverviewFeatures(): string[] {
     return this.overviewFeatures;
   }
+
+  selectOverviewFeatures(features: string[]): string[] {
+    const overviewFeatures: string[] = this.getOverviewFeatures();
+    return features.filter((feature: string) => {
+      return overviewFeatures.includes(feature);
+    });
+  }
 }

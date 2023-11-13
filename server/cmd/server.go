@@ -330,10 +330,15 @@ func getToolConfidence(tool ToolResponse, featureKey string) ToolConfidence {
 }
 
 func getCorrectedToolConfidence(
+	featureKey string,
 	toolConfidence ToolConfidence,
 	scoredFeatures *map[string]Feature,
 ) ToolConfidence {
 	for _, featureConfig := range toolConfidence.FeatureConfig {
+		// if feature configuration doesn't belong to currentlu corrected feature
+		if featureKey != featureConfig.Key {
+			continue
+		}
 		if len(featureConfig.Confidence.Conditions) > 0 {
 			for _, condition := range featureConfig.Confidence.Conditions {
 				scoredFeature, ok := (*scoredFeatures)[condition.GlobalFeature]
@@ -412,8 +417,9 @@ func correctToolConfidence(scoredFeatures *map[string]Feature) {
 	for featureKey, feature := range *scoredFeatures {
 		for featureValueIndex, featureValue := range feature.Values {
 			for toolIndex, toolConfidence := range featureValue.Tools {
+				log.Println(toolConfidence)
 				(*scoredFeatures)[featureKey].Values[featureValueIndex].Tools[toolIndex] =
-					getCorrectedToolConfidence(toolConfidence, scoredFeatures)
+					getCorrectedToolConfidence(featureKey, toolConfidence, scoredFeatures)
 			}
 		}
 	}

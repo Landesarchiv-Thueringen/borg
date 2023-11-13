@@ -7,7 +7,7 @@ formatIdentificationTools:
       -
         key: "puid"
         confidence:
-          defaultValue: 1.0
+          defaultValue: 0.9
   -
     toolName: "Tika"
     toolVersion: "2.9.0"
@@ -28,34 +28,34 @@ formatIdentificationTools:
 
 formatValidationTools:
   -
-    toolName: "JHOVE-PDF-Modul"
+    toolName: "JHOVE (PDF-Modul)"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/pdf"
     trigger:
       -
         feature: "puid"
-        regEx: "fmt/14" # PDF 1.0
+        regEx: "^fmt/14$" # PDF 1.0
       -
         feature: "puid"
-        regEx: "fmt/15" # PDF 1.1
+        regEx: "^fmt/15$" # PDF 1.1
       -
         feature: "puid"
-        regEx: "fmt/16" # PDF 1.2
+        regEx: "^fmt/16$" # PDF 1.2
       -
         feature: "puid"
-        regEx: "fmt/17" # PDF 1.3
+        regEx: "^fmt/17$" # PDF 1.3
       -
         feature: "puid"
-        regEx: "fmt/18" # PDF 1.4
+        regEx: "^fmt/18$" # PDF 1.4
       -
         feature: "puid"
-        regEx: "fmt/19" # PDF 1.5
+        regEx: "^fmt/19$" # PDF 1.5
       -
         feature: "puid"
-        regEx: "fmt/20" # PDF 1.6
+        regEx: "^fmt/20$" # PDF 1.6
       -
         feature: "puid"
-        regEx: "fmt/276" # PDF 1.7
+        regEx: "^fmt/276$" # PDF 1.7
     features:
       -
         key: "wellFormed"
@@ -65,7 +65,7 @@ formatValidationTools:
             -
               globalFeature: formatVersion
               regEx: "PDF/A"
-              value: 0.3 # no PDF/A validator
+              value: 0.0 # no PDF/A validator
       -
         key: "valid"
         confidence:
@@ -74,7 +74,7 @@ formatValidationTools:
             -
               globalFeature: formatVersion
               regEx: "PDF/A"
-              value: 0.5
+              value: 0.0 # no PDF/A validator
       -
         key: "formatVersion"
         confidence:
@@ -83,9 +83,9 @@ formatValidationTools:
             -
               globalFeature: formatVersion
               regEx: "PDF/A"
-              value: 0.5
+              value: 0.0 # no PDF/A validator
   -
-    toolName: "JHOVE-HTML-Modul"
+    toolName: "JHOVE (HTML-Modul)"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/html"
     trigger:
@@ -94,13 +94,13 @@ formatValidationTools:
         regEx: "html"
       -
         feature: "puid"
-        regEx: "fmt/98" # HTML 3.2
+        regEx: "^fmt/98$" # HTML 3.2
       -
         feature: "puid"
-        regEx: "fmt/99" # HTML 4.0
+        regEx: "^fmt/99$" # HTML 4.0
       -
         feature: "puid"
-        regEx: "fmt/100" # HTML 4.01
+        regEx: "^fmt/100$" # HTML 4.01
       # 06.11.2023: JHOVE HTML-Hul doesn"t support HTML 5
     features:
       -
@@ -116,7 +116,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "JHOVE-TIFF-Modul"
+    toolName: "JHOVE (TIFF-Modul)"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/tiff"
     trigger:
@@ -125,7 +125,7 @@ formatValidationTools:
         regEx: "tiff"
       -
         feature: "puid"
-        regEx: "fmt/153" # TIFF
+        regEx: "^fmt/153$" # TIFF
     features:
       -
         key: "wellFormed"
@@ -140,7 +140,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "JHOVE-JPEG-Modul"
+    toolName: "JHOVE (JPEG-Modul)"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/jpeg"
     trigger:
@@ -149,7 +149,7 @@ formatValidationTools:
         regEx: "jpeg"
       -
         feature: "puid"
-        regEx: "fmt/43" # JPEG
+        regEx: "^fmt/43$" # JPEG
     features:
       -
         key: "wellFormed"
@@ -164,16 +164,16 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "JHOVE-JPEG2000-Modul"
+    toolName: "JHOVE (JPEG2000-Modul)"
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api:3000/validate/jpeg2000"
     trigger:
       -
         feature: "mimeType"
-        regEx: "jp2"
+        regEx: "^jp2$"
       -
         feature: "puid"
-        regEx: "x-fmt/392" # JP2 (JPEG 2000 part 1)
+        regEx: "^x-fmt/392$" # JP2 (JPEG 2000 part 1)
     features:
       -
         key: "wellFormed"
@@ -188,7 +188,7 @@ formatValidationTools:
         confidence:
           defaultValue: 0.8
   -
-    toolName: "veraPDF-PDF/A-1a-Profil"
+    toolName: "veraPDF (PDF/A-1a-Profil)"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/1a"
     trigger:
@@ -197,14 +197,14 @@ formatValidationTools:
         regEx: "PDF/A-1a"
       -
         feature: "puid"
-        regEx: "fmt/95" # PDF/A-1a
+        regEx: "^fmt/95$" # PDF/A-1a
     features:
       -
         key: "valid"
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-PDF/A-1b-Profil"
+    toolName: "veraPDF (PDF/A-1b-Profil)"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/1b"
     trigger:
@@ -213,14 +213,14 @@ formatValidationTools:
         regEx: "PDF/A-1b"
       -
         feature: "puid"
-        regEx: "fmt/354" # PDF/A-1b
+        regEx: "^fmt/354$" # PDF/A-1b
     features:
       -
         key: "valid"
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-PDF/A-2a-Profil"
+    toolName: "veraPDF (PDF/A-2a-Profil)"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/2a"
     trigger:
@@ -229,14 +229,14 @@ formatValidationTools:
         regEx: "PDF/A-2a"
       -
         feature: "puid"
-        regEx: "fmt/476" # PDF/A-2a
+        regEx: "^fmt/476$" # PDF/A-2a
     features:
       -
         key: "valid"
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-PDF/A-2b-Profil"
+    toolName: "veraPDF (PDF/A-2b-Profil)"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/2b"
     trigger:
@@ -245,14 +245,14 @@ formatValidationTools:
         regEx: "PDF/A-2b"
       -
         feature: "puid"
-        regEx: "fmt/477" # PDF/A-2b
+        regEx: "^fmt/477$" # PDF/A-2b
     features:
       -
         key: "valid"
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-PDF/A-2u-Profil"
+    toolName: "veraPDF (PDF/A-2u-Profil)"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/2u"
     trigger:
@@ -261,14 +261,14 @@ formatValidationTools:
         regEx: "PDF/A-2u"
       -
         feature: "puid"
-        regEx: "fmt/478" # PDF/A-2u
+        regEx: "^fmt/478$" # PDF/A-2u
     features:
       -
         key: "valid"
         confidence:
           defaultValue: 1.0
   -
-    toolName: "veraPDF-PDF/UA-Profil"
+    toolName: "veraPDF (PDF/UA-Profil)"
     toolVersion: "1.24.1"
     endpoint: "http://verapdf-api:3000/validate/ua1"
     trigger:
@@ -280,4 +280,4 @@ formatValidationTools:
       -
         key: "valid"
         confidence:
-          defaultValue: 0.5 # temporary run for every PDF file, mostly incorrect
+          defaultValue: 0.3 # temporary run for every PDF file, mostly incorrect

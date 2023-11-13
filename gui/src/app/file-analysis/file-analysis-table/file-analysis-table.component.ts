@@ -12,7 +12,7 @@ import {
   FileAnalysisService,
   Feature,
 } from '../file-analysis.service';
-import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
+import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
 
 interface FileOverview {
@@ -86,17 +86,10 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     }
     this.dataSource.data = data;
     const features = [...new Set(featureKeys)];
-    const selectedFeatures = this.selectFeatures(features);
+    const selectedFeatures = this.fileAnalysisService.selectOverviewFeatures(features);
     const sortedFeatures = this.fileAnalysisService.sortFeatures(selectedFeatures);
     this.generatedTableColumnList = sortedFeatures;
     this.tableColumnList = sortedFeatures.concat(['actions']);
-  }
-
-  selectFeatures(features: string[]): string[] {
-    const overviewFeatures: string[] = this.fileAnalysisService.getOverviewFeatures();
-    return features.filter((feature: string) => {
-      return overviewFeatures.includes(feature);
-    });
   }
 
   getFeatureTooltip(feature: Feature): string {

@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import { FileAnalysisService, Summary } from '../file-analysis/file-analysis.service';
+import { FileAnalysisService, Summary, ToolConfidence } from '../file-analysis/file-analysis.service';
 import { FeatureValue, FileResult, ToolResult } from '../file-analysis/file-analysis.service';
 
 interface DialogData {
@@ -46,11 +46,11 @@ export class FileOverviewComponent {
     if (this.fileResult.toolResults.summary) {
       const summary = this.fileResult.toolResults.summary;
       const toolNames: string[] = [];
-      const featureNames: string[] = [];
-      const toolResults: ToolResult[] =
-        this.fileResult.toolResults.fileIdentificationResults.concat(
-          this.fileResult.toolResults.fileValidationResults
-        );
+      let featureNames: string[] = [];
+      let toolResults: ToolResult[] = this.fileResult.toolResults.fileIdentificationResults;
+      if (this.fileResult.toolResults.fileValidationResults) {
+        toolResults = toolResults.concat(this.fileResult.toolResults.fileValidationResults);
+      }
       toolResults.forEach(
         (toolResult: ToolResult) => {
           toolNames.push(toolResult.toolName);
@@ -59,8 +59,8 @@ export class FileOverviewComponent {
       for (let featureKey in summary) {
         featureNames.push(featureKey);
       }
+      featureNames = this.fileAnalysisService.selectOverviewFeatures(featureNames);
       this.dataSource.data = this.getTableRows(summary, toolNames, featureNames);
-      console.log(this.tableColumnList);
     }
   }
 
@@ -76,9 +76,12 @@ export class FileOverviewComponent {
       for (let featureName of featureNames) {
         for (let featureValue of summary[featureName].values) {
           if (this.featureOfTool(featureValue, toolName)) {
+            const toolInfo: ToolConfidence = featureValue.tools.find((toolInfo: ToolConfidence) => {
+              return toolInfo.toolName === toolName;
+            })!;
             featureValues[featureName] = {
               value: featureValue.value,
-              confidence: featureValue.score,
+              confidence: toolInfo.confidence,
               colorizeConfidence: false,
             };
           }

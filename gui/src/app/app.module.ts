@@ -29,7 +29,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { FileFeaturePipe } from './utility/localization/file-attribut-de.pipe';
-import { FileSizePipe } from './utility/file-size/file-size.pipe';
+import { FileSizePipe } from './utility/formatting/file-size.pipe';
 import { FileUploadTableComponent } from './file-upload-table/file-upload-table.component';
 import { PaginatorDeService } from './utility/localization/paginator-de.service';
 import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
