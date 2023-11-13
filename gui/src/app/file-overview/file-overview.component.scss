@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  min-width: 70.0em;
+
+  .feature-info {
+    display: flex;
+    column-gap: 1.0em;
+
+    .confidence-value {
+      font-size: 14px;
+      color: gray;
+    }
+  }
+}

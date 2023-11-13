@@ -9,12 +9,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FileAnalysisService } from '../file-analysis/file-analysis.service';
 import { FeatureValue, FileResult, ToolResult } from '../file-analysis/file-analysis.service';
 
-export interface DialogData {
+interface DialogData {
   fileResult: FileResult;
 }
 
-export interface FileFeatures {
-  [key: string]: string;
+interface FileFeature {
+  value: string;
+  confidence?: number;
+}
+
+interface FileFeatures {
+  [key: string]: FileFeature;
 }
 
 @Component({
@@ -58,13 +63,18 @@ export class FileOverviewComponent {
       this.tableColumnList = ['Werkzeug', ...sortedFeatures];
       for (let toolName of toolNames) {
         const featureValues: FileFeatures = {};
-        featureValues['Werkzeug'] = toolName;
+        featureValues['Werkzeug'] = {
+          value: toolName,
+        }
         for (let featureName of featureNames) {
           for (let featureValue of summary[featureName].values) {
             if (this.featureOfTool(featureValue, toolName)) {
-              let value: string = featureValue.value;
-              //const score: string = (featureValue.score * 100).toFixed(2)
-              featureValues[featureName] = featureValue.value;
+              const value: string = featureValue.value;
+              const confidence: number = featureValue.score
+              featureValues[featureName] = {
+                value: value,
+                confidence: confidence,
+              };
             }
           }
         }

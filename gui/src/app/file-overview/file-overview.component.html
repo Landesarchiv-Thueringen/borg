@@ -7,10 +7,15 @@
     <ng-container *ngFor="let tableColumn of tableColumnList" matColumnDef={{tableColumn}}>
       <th mat-header-cell *matHeaderCellDef>{{tableColumn|fileFeature}}</th>
       <td mat-cell *matCellDef="let fileInfo">
-        <mat-icon *ngIf="fileInfo[tableColumn] === 'true'">check</mat-icon>
-        <mat-icon *ngIf="fileInfo[tableColumn] === 'false'">close</mat-icon>
-        <div *ngIf="fileInfo[tableColumn] !== 'false' && fileInfo[tableColumn] !== 'true'">
-          {{fileInfo[tableColumn]}}
+        <div class="feature-info">
+          <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'true'">check</mat-icon>
+          <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'false'">close</mat-icon>
+          <ng-container *ngIf="fileInfo[tableColumn]?.value !== 'false' && fileInfo[tableColumn]?.value !== 'true'">
+            <span *ngIf="fileInfo[tableColumn]">{{fileInfo[tableColumn].value}}</span>
+          </ng-container>
+          <span *ngIf="fileInfo[tableColumn]?.confidence" class="confidence-value">
+            ({{ fileInfo[tableColumn].confidence | percent }})
+          </span>
         </div>
       </td>
     </ng-container>
