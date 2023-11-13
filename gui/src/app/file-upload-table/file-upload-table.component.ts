@@ -63,10 +63,6 @@ export class FileUploadTableComponent implements AfterViewInit {
         'Einzeldatei', 
         file.size,
       );
-
-      const data = this.dataSource.data
-      const fileDataIndex = data.length;
-
       this.uploadFile(file, fileUpload);
     }
   }
@@ -83,9 +79,6 @@ export class FileUploadTableComponent implements AfterViewInit {
           file.webkitRelativePath.replace(new RegExp(file.name + '$'), ''), 
           file.size,
         );
-
-        const fileDataIndex = data.length;
-
         this.uploadFile(file, fileUpload);
       }
     }
@@ -112,14 +105,11 @@ export class FileUploadTableComponent implements AfterViewInit {
     } else if(event.type === HttpEventType.Response) {
         if (event.body) {
           this.fileAnalysisService.addFileResult(
-            fileUpload.fileName,
-            fileUpload.relativePath,
-            fileUpload.fileSize,
+            fileUpload,
             event.body,
           );
           this.notificationService.show('Formaterkennung, -validierung abgeschlossen: ' 
             + fileUpload.fileName);
-          console.log(event.body);
         }
     }
   }

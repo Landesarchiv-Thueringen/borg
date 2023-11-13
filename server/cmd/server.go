@@ -417,7 +417,6 @@ func correctToolConfidence(scoredFeatures *map[string]Feature) {
 	for featureKey, feature := range *scoredFeatures {
 		for featureValueIndex, featureValue := range feature.Values {
 			for toolIndex, toolConfidence := range featureValue.Tools {
-				log.Println(toolConfidence)
 				(*scoredFeatures)[featureKey].Values[featureValueIndex].Tools[toolIndex] =
 					getCorrectedToolConfidence(featureKey, toolConfidence, scoredFeatures)
 			}

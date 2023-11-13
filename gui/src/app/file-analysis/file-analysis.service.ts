@@ -11,6 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface FileUpload {
+  id: string;
   fileName: string;
   relativePath: string;
   fileSize: number;
@@ -58,7 +59,7 @@ export interface ToolConfidence {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FileAnalysisService {
   fileUploads: FileUpload[];
@@ -71,8 +72,12 @@ export class FileAnalysisService {
   constructor(private httpClient: HttpClient) {
     this.fileUploads = [];
     this.fileResults = [];
-    this.fileUploadsSubject = new BehaviorSubject<FileUpload[]>(this.fileUploads);
-    this.fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
+    this.fileUploadsSubject = new BehaviorSubject<FileUpload[]>(
+      this.fileUploads
+    );
+    this.fileResultsSubject = new BehaviorSubject<FileResult[]>(
+      this.fileResults
+    );
     this.overviewFeatures = [
       'relativePath',
       'fileName',
@@ -99,30 +104,30 @@ export class FileAnalysisService {
   analyzeFile(file: File): Observable<HttpEvent<ToolResults>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post<ToolResults>(environment.apiEndpoint, formData, {
-      reportProgress: true,
-      observe: 'events'
-    });
+    return this.httpClient.post<ToolResults>(
+      environment.apiEndpoint,
+      formData,
+      {
+        reportProgress: true,
+        observe: 'events',
+      }
+    );
   }
 
-  addFileResult(
-    fileName: string, 
-    relativePath: string, 
-    fileSize: number,
-    toolResults: ToolResults,
-  ): void {
+  addFileResult(fileUpload: FileUpload, toolResults: ToolResults): void {
     const fileResult: FileResult = {
-      id: uuidv4(),
-      fileName: fileName,
-      relativePath: relativePath,
-      fileSize: fileSize,
+      id: fileUpload.id,
+      fileName: fileUpload.fileName,
+      relativePath: fileUpload.relativePath,
+      fileSize: fileUpload.fileSize,
       toolResults: toolResults,
-    }
+    };
     this.fileResults.push(fileResult);
     this.fileResultsSubject.next(this.fileResults);
+    this.removeFileUpload(fileUpload);
   }
 
-  getFileResult(id: string): FileResult|undefined {
+  getFileResult(id: string): FileResult | undefined {
     return this.fileResults.find((fileResult: FileResult) => {
       return fileResult.id === id;
     });
@@ -132,19 +137,31 @@ export class FileAnalysisService {
     return this.fileResultsSubject.asObservable();
   }
 
-  addFileUpload(fileName: string, relativePath: string, fileSize: number): FileUpload {
+  addFileUpload(
+    fileName: string,
+    relativePath: string,
+    fileSize: number
+  ): FileUpload {
     const fileUpload: FileUpload = {
+      id: uuidv4(),
       fileName: fileName,
       relativePath: relativePath,
       fileSize: fileSize,
-    }
-    this.fileUploads.push(fileUpload)
+    };
+    this.fileUploads.push(fileUpload);
     this.fileUploadsSubject.next(this.fileUploads);
     return fileUpload;
   }
 
   getFileUploads(): Observable<FileUpload[]> {
     return this.fileUploadsSubject.asObservable();
+  }
+
+  removeFileUpload(fileUpload: FileUpload): void {
+    this.fileUploads = this.fileUploads.filter((upload: FileUpload) => {
+      return upload.id !== fileUpload.id;
+    });
+    this.fileUploadsSubject.next(this.fileUploads);
   }
 
   getFeatureOrder(): Map<string, number> {
