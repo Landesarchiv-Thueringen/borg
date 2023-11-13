@@ -1,6 +1,7 @@
 // angular
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { HttpEventType, HttpEvent } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 // material
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,7 +14,6 @@ import {
   FileUpload,
   FileAnalysisService,
 } from '../file-analysis/file-analysis.service';
-import { FileSizePipe } from '../utility/formatting/file-size.pipe';
 import { NotificationService } from 'src/app/utility/notification/notification.service';
 
 @Component({
@@ -24,15 +24,17 @@ import { NotificationService } from 'src/app/utility/notification/notification.s
 export class FileUploadTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileUpload>;
   displayedColumns: string[];
+  uploadInProgress: boolean;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fileAnalysisService: FileAnalysisService,
-    private fileSizePipe: FileSizePipe,
     private notificationService: NotificationService,
+    private router: Router,
   ) {
+    this.uploadInProgress = false;
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = [
       'relativePath',
@@ -44,6 +46,10 @@ export class FileUploadTableComponent implements AfterViewInit {
       // error can't occure --> no error handling
       next: (fileUploads: FileUpload[]) => {
         this.dataSource.data = fileUploads;
+        if (fileUploads.length === 0 && this.uploadInProgress) {
+          this.uploadInProgress = false;
+          this.router.navigate(['auswertung']);
+        }
       },
     });
   }
@@ -85,6 +91,7 @@ export class FileUploadTableComponent implements AfterViewInit {
   }
 
   uploadFile(file: File, fileUpload: FileUpload): void {
+    this.uploadInProgress = true;
     this.fileAnalysisService.analyzeFile(file).subscribe({
       error: (error: any) => {
         console.error(error);

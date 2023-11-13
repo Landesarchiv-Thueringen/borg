@@ -9,16 +9,17 @@ import { MainNavigationComponent } from './main-navigation/main-navigation.compo
 
 const routes: Routes = [
   {
-    path: '',  component: MainNavigationComponent,
+    path: '',
+    component: MainNavigationComponent,
     children: [
-      { path: "upload", component: FileUploadTableComponent },
-      { path: "analysis", component: FileAnalysisTableComponent },
+      { path: '', component: FileUploadTableComponent },
+      { path: 'auswertung', component: FileAnalysisTableComponent },
     ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
