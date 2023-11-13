@@ -15,12 +15,13 @@ import {
 import { FileSizePipe } from '../../utility/file-size/file-size.pipe';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
 
-export interface FileOverview {
+interface FileOverview {
   [key: string]: FileFeature;
 }
 
-export interface FileFeature {
+interface FileFeature {
   value: string;
+  confidence?: number;
   feature?: Feature;
   tooltip?: string;
 }
@@ -73,6 +74,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
         };
         fileOverview[featureKey] = {
           value: fileInfo.toolResults.summary[featureKey].values[0].value,
+          confidence: fileInfo.toolResults.summary[featureKey].values[0].score,
           feature: fileInfo.toolResults.summary[featureKey],
           tooltip: this.getFeatureTooltip(
             fileInfo.toolResults.summary[featureKey]
@@ -85,7 +87,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this.dataSource.data = data;
     const features = [...new Set(featureKeys)];
     const selectedFeatures = this.selectFeatures(features);
-    const sortedFeatures = this.sortFeatures(selectedFeatures);
+    const sortedFeatures = this.fileAnalysisService.sortFeatures(selectedFeatures);
     this.generatedTableColumnList = sortedFeatures;
     this.tableColumnList = sortedFeatures.concat(['actions']);
   }
@@ -94,26 +96,6 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     const overviewFeatures: string[] = this.fileAnalysisService.getOverviewFeatures();
     return features.filter((feature: string) => {
       return overviewFeatures.includes(feature);
-    });
-  }
-
-  sortFeatures(features: string[]): string[] {
-    return features.sort((f1: string, f2: string) => {
-      const featureOrder = this.fileAnalysisService.getFeatureOrder();
-      let orderF1: number | undefined = featureOrder.get(f1);
-      if (!orderF1) {
-        orderF1 = featureOrder.get('');
-      }
-      let orderF2: number | undefined = featureOrder.get(f2);
-      if (!orderF2) {
-        orderF2 = featureOrder.get('');
-      }
-      if (orderF1! < orderF2!) {
-        return -1;
-      } else if (orderF1! > orderF2!) {
-        return 1;
-      }
-      return 0;
     });
   }
 

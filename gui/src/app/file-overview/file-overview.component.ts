@@ -16,6 +16,7 @@ interface DialogData {
 interface FileFeature {
   value: string;
   confidence?: number;
+  colorizeConfidence?: boolean;
 }
 
 interface FileFeatures {
@@ -78,6 +79,7 @@ export class FileOverviewComponent {
             featureValues[featureName] = {
               value: featureValue.value,
               confidence: featureValue.score,
+              colorizeConfidence: false,
             };
           }
         }
@@ -98,6 +100,7 @@ export class FileOverviewComponent {
       features[featureName] = {
         value: featureValue.value,
         confidence: featureValue.score,
+        colorizeConfidence: true,
       };
     }
     return features;
