@@ -395,7 +395,7 @@ func calculateFeatureValueScore(features *map[string]Feature) {
 		}
 		for valueIndex, featureValue := range feauture.Values {
 			// if only one tool has extracted the feature
-			if totalValueConfidence[featureValue.Value] == totalFeatureConfidence {
+			if len(featureValue.Tools) == 1 {
 				// total confidence is equal to tool confidence
 				(*features)[featureKey].Values[valueIndex].Score = totalValueConfidence[featureValue.Value]
 			} else {
