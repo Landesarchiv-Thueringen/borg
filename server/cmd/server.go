@@ -72,6 +72,7 @@ var serverConfig config.ServerConfig
 func main() {
 	serverConfig = config.ParseConfig()
 	router := gin.Default()
+	router.MaxMultipartMemory = 1000 << 20 // 1 GiB
 	router.ForwardedByClientIP = true
 	router.SetTrustedProxies([]string{"*"})
 	corsConfig := cors.DefaultConfig()
