@@ -61,7 +61,7 @@ func identifyFileFormat(context *gin.Context) {
 	}
 	cmd := exec.Command(
 		"/bin/ash",
-		"/borg/tools/droid/bin/droid-binary-6.7.0-bin/droid.sh",
+		"/borg/tools/droid/bin/droid.sh",
 		"-Ns",
 		signatureFilePath,
 		"-Nc",

@@ -9,6 +9,6 @@ WORKDIR /borg/tools/droid
 COPY --from=build /borg/tools/droid/ .
 RUN apk update
 RUN apk add unzip openjdk17
-RUN unzip bin/droid-binary-6.7.0-bin.zip
-RUN chmod +x bin/droid-binary-6.7.0-bin/droid.sh
+RUN unzip bin/droid-binary-6.7.0-bin.zip -d bin/
+RUN chmod +x bin/droid.sh
 CMD ["./droidapi"]
