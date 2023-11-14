@@ -41,12 +41,12 @@
 
     <mat-toolbar class="table-toolbar">
       <input #fileInput type="file" (change)="addFile($event)">
-      <button mat-button (click)="fileInput.click()" color="primary">
+      <button mat-stroked-button (click)="fileInput.click()" color="primary">
         <mat-icon>upload_file</mat-icon>
         Einzeldatei hinzufügen
       </button>
       <input #folderInput type="file" (change)="addFolder($event)" webkitdirectory>
-      <button mat-button (click)="folderInput.click()" color="primary">
+      <button mat-stroked-button (click)="folderInput.click()" color="primary">
         <mat-icon>drive_folder_upload</mat-icon>
         Ordner hinzufügen
       </button>

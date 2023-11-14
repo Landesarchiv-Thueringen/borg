@@ -119,4 +119,8 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       console.error('file result not found');
     }
   }
+
+  clearToolResults(): void {
+    this.fileAnalysisService.clearFileResults();
+  }
 }

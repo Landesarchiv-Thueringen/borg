@@ -12,7 +12,7 @@ const routes: Routes = [
     path: '',
     component: MainNavigationComponent,
     children: [
-      { path: '', component: FileUploadTableComponent },
+      { path: 'auswahl', component: FileUploadTableComponent },
       { path: 'auswertung', component: FileAnalysisTableComponent },
     ],
   },

@@ -137,6 +137,11 @@ export class FileAnalysisService {
     return this.fileResultsSubject.asObservable();
   }
 
+  clearFileResults(): void {
+    this.fileResults = [];
+    this.fileResultsSubject.next(this.fileResults);
+  }
+
   addFileUpload(
     fileName: string,
     relativePath: string,
