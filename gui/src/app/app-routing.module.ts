@@ -9,6 +9,11 @@ import { MainNavigationComponent } from './main-navigation/main-navigation.compo
 
 const routes: Routes = [
   {
+    path: "",
+    redirectTo: "auswahl",
+    pathMatch: 'full',
+  },
+  {
     path: '',
     component: MainNavigationComponent,
     children: [
