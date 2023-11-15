@@ -100,7 +100,7 @@ func identifyFileFormat(context *gin.Context) {
 		ExtractedFeatures: &extractedFeatures,
 	}
 	// TODO: discuss returning multiple results
-	if len(formats) > 1 {
+	if len(formats) > 1 && formats[1][1] != "" {
 		extractedFeatures["puid"] = formats[1][1]
 	}
 	context.JSON(http.StatusOK, response)
