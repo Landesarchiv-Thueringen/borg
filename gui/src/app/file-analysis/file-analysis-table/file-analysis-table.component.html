@@ -6,6 +6,27 @@
 
       <table mat-table [dataSource]="dataSource">
 
+        <!-- table with tooltips -->
+        <!-- <ng-container *ngFor="let tableColumn of generatedTableColumnList" matColumnDef={{tableColumn}}>
+          <th mat-header-cell *matHeaderCellDef>{{tableColumn|fileFeature}}</th>
+          <td mat-cell 
+            *matCellDef="let fileInfo"
+            [matTooltip]="fileInfo[tableColumn] ? fileInfo[tableColumn].tooltip : null"
+            matTooltipClass='feature-tooltip'
+            [class.name-cell]="tableColumn === 'fileName'"
+            [class.path-cell]="tableColumn === 'relativePath'"
+            [class.mime-type-cell]="tableColumn === 'mimeType'"
+            [class.high-confidence-cell]="fileInfo[tableColumn] && fileInfo[tableColumn].confidence >= 0.7"
+            [class.mid-confidence-cell]="fileInfo[tableColumn] && fileInfo[tableColumn].confidence < 0.7 && fileInfo[tableColumn]?.confidence >= 0.45"
+            [class.low-confidence-cell]="fileInfo[tableColumn] && fileInfo[tableColumn].confidence < 0.45">
+            <mat-icon *ngIf="fileInfo[tableColumn] && fileInfo[tableColumn].value === 'true'">check</mat-icon>
+            <mat-icon *ngIf="fileInfo[tableColumn] && fileInfo[tableColumn].value === 'false'">close</mat-icon>
+            <div *ngIf="fileInfo[tableColumn] && fileInfo[tableColumn].value !== 'false' && fileInfo[tableColumn].value !== 'true'">
+              {{fileInfo[tableColumn].value}}
+            </div>
+          </td>
+        </ng-container> -->
+
         <ng-container *ngFor="let tableColumn of generatedTableColumnList" matColumnDef={{tableColumn}}>
           <th mat-header-cell *matHeaderCellDef>{{tableColumn|fileFeature}}</th>
           <td mat-cell 

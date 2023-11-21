@@ -15,11 +15,26 @@
       min-width: 80em;
       max-width: 150em;
 
+      // no other possibility to center the text of a sort header
+      ::ng-deep .progress-header .mat-sort-header-container {
+        justify-content: center;
+      }
+
       .table-content {
         overflow: auto;
 
-        .upload-progress {
-          width: 15.0em;
+        .task-progress {
+          width: 20.0em;
+        }
+
+        .progress-cell {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+  
+          mat-spinner {
+            margin-left: 1.0em;
+          }
         }
       }
 

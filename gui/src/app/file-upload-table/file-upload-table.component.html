@@ -26,9 +26,37 @@
 
         <!-- upload progress column -->
         <ng-container matColumnDef="uploadProgress">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Upload-Status</th>
-          <td mat-cell *matCellDef="let file" class="upload-progress">
-            <mat-progress-bar *ngIf="file.uploadProgress" mode="determinate" [value]=file.uploadProgress></mat-progress-bar>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header">
+            Upload
+          </th>
+          <td mat-cell *matCellDef="let file" class="task-progress">
+            <div class="progress-cell">
+              <ng-container *ngIf="!file.uploadProgress">
+                <span>warte auf Serverkapazität</span>
+                <mat-spinner diameter="25"></mat-spinner>
+              </ng-container>
+              <mat-progress-bar 
+                *ngIf="file.uploadProgress && file.uploadProgress < 100" 
+                mode="determinate" 
+                [value]=file.uploadProgress>
+              </mat-progress-bar>
+              <mat-icon *ngIf="file.uploadProgress === 100">check</mat-icon>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- format verification column -->
+        <ng-container matColumnDef="verificationProgress">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header">
+            Formatverifikation
+          </th>
+          <td mat-cell *matCellDef="let file" class="task-progress">
+            <div class="progress-cell">
+              <ng-container *ngIf="file.uploadProgress === 100">
+                <span>wird durchgeführt</span>
+                <mat-spinner diameter="25"></mat-spinner>
+              </ng-container>
+            </div>
           </td>
         </ng-container>
       

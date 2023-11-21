@@ -41,6 +41,7 @@ export class FileUploadTableComponent implements AfterViewInit {
       'fileName',
       'fileSize',
       'uploadProgress',
+      'verificationProgress',
     ];
     this.fileAnalysisService.getFileUploads().subscribe({
       // error can't occure --> no error handling
