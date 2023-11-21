@@ -31,8 +31,6 @@
           <th mat-header-cell *matHeaderCellDef>{{tableColumn|fileFeature}}</th>
           <td mat-cell 
             *matCellDef="let fileInfo"
-            [matTooltip]="fileInfo[tableColumn] ? fileInfo[tableColumn].tooltip : null"
-            matTooltipClass='feature-tooltip'
             [class.name-cell]="tableColumn === 'fileName'"
             [class.path-cell]="tableColumn === 'relativePath'"
             [class.mime-type-cell]="tableColumn === 'mimeType'"
