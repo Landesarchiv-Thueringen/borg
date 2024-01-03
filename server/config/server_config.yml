@@ -222,3 +222,14 @@ formatValidationTools:
       - key: "valid"
         confidence:
           defaultValue: 0.3 # temporary run for every PDF file, mostly incorrect
+
+  - toolName: "ODF Validator"
+    toolVersion: "0.12.0"
+    endpoint: "http://odf-validator-api/validate"
+    trigger:
+      - feature: "mimeType"
+        regEx: "^application/vnd\\.oasis\\.opendocument\\."
+    features:
+      - key: "valid"
+        confidence:
+          defaultValue: 1.0

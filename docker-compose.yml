@@ -67,5 +67,18 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
+  odf-validator-api:
+    container_name: odf-validator-api
+    restart: unless-stopped
+    build:
+      context: ./tools/odf-validator
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "filestore:/borg/filestore"
+    environment:
+      - GIN_MODE=${GIN_MODE}
+
 volumes:
   filestore:
