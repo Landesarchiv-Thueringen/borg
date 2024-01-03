@@ -5,7 +5,6 @@ services:
     restart: unless-stopped
     build:
       context: ./server
-      dockerfile: dockerfile_server
       args:
         - HTTP_PROXY=${HTTP_PROXY}
         - HTTPS_PROXY=${HTTPS_PROXY}
@@ -21,7 +20,6 @@ services:
     restart: unless-stopped
     build:
       context: ./tools/droid
-      dockerfile: dockerfile_droid
       args:
         - HTTP_PROXY=${HTTP_PROXY}
         - HTTPS_PROXY=${HTTPS_PROXY}
@@ -37,7 +35,6 @@ services:
     restart: unless-stopped
     build:
       context: ./tools/tika
-      dockerfile: dockerfile_tika
       args:
         - HTTP_PROXY=${HTTP_PROXY}
         - HTTPS_PROXY=${HTTPS_PROXY}
@@ -53,7 +50,6 @@ services:
     restart: unless-stopped
     build:
       context: ./tools/jhove
-      dockerfile: dockerfile_jhove
       args:
         - HTTP_PROXY=${HTTP_PROXY}
         - HTTPS_PROXY=${HTTPS_PROXY}
@@ -69,7 +65,6 @@ services:
     restart: unless-stopped
     build:
       context: ./tools/verapdf
-      dockerfile: dockerfile_verapdf
       args:
         - HTTP_PROXY=${HTTP_PROXY}
         - HTTPS_PROXY=${HTTPS_PROXY}

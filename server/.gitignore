@@ -9,7 +9,7 @@
 !/**/*.go
 
 # allow server dockerfile
-!dockerfile_server
+!Dockerfile
 
 # allow server config
 !config/server_config.yml

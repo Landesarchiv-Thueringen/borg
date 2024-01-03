@@ -6,7 +6,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o tika_api cmd/tika_api.go
 
 FROM alpine:3.18 AS prod
 WORKDIR /borg/tools/tika
-COPY --from=build /borg/tools/tika/ .
 RUN apk update
 RUN apk add openjdk17
+COPY --from=build /borg/tools/tika/ .
 CMD ["./tika_api"]

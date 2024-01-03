@@ -1,4 +1,4 @@
-# allwo readme
+# allow readme
 !README.md
 
 # allow go project files
@@ -9,7 +9,7 @@
 !/**/*.go
 
 # allow tika dockerfile
-!dockerfile_jhove
+!Dockerfile
 
 # allow tika jar
 !/bin/jhove_1.28.0.jar

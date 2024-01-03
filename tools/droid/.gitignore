@@ -1,4 +1,4 @@
-# allwo readme
+# allow readme
 !README.md
 
 # allow go project files
@@ -9,7 +9,7 @@
 !/**/*.go
 
 # allow droid dockerfile
-!dockerfile_droid
+!Dockerfile
 
 # allow droid zip and signature files
 !/bin/DROID_SignatureFile_V114.xml
