@@ -2,12 +2,24 @@
 
 Identifies and validates file formats.
 
-## Backend
+## Run
 
-### Run
+Build or rebuild images as required and start backend and frontend services:
 
 ```sh
-docker compose up
+docker compose up --build
+```
+
+## Development
+
+### Frontend
+
+#### Start a Development Server
+
+In the directory `gui` run
+```sh
+npm install
+npm start
 ```
 
 ### Go Workspaces
@@ -17,14 +29,4 @@ We use Go workspaces so any tooling (e.g., IDE integration) knows about director
 To add a new directory, run for example
 ```sh
 go work use ./tools/new-tool
-```
-
-## Frontend
-
-### Run
-
-In the directory `gui` run
-```sh
-npm install
-npm start
 ```
