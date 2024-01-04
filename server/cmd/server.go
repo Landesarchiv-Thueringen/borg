@@ -83,8 +83,7 @@ func main() {
 	router.Use(cors.New(corsConfig))
 	router.GET("", getDefaultResponse)
 	router.POST("analyse-file", analyseFile)
-	addr := "0.0.0.0:" + os.Getenv("BORG_SERVER_CONTAINER_PORT")
-	router.Run(addr)
+	router.Run("0.0.0.0:80")
 }
 
 func getDefaultResponse(context *gin.Context) {

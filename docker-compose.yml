@@ -10,10 +10,8 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
-    environment:
-      - BORG_SERVER_CONTAINER_PORT=${BORG_SERVER_CONTAINER_PORT}
     ports:
-      - ${BORG_SERVER_HOST_PORT}:${BORG_SERVER_CONTAINER_PORT}
+      - ${BORG_SERVER_HOST_PORT}:80
 
   droid-api:
     container_name: droid-api
@@ -25,10 +23,6 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
-    environment:
-      - DROID_API_CONTAINER_PORT=${DROID_API_CONTAINER_PORT}
-    ports:
-      - ${DROID_API_HOST_PORT}:${DROID_API_CONTAINER_PORT}
 
   tika-api:
     container_name: tika-api
@@ -40,10 +34,6 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
-    environment:
-      - TIKA_API_CONTAINER_PORT=${TIKA_API_CONTAINER_PORT}
-    ports:
-      - ${TIKA_API_HOST_PORT}:${TIKA_API_CONTAINER_PORT}
 
   jhove-api:
     container_name: jhove-api
@@ -55,10 +45,6 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
-    environment:
-      - JHOVE_API_CONTAINER_PORT=${JHOVE_API_CONTAINER_PORT}
-    ports:
-      - ${JHOVE_API_HOST_PORT}:${JHOVE_API_CONTAINER_PORT}
 
   verapdf-api:
     container_name: verapdf-api
@@ -70,10 +56,6 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
-    environment:
-      - VERAPDF_API_CONTAINER_PORT=${VERAPDF_API_CONTAINER_PORT}
-    ports:
-      - ${VERAPDF_API_HOST_PORT}:${VERAPDF_API_CONTAINER_PORT}
 
 volumes:
   filestore:
