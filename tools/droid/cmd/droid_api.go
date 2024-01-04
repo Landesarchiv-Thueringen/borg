@@ -21,7 +21,7 @@ type ToolResponse struct {
 
 var defaultResponse = "DROID API is running"
 var workDir = "/borg/tools/droid"
-var storeDir = "/borg/filestore"
+var storeDir = "/borg/file-store"
 var signatureFilePath = filepath.Join(workDir, "bin/DROID_SignatureFile_V114.xml")
 var containerSignatureFilePath = filepath.Join(workDir, "bin/container-signature-20230822.xml")
 var outputFormat = "csv"

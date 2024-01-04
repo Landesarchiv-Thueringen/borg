@@ -28,7 +28,7 @@ type TikaOutput struct {
 
 var defaultResponse = "Tika API is running"
 var workDir = "/borg/tools/tika"
-var storeDir = "/borg/filestore"
+var storeDir = "/borg/file-store"
 var outputFormat = "json"
 
 func main() {

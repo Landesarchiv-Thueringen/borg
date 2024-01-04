@@ -40,7 +40,7 @@ type ValidationResult struct {
 
 var defaultResponse = "veraPDF API is running"
 var workDir = "/borg/tools/verapdf"
-var storeDir = "/borg/filestore"
+var storeDir = "/borg/file-store"
 var outputFormat = "json"
 
 func main() {
@@ -91,11 +91,11 @@ func validateFile(context *gin.Context) {
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	veraPDFOutput, err := cmd.Output()
-	// exit status 1: file for profile invalid but validation job succesfull
+	// exit status 1: file for profile invalid but validation job successful
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println(err.Error())
 		log.Println(stderr.String())
-		errorMessage := "error executint verPDF\n" + stderr.String()
+		errorMessage := "error executing verPDF\n" + stderr.String()
 		response := ToolResponse{
 			Error: &errorMessage,
 		}

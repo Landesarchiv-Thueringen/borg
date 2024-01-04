@@ -66,7 +66,7 @@ func (featureValues ByScore) Swap(i, j int) {
 }
 
 var defaultResponse = "borg server is running"
-var storePath = "/borg/filestore"
+var storePath = "/borg/file-store"
 var serverConfig config.ServerConfig
 
 func main() {
@@ -82,7 +82,7 @@ func main() {
 	// It's important that the cors configuration is used before declaring the routes.
 	router.Use(cors.New(corsConfig))
 	router.GET("", getDefaultResponse)
-	router.POST("analyse-file", analyseFile)
+	router.POST("analyze-file", analyzeFile)
 	router.Run("0.0.0.0:80")
 }
 
@@ -90,7 +90,7 @@ func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, defaultResponse)
 }
 
-func analyseFile(context *gin.Context) {
+func analyzeFile(context *gin.Context) {
 	file, err := context.FormFile("file")
 	// no file received
 	if err != nil {
@@ -335,7 +335,7 @@ func getCorrectedToolConfidence(
 	scoredFeatures *map[string]Feature,
 ) ToolConfidence {
 	for _, featureConfig := range toolConfidence.FeatureConfig {
-		// if feature configuration doesn't belong to currentlu corrected feature
+		// if feature configuration doesn't belong to currently corrected feature
 		if featureKey != featureConfig.Key {
 			continue
 		}
@@ -383,17 +383,17 @@ func getFeature(featureKey string, featureValue string, tool ToolResponse) Featu
 }
 
 func calculateFeatureValueScore(features *map[string]Feature) {
-	for featureKey, feauture := range *features {
+	for featureKey, feature := range *features {
 		totalFeatureConfidence := 0.0
 		totalValueConfidence := make(map[string]float64)
-		for _, featureValue := range feauture.Values {
+		for _, featureValue := range feature.Values {
 			totalValueConfidence[featureValue.Value] = 0.0
 			for _, tool := range featureValue.Tools {
 				totalFeatureConfidence += tool.Confidence
 				totalValueConfidence[featureValue.Value] += tool.Confidence
 			}
 		}
-		for valueIndex, featureValue := range feauture.Values {
+		for valueIndex, featureValue := range feature.Values {
 			// if only one tool has extracted the feature
 			if len(featureValue.Tools) == 1 {
 				// total confidence is equal to tool confidence

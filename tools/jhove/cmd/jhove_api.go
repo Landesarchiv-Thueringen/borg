@@ -36,7 +36,7 @@ type JhoveRepInfo struct {
 }
 
 var defaultResponse = "JHOVE API is running"
-var storeDir = "/borg/filestore"
+var storeDir = "/borg/file-store"
 var wellFormedRegEx = regexp.MustCompile("Well-Formed")
 var validRegEx = regexp.MustCompile("Well-Formed and valid")
 var outputFormat = "json"

@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const storeDir = "/borg/filestore"
+const storeDir = "/borg/file-store"
 const defaultResponse = "ODF Validator API is running"
 
 var outputFormat = "text"
