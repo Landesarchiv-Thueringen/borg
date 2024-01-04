@@ -12,6 +12,8 @@ services:
       - "filestore:/borg/filestore"
     ports:
       - ${BORG_SERVER_HOST_PORT}:80
+    environment:
+      - GIN_MODE=${GIN_MODE}
 
   droid-api:
     container_name: droid-api
@@ -23,6 +25,8 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
+    environment:
+      - GIN_MODE=${GIN_MODE}
 
   tika-api:
     container_name: tika-api
@@ -34,6 +38,8 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
+    environment:
+      - GIN_MODE=${GIN_MODE}
 
   jhove-api:
     container_name: jhove-api
@@ -45,6 +51,8 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
+    environment:
+      - GIN_MODE=${GIN_MODE}
 
   verapdf-api:
     container_name: verapdf-api
@@ -56,6 +64,8 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "filestore:/borg/filestore"
+    environment:
+      - GIN_MODE=${GIN_MODE}
 
 volumes:
   filestore:
