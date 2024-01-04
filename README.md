@@ -10,6 +10,15 @@ Identifies and validates file formats.
 docker compose up
 ```
 
+### Go Workspaces
+
+We use Go workspaces so any tooling (e.g., IDE integration) knows about directories that contain Go modules.
+
+To add a new directory, run for example
+```sh
+go work use ./tools/new-tool
+```
+
 ## Frontend
 
 ### Run

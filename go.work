@@ -1,0 +1,10 @@
+go 1.21.5
+
+use (
+	./server
+	./tools/droid
+	./tools/jhove
+	./tools/odf-validator
+	./tools/tika
+	./tools/verapdf
+)
