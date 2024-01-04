@@ -1,7 +1,8 @@
 FROM golang:alpine AS build
 WORKDIR /borg
-COPY . ./
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o borg cmd/server.go
 
 FROM alpine:3.18 AS prod

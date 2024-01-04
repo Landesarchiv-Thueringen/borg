@@ -1,7 +1,8 @@
 FROM golang:alpine AS build
 WORKDIR /borg/tools/tika
-COPY . ./
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o tika_api cmd/tika_api.go
 
 FROM alpine:3.18 AS prod
