@@ -22,8 +22,8 @@ type ToolResponse struct {
 var defaultResponse = "DROID API is running"
 var workDir = "/borg/tools/droid"
 var storeDir = "/borg/file-store"
-var signatureFilePath = filepath.Join(workDir, "bin/DROID_SignatureFile_V114.xml")
-var containerSignatureFilePath = filepath.Join(workDir, "bin/container-signature-20230822.xml")
+var signatureFilePath = filepath.Join(workDir, "third_party/DROID_SignatureFile_V114.xml")
+var containerSignatureFilePath = filepath.Join(workDir, "third_party/container-signature-20230822.xml")
 var outputFormat = "csv"
 
 func main() {
@@ -52,7 +52,7 @@ func identifyFileFormat(context *gin.Context) {
 	}
 	cmd := exec.Command(
 		"/bin/ash",
-		"/borg/tools/droid/bin/droid.sh",
+		"/borg/tools/droid/third_party/droid.sh",
 		"-Ns",
 		signatureFilePath,
 		"-Nc",

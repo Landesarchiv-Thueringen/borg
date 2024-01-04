@@ -80,7 +80,7 @@ func validateFile(context *gin.Context) {
 	}
 	cmd := exec.Command(
 		"/bin/ash",
-		filepath.Join(workDir, "bin/verapdf"),
+		filepath.Join(workDir, "third_party/verapdf"),
 		"-f",
 		profile,
 		"--format",

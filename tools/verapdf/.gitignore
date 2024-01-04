@@ -12,4 +12,4 @@
 !Dockerfile
 
 # allow veraPDF installer zip
-!/bin/verapdf-installer.zip
+!/third_party/verapdf-installer.zip

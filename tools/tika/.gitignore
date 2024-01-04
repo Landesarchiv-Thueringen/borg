@@ -12,4 +12,4 @@
 !Dockerfile
 
 # allow tika jar
-!/bin/tika-app-2.9.0.jar
+!/third_party/tika-app-2.9.0.jar

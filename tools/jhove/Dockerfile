@@ -11,5 +11,5 @@ RUN apk update
 RUN apk add openjdk17
 COPY --from=build /borg/tools/jhove/ .
 # install JHOVE with jar, enter sequence of characters required for the installation wizard
-RUN sh -c '/bin/echo -e "1\njhove\nO\n1\nY\n1" | java -jar bin/jhove_1.28.0.jar'
+RUN sh -c '/bin/echo -e "1\njhove\nO\n1\nY\n1" | java -jar third_party/jhove_1.28.0.jar'
 CMD ["./jhove_api"]

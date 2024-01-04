@@ -12,4 +12,4 @@
 !Dockerfile
 
 # allow tika jar
-!/bin/jhove_1.28.0.jar
+!/third_party/jhove_1.28.0.jar
