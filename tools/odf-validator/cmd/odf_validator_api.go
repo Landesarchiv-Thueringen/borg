@@ -46,7 +46,7 @@ func validate(context *gin.Context) {
 		response := ToolResponse{
 			Error: &errorMessage,
 		}
-		context.JSON(http.StatusInternalServerError, response)
+		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
@@ -59,7 +59,7 @@ func validate(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
-// validateFile uses ODF Validator to determine wether a given file is a valid ODF document.
+// validateFile uses ODF Validator to determine whether a given file is a valid ODF document.
 //
 // It returns
 // - a boolean indicating whether the file is valid ODF
