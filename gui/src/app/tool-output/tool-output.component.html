@@ -1,0 +1,48 @@
+<h1 mat-dialog-title>{{ toolResult.toolName }} ({{ toolResult.toolVersion }})</h1>
+
+<mat-dialog-content>
+    <ng-container *ngIf="toolResult.extractedFeatures as extractedFeatures">
+        <h2>Entnommene Eigenschaften</h2>
+
+        <table mat-table [dataSource]="extractedFeatures | keyvalue">
+            <ng-container matColumnDef="key">
+                <th mat-header-cell *matHeaderCellDef>Eigenschaft</th>
+                <td mat-cell *matCellDef="let element">{{ element.key }}</td>
+            </ng-container>
+            <ng-container matColumnDef="value">
+                <th mat-header-cell *matHeaderCellDef>Wert</th>
+                <td mat-cell *matCellDef="let element">{{ element.value }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['key', 'value']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['key', 'value'];"></tr>
+        </table>
+    </ng-container>
+
+    <ng-container *ngIf="toolResult.toolOutput">
+        <h2>Werkzeug-Ausgabe</h2>
+
+        <table *ngIf="toolResult.outputFormat === 'csv'" mat-table
+            [dataSource]="toolResult.toolOutput | csvTable: 'data'">
+            <ng-container *ngFor="let tableColumn of toolResult.toolOutput | csvTable: 'columns'"
+                matColumnDef={{tableColumn}}>
+                <th mat-header-cell *matHeaderCellDef>{{ tableColumn }}</th>
+                <td mat-cell *matCellDef="let element">{{ element[tableColumn] }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="toolResult.toolOutput | csvTable: 'columns'"></tr>
+            <tr mat-row *matRowDef="let row; columns: toolResult.toolOutput | csvTable: 'columns';"></tr>
+        </table>
+
+        <pre *ngIf="toolResult.outputFormat === 'json'">{{ toolResult.toolOutput | prettyPrintJson }}</pre>
+
+        <pre *ngIf="toolResult.outputFormat === 'text'">{{ toolResult.toolOutput }}</pre>
+    </ng-container>
+
+    <ng-container *ngIf="toolResult.error as error">
+        <h2>Fehler</h2>
+        <pre>{{ error }}</pre>
+    </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close color="primary">Schließen</button>
+</mat-dialog-actions>

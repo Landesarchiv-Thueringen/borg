@@ -36,6 +36,9 @@ export interface ToolResult {
   toolName: string;
   toolVersion: string;
   toolOutput: string;
+  outputFormat: 'text' | 'json' | 'csv';
+  extractedFeatures: { [key: string]: string };
+  error: string | null;
 }
 
 export interface Summary {

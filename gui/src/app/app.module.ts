@@ -35,6 +35,9 @@ import { FileUploadTableComponent } from './file-upload-table/file-upload-table.
 import { PaginatorDeService } from './utility/localization/paginator-de.service';
 import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
 import { FileOverviewComponent } from './file-overview/file-overview.component';
+import { ToolOutputComponent } from './tool-output/tool-output.component';
+import { CsvTablePipe } from './utility/formatting/csv-table.pipe';
+import { PrettyPrintJsonPipe } from './utility/formatting/pretty-print-json.pipe';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,9 @@ import { FileOverviewComponent } from './file-overview/file-overview.component';
     FileUploadTableComponent,
     FileAnalysisTableComponent,
     FileOverviewComponent,
+    ToolOutputComponent,
+    CsvTablePipe,
+    PrettyPrintJsonPipe,
   ],
   imports: [
     BrowserModule,

@@ -2,12 +2,19 @@
 import { Component, Inject } from '@angular/core';
 
 // material
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import { FileAnalysisService, Summary, ToolConfidence } from '../file-analysis/file-analysis.service';
-import { FeatureValue, FileResult, ToolResult } from '../file-analysis/file-analysis.service';
+import {
+  FeatureValue,
+  FileAnalysisService,
+  FileResult,
+  Summary,
+  ToolConfidence,
+  ToolResult,
+} from '../file-analysis/file-analysis.service';
+import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
 interface DialogData {
   fileResult: FileResult;
@@ -35,6 +42,7 @@ export class FileOverviewComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: DialogData,
     private fileAnalysisService: FileAnalysisService,
+    private dialog: MatDialog
   ) {
     this.dataSource = new MatTableDataSource<FileFeatures>();
     this.tableColumnList = ['Attribut'];
@@ -47,38 +55,54 @@ export class FileOverviewComponent {
       const summary = this.fileResult.toolResults.summary;
       const toolNames: string[] = [];
       let featureNames: string[] = [];
-      let toolResults: ToolResult[] = this.fileResult.toolResults.fileIdentificationResults;
+      let toolResults: ToolResult[] =
+        this.fileResult.toolResults.fileIdentificationResults;
       if (this.fileResult.toolResults.fileValidationResults) {
-        toolResults = toolResults.concat(this.fileResult.toolResults.fileValidationResults);
+        toolResults = toolResults.concat(
+          this.fileResult.toolResults.fileValidationResults
+        );
       }
-      toolResults.forEach(
-        (toolResult: ToolResult) => {
-          toolNames.push(toolResult.toolName);
-        }
-      );
+      toolResults.forEach((toolResult: ToolResult) => {
+        toolNames.push(toolResult.toolName);
+      });
       for (let featureKey in summary) {
         featureNames.push(featureKey);
       }
-      featureNames = this.fileAnalysisService.selectOverviewFeatures(featureNames);
-      this.dataSource.data = this.getTableRows(summary, toolNames, featureNames);
+      featureNames =
+        this.fileAnalysisService.selectOverviewFeatures(featureNames);
+      this.dataSource.data = this.getTableRows(
+        summary,
+        toolNames,
+        featureNames
+      );
+      console.log('table rows', this.dataSource.data);
     }
   }
 
-  getTableRows(summary: Summary, toolNames: string[], featureNames: string[]): FileFeatures[] {
-    const rows: FileFeatures[] = [this.getCumulativeResult(summary, featureNames)];
-    const sortedFeatures: string[] = this.fileAnalysisService.sortFeatures(featureNames);
-    this.tableColumnList = ['Werkzeug', ...sortedFeatures];
+  getTableRows(
+    summary: Summary,
+    toolNames: string[],
+    featureNames: string[]
+  ): FileFeatures[] {
+    const rows: FileFeatures[] = [
+      this.getCumulativeResult(summary, featureNames),
+    ];
+    const sortedFeatures: string[] =
+      this.fileAnalysisService.sortFeatures(featureNames);
+    this.tableColumnList = ['Werkzeug', ...sortedFeatures, 'action'];
     for (let toolName of toolNames) {
       const featureValues: FileFeatures = {};
       featureValues['Werkzeug'] = {
         value: toolName,
-      }
+      };
       for (let featureName of featureNames) {
         for (let featureValue of summary[featureName].values) {
           if (this.featureOfTool(featureValue, toolName)) {
-            const toolInfo: ToolConfidence = featureValue.tools.find((toolInfo: ToolConfidence) => {
-              return toolInfo.toolName === toolName;
-            })!;
+            const toolInfo: ToolConfidence = featureValue.tools.find(
+              (toolInfo: ToolConfidence) => {
+                return toolInfo.toolName === toolName;
+              }
+            )!;
             featureValues[featureName] = {
               value: featureValue.value,
               confidence: toolInfo.confidence,
@@ -96,10 +120,10 @@ export class FileOverviewComponent {
     const features: FileFeatures = {};
     features['Werkzeug'] = {
       value: 'Gesamtergebnis',
-    }
+    };
     for (let featureName of featureNames) {
       // result with highest confidence
-      const featureValue = summary[featureName].values[0]
+      const featureValue = summary[featureName].values[0];
       features[featureName] = {
         value: featureValue.value,
         confidence: featureValue.score,
@@ -116,5 +140,19 @@ export class FileOverviewComponent {
       }
     }
     return false;
+  }
+
+  showToolOutput(toolName: string): void {
+    const toolResult = [
+      ...this.fileResult.toolResults.fileIdentificationResults,
+      ...this.fileResult.toolResults.fileValidationResults,
+    ].find((result) => result.toolName === toolName);
+    if (toolResult) {
+      this.dialog.open(ToolOutputComponent, {
+        data: {
+          toolResult,
+        },
+      });
+    }
   }
 }

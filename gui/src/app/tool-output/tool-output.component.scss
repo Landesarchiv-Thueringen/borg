@@ -1,0 +1,11 @@
+h2 {
+  margin-bottom: 0;
+}
+
+h2:not(:first-child) {
+  margin-top: 16px;
+}
+
+pre {
+  overflow: auto;
+}

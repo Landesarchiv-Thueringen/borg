@@ -1,36 +1,29 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({name: 'fileFeature'})
+@Pipe({ name: 'fileFeature' })
 export class FileFeaturePipe implements PipeTransform {
   transform(value: string): string {
     switch (value) {
-      case 'fileName': {
+      case 'fileName':
         return 'Dateiname';
-      }
-      case 'relativePath': {
+      case 'relativePath':
         return 'Pfad';
-      }
-      case 'fileSize': {
+      case 'fileSize':
         return 'Dateigröße';
-      }
-      case 'formatVersion': {
+      case 'formatVersion':
         return 'Formatversion';
-      }
-      case 'mimeType': {
+      case 'mimeType':
         return 'MIME-Type';
-      }
-      case 'puid': {
+      case 'puid':
         return 'PUID';
-      }
-      case 'valid': {
+      case 'valid':
         return 'Valide';
-      }
-      case 'wellFormed': {
+      case 'wellFormed':
         return 'Wohlgeformt';
-      }
-      case 'encoding': {
+      case 'encoding':
         return 'Zeichenkodierung';
-      }
+      case 'action':
+        return '';
     }
     return value;
   }
