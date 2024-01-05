@@ -92,5 +92,18 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
+  ooxml-validator-api:
+    container_name: ooxml-validator-api
+    restart: unless-stopped
+    build:
+      context: ./tools/ooxml-validator
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "file-store:/borg/file-store"
+    environment:
+      - GIN_MODE=${GIN_MODE}
+
 volumes:
   file-store:

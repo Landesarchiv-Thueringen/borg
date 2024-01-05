@@ -233,3 +233,14 @@ formatValidationTools:
       - key: "valid"
         confidence:
           defaultValue: 1.0
+
+  - toolName: "OOXML-Validator"
+    toolVersion: "2.1.1"
+    endpoint: "http://ooxml-validator-api/validate"
+    trigger:
+      - feature: "mimeType"
+        regEx: "^application/vnd\\.openxmlformats-officedocument\\."
+    features:
+      - key: "valid"
+        confidence:
+          defaultValue: 1.0

@@ -5,6 +5,7 @@ use (
 	./tools/droid
 	./tools/jhove
 	./tools/odf-validator
+	./tools/ooxml-validator
 	./tools/tika
 	./tools/verapdf
 )
