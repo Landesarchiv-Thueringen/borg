@@ -123,4 +123,15 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   clearToolResults(): void {
     this.fileAnalysisService.clearFileResults();
   }
+
+  exportResults(): void {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.download = 'borg-results.json';
+    a.href =
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(this.fileAnalysisService.fileResults, null, 2));
+    a.click();
+    document.body.removeChild(a);
+  }
 }

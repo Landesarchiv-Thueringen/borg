@@ -71,9 +71,13 @@
     </div>
 
     <mat-toolbar class ="table-toolbar">
-      <button mat-stroked-button (click)="clearToolResults()" color="primary">
+      <button mat-stroked-button (click)="clearToolResults()" color="primary" [disabled]="dataSource.data.length === 0">
         <mat-icon>cleaning_services</mat-icon>
         Auswertung leeren
+      </button>
+      <button mat-stroked-button (click)="exportResults()" color="primary" [disabled]="dataSource.data.length === 0">
+        <mat-icon>summarize</mat-icon>
+        Ergebnisse exportieren
       </button>
       <span class="spacer"></span>
       <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
