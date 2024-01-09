@@ -56,7 +56,7 @@ export class FileOverviewComponent {
       const toolNames: string[] = [];
       let featureNames: string[] = [];
       let toolResults: ToolResult[] =
-        this.fileResult.toolResults.fileIdentificationResults;
+        this.fileResult.toolResults.fileIdentificationResults ?? [];
       if (this.fileResult.toolResults.fileValidationResults) {
         toolResults = toolResults.concat(
           this.fileResult.toolResults.fileValidationResults
@@ -144,8 +144,8 @@ export class FileOverviewComponent {
 
   showToolOutput(toolName: string): void {
     const toolResult = [
-      ...this.fileResult.toolResults.fileIdentificationResults,
-      ...this.fileResult.toolResults.fileValidationResults,
+      ...(this.fileResult.toolResults.fileIdentificationResults ?? []),
+      ...(this.fileResult.toolResults.fileValidationResults ?? []),
     ].find((result) => result.toolName === toolName);
     if (toolResult) {
       this.dialog.open(ToolOutputComponent, {

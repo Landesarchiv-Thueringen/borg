@@ -27,8 +27,8 @@ export interface FileResult {
 }
 
 export interface ToolResults {
-  fileIdentificationResults: ToolResult[];
-  fileValidationResults: ToolResult[];
+  fileIdentificationResults: ToolResult[] | null;
+  fileValidationResults: ToolResult[] | null;
   summary: Summary;
 }
 
