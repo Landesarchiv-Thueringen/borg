@@ -20,7 +20,7 @@
             ({{ fileInfo[tableColumn].confidence | percent }})
           </span>
           <button *ngIf="tableColumn === 'action' && fileInfo.Werkzeug.value !== 'Gesamtergebnis'" mat-icon-button
-            matTooltip="Ausgabe ansehen" matTooltipPosition="right" (click)="showToolOutput(fileInfo.Werkzeug.value)">
+            matTooltip="Werkzeug-Ausgabe ansehen" matTooltipPosition="right" (click)="showToolOutput(fileInfo.Werkzeug.value)">
             <mat-icon>search</mat-icon>
           </button>
         </div>
