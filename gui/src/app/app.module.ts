@@ -34,7 +34,7 @@ import { PaginatorDeService } from './utility/localization/paginator-de.service'
 import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
 import { FileOverviewComponent } from './file-overview/file-overview.component';
 import { ToolOutputComponent } from './tool-output/tool-output.component';
-import { CsvTablePipe } from './utility/formatting/csv-table.pipe';
+import { PrettyPrintCsvPipe } from './utility/formatting/pretty-print-csv.pipe';
 import { PrettyPrintJsonPipe } from './utility/formatting/pretty-print-json.pipe';
 
 @NgModule({
@@ -47,7 +47,7 @@ import { PrettyPrintJsonPipe } from './utility/formatting/pretty-print-json.pipe
     FileAnalysisTableComponent,
     FileOverviewComponent,
     ToolOutputComponent,
-    CsvTablePipe,
+    PrettyPrintCsvPipe,
     PrettyPrintJsonPipe,
   ],
   imports: [

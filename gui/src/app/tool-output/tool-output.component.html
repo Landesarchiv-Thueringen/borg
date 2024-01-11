@@ -26,24 +26,8 @@
         <mat-panel-title>Werkzeug-Ausgabe</mat-panel-title>
       </mat-expansion-panel-header>
 
-      <table
-        *ngIf="toolResult.outputFormat === 'csv'"
-        mat-table
-        [dataSource]="toolResult.toolOutput | csvTable : 'data'"
-      >
-        <ng-container
-          *ngFor="let tableColumn of toolResult.toolOutput | csvTable : 'columns'"
-          matColumnDef="{{ tableColumn }}"
-        >
-          <th mat-header-cell *matHeaderCellDef>{{ tableColumn }}</th>
-          <td mat-cell *matCellDef="let element">{{ element[tableColumn] }}</td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="toolResult.toolOutput | csvTable : 'columns'"></tr>
-        <tr mat-row *matRowDef="let row; columns: toolResult.toolOutput | csvTable : 'columns'"></tr>
-      </table>
-
+      <pre *ngIf="toolResult.outputFormat === 'csv'">{{ toolResult.toolOutput | prettyPrintCsv }}</pre>
       <pre *ngIf="toolResult.outputFormat === 'json'">{{ toolResult.toolOutput | prettyPrintJson }}</pre>
-
       <pre *ngIf="toolResult.outputFormat === 'text'">{{ toolResult.toolOutput }}</pre>
     </mat-expansion-panel>
 
