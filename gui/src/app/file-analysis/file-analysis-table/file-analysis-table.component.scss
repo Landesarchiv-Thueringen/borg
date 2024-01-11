@@ -9,57 +9,63 @@
     display: flex;
     flex-direction: column;
     margin-top: 2em;
-  
+
     .file-analysis-table {
       width: 100%;
       min-width: 80em;
       max-width: 150em;
 
       .table-content {
-        overflow: auto;
+        .mat-mdc-row {
+          position: relative;
+        }
 
-        .path-cell {
-          max-width: 15.0em!important;
+        .cdk-cell.cdk-column-relativePath {
           word-break: break-word;
         }
 
-        .name-cell {
-          max-width: 15.0em!important;
+        .cdk-cell.cdk-column-fileName {
           word-break: break-word;
         }
 
-        .mime-type-cell {
-          max-width: 10.0em!important;
+        .cdk-cell.cdk-column-mimeType {
           word-break: break-word;
         }
 
-        .high-confidence-cell {
-          background-color: rgba(0,150,0,0.1);
-        }
-
-        .mid-confidence-cell {
-          background-color: rgba(255,165,0,0.2);
-        }
-
-        .low-confidence-cell {
-          background-color: rgba(150,0,0,0.1);
+        .open-details-button {
+          position: absolute;
+          border-radius: 0;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+          &:hover::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: currentColor;
+            opacity: 0.04;
+          }
         }
       }
 
       .table-toolbar {
         background-color: white;
-        column-gap: 1.0em;
+        column-gap: 1em;
 
         mat-paginator {
           background: transparent;
         }
-        
+
         .spacer {
-            flex: 1 1 auto;
+          flex: 1 1 auto;
         }
-        
+
         input[type="file"] {
-            display: none;
+          display: none;
         }
       }
     }

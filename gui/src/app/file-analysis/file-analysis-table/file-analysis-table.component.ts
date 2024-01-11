@@ -47,7 +47,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this.tableColumnList = [];
     this.generatedTableColumnList = ['fileName', 'relativePath', 'fileSize'];
     this.fileAnalysisService.getFileResults().subscribe({
-      // error can't occure --> no error handling
+      // error can't occur --> no error handling
       next: (fileInfos: FileResult[]) => {
         this.processFileInformations(fileInfos);
       },
@@ -89,7 +89,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     const selectedFeatures = this.fileAnalysisService.selectOverviewFeatures(features);
     const sortedFeatures = this.fileAnalysisService.sortFeatures(selectedFeatures);
     this.generatedTableColumnList = sortedFeatures;
-    this.tableColumnList = sortedFeatures.concat(['actions']);
+    this.tableColumnList = sortedFeatures.concat(['status']);
   }
 
   getFeatureTooltip(feature: Feature): string {
