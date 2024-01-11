@@ -1,37 +1,33 @@
 <h1 mat-dialog-title>Formatverifikation</h1>
 
 <mat-dialog-content>
-
-  <table mat-table [dataSource]="dataSource">
-
-    <ng-container *ngFor="let tableColumn of tableColumnList" matColumnDef={{tableColumn}}>
-      <th mat-header-cell *matHeaderCellDef>{{tableColumn|fileFeature}}</th>
-      <td mat-cell *matCellDef="let fileInfo"
-        [class.high-confidence-cell]="fileInfo[tableColumn] && fileInfo[tableColumn].colorizeConfidence && fileInfo[tableColumn].confidence >= 0.7"
-        [class.mid-confidence-cell]="fileInfo[tableColumn] && fileInfo[tableColumn].colorizeConfidence && fileInfo[tableColumn].confidence < 0.7 && fileInfo[tableColumn]?.confidence >= 0.45"
-        [class.low-confidence-cell]="fileInfo[tableColumn] && fileInfo[tableColumn].colorizeConfidence && fileInfo[tableColumn].confidence < 0.45">
+  <mat-table [dataSource]="dataSource">
+    <ng-container *ngFor="let tableColumn of tableColumnList; let first = first" matColumnDef="{{ tableColumn }}">
+      <mat-header-cell *matHeaderCellDef>{{ tableColumn | fileFeature }}</mat-header-cell>
+      <mat-cell *matCellDef="let fileInfo">
         <div class="feature-info">
           <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'true'">check</mat-icon>
           <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'false'">close</mat-icon>
           <ng-container *ngIf="fileInfo[tableColumn]?.value !== 'false' && fileInfo[tableColumn]?.value !== 'true'">
-            <span *ngIf="fileInfo[tableColumn]">{{fileInfo[tableColumn].value}}</span>
+            <span *ngIf="fileInfo[tableColumn]">{{ fileInfo[tableColumn].value }}</span>
           </ng-container>
-          <span *ngIf="fileInfo[tableColumn]?.confidence || fileInfo[tableColumn]?.confidence === 0.0" class="confidence-value">
+          <span *ngIf="fileInfo[tableColumn]?.confidence != null" class="confidence-value">
             ({{ fileInfo[tableColumn].confidence | percent }})
           </span>
-          <button *ngIf="tableColumn === 'action' && fileInfo.Werkzeug.value !== 'Gesamtergebnis'" mat-icon-button
-            matTooltip="Werkzeug-Ausgabe ansehen" matTooltipPosition="right" (click)="showToolOutput(fileInfo.Werkzeug.value)">
-            <mat-icon>search</mat-icon>
-          </button>
+          <button
+            *ngIf="first && fileInfo.Werkzeug.value !== 'Gesamtergebnis'"
+            mat-button
+            class="open-details-button"
+            (click)="showToolOutput(fileInfo.Werkzeug.value)"
+            aria-label="Details anzeigen"
+          ></button>
         </div>
-      </td>
+      </mat-cell>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="tableColumnList"></tr>
-    <tr mat-row *matRowDef="let row; columns: tableColumnList;"></tr>
-
-  </table>
-
+    <mat-header-row *matHeaderRowDef="tableColumnList"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: tableColumnList"></mat-row>
+  </mat-table>
 </mat-dialog-content>
 
 <mat-dialog-actions>

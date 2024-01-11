@@ -89,7 +89,7 @@ export class FileOverviewComponent {
     ];
     const sortedFeatures: string[] =
       this.fileAnalysisService.sortFeatures(featureNames);
-    this.tableColumnList = ['Werkzeug', ...sortedFeatures, 'action'];
+    this.tableColumnList = ['Werkzeug', ...sortedFeatures];
     for (let toolName of toolNames) {
       const featureValues: FileFeatures = {};
       featureValues['Werkzeug'] = {

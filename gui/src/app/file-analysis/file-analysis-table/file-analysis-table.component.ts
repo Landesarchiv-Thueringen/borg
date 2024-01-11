@@ -113,7 +113,8 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       this.dialog.open(FileOverviewComponent, {
         data: {
           fileResult: fileResult
-        }
+        }, 
+        autoFocus: false
       });
     } else {
       console.error('file result not found');
