@@ -1,48 +1,61 @@
 <h1 mat-dialog-title>{{ toolResult.toolName }} ({{ toolResult.toolVersion }})</h1>
 
 <mat-dialog-content>
-    <ng-container *ngIf="toolResult.extractedFeatures as extractedFeatures">
-        <h2>Entnommene Eigenschaften</h2>
+  <mat-accordion multi="true">
+    <mat-expansion-panel *ngIf="toolResult.extractedFeatures as extractedFeatures" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Extrahierte Eigenschaften</mat-panel-title>
+      </mat-expansion-panel-header>
 
-        <table mat-table [dataSource]="extractedFeatures | keyvalue">
-            <ng-container matColumnDef="key">
-                <th mat-header-cell *matHeaderCellDef>Eigenschaft</th>
-                <td mat-cell *matCellDef="let element">{{ element.key }}</td>
-            </ng-container>
-            <ng-container matColumnDef="value">
-                <th mat-header-cell *matHeaderCellDef>Wert</th>
-                <td mat-cell *matCellDef="let element">{{ element.value }}</td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['key', 'value']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['key', 'value'];"></tr>
-        </table>
-    </ng-container>
+      <table mat-table [dataSource]="extractedFeatures | keyvalue">
+        <ng-container matColumnDef="key">
+          <th mat-header-cell *matHeaderCellDef>Eigenschaft</th>
+          <td mat-cell *matCellDef="let element">{{ element.key }}</td>
+        </ng-container>
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Wert</th>
+          <td mat-cell *matCellDef="let element">{{ element.value }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['key', 'value']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['key', 'value']"></tr>
+      </table>
+    </mat-expansion-panel>
 
-    <ng-container *ngIf="toolResult.toolOutput">
-        <h2>Werkzeug-Ausgabe</h2>
+    <mat-expansion-panel *ngIf="toolResult.toolOutput">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Werkzeug-Ausgabe</mat-panel-title>
+      </mat-expansion-panel-header>
 
-        <table *ngIf="toolResult.outputFormat === 'csv'" mat-table
-            [dataSource]="toolResult.toolOutput | csvTable: 'data'">
-            <ng-container *ngFor="let tableColumn of toolResult.toolOutput | csvTable: 'columns'"
-                matColumnDef={{tableColumn}}>
-                <th mat-header-cell *matHeaderCellDef>{{ tableColumn }}</th>
-                <td mat-cell *matCellDef="let element">{{ element[tableColumn] }}</td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="toolResult.toolOutput | csvTable: 'columns'"></tr>
-            <tr mat-row *matRowDef="let row; columns: toolResult.toolOutput | csvTable: 'columns';"></tr>
-        </table>
+      <table
+        *ngIf="toolResult.outputFormat === 'csv'"
+        mat-table
+        [dataSource]="toolResult.toolOutput | csvTable : 'data'"
+      >
+        <ng-container
+          *ngFor="let tableColumn of toolResult.toolOutput | csvTable : 'columns'"
+          matColumnDef="{{ tableColumn }}"
+        >
+          <th mat-header-cell *matHeaderCellDef>{{ tableColumn }}</th>
+          <td mat-cell *matCellDef="let element">{{ element[tableColumn] }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="toolResult.toolOutput | csvTable : 'columns'"></tr>
+        <tr mat-row *matRowDef="let row; columns: toolResult.toolOutput | csvTable : 'columns'"></tr>
+      </table>
 
-        <pre *ngIf="toolResult.outputFormat === 'json'">{{ toolResult.toolOutput | prettyPrintJson }}</pre>
+      <pre *ngIf="toolResult.outputFormat === 'json'">{{ toolResult.toolOutput | prettyPrintJson }}</pre>
 
-        <pre *ngIf="toolResult.outputFormat === 'text'">{{ toolResult.toolOutput }}</pre>
-    </ng-container>
+      <pre *ngIf="toolResult.outputFormat === 'text'">{{ toolResult.toolOutput }}</pre>
+    </mat-expansion-panel>
 
-    <ng-container *ngIf="toolResult.error as error">
-        <h2>Fehler</h2>
-        <pre>{{ error }}</pre>
-    </ng-container>
+    <mat-expansion-panel *ngIf="toolResult.error as error" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Fehler</mat-panel-title>
+      </mat-expansion-panel-header>
+      <pre>{{ error }}</pre>
+    </mat-expansion-panel>
+  </mat-accordion>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-    <button mat-raised-button mat-dialog-close color="primary">Schließen</button>
+  <button mat-raised-button mat-dialog-close color="primary">Schließen</button>
 </mat-dialog-actions>

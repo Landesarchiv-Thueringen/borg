@@ -10,20 +10,18 @@ registerLocaleData(localeDe);
 
 // material
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog'; 
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu'; 
-import {
-  MatPaginatorModule,
-  MatPaginatorIntl,
-} from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 // project
 import { AppRoutingModule } from './app-routing.module';
@@ -59,6 +57,7 @@ import { PrettyPrintJsonPipe } from './utility/formatting/pretty-print-json.pipe
     HttpClientModule,
     MatButtonModule,
     MatDialogModule,
+    MatExpansionModule,
     MatIconModule,
     MatMenuModule,
     MatPaginatorModule,

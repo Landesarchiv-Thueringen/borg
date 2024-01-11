@@ -152,6 +152,7 @@ export class FileOverviewComponent {
         data: {
           toolResult,
         },
+        autoFocus: false,
       });
     }
   }

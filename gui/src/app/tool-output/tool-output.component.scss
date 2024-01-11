@@ -1,9 +1,5 @@
-h2 {
-  margin-bottom: 0;
-}
-
-h2:not(:first-child) {
-  margin-top: 16px;
+.mat-mdc-dialog-container :host mat-dialog-content {
+  padding-top: 3px; // make room for box shadow
 }
 
 pre {
