@@ -10,7 +10,7 @@
       <table mat-table [dataSource]="extractedFeatures | keyvalue">
         <ng-container matColumnDef="key">
           <th mat-header-cell *matHeaderCellDef>Eigenschaft</th>
-          <td mat-cell *matCellDef="let element">{{ element.key }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.key | fileFeature }}</td>
         </ng-container>
         <ng-container matColumnDef="value">
           <th mat-header-cell *matHeaderCellDef>Wert</th>
