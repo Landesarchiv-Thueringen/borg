@@ -7,11 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import {
-  FileResult,
-  FileAnalysisService,
-  Feature,
-} from '../file-analysis.service';
+import { FileResult, FileAnalysisService, Feature } from '../file-analysis.service';
 import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
 
@@ -41,7 +37,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   constructor(
     private dialog: MatDialog,
     private fileAnalysisService: FileAnalysisService,
-    private fileSizePipe: FileSizePipe,
+    private fileSizePipe: FileSizePipe
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = [];
@@ -49,7 +45,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this.fileAnalysisService.getFileResults().subscribe({
       // error can't occur --> no error handling
       next: (fileInfos: FileResult[]) => {
-        this.processFileInformations(fileInfos);
+        this.processFileInformation(fileInfos);
       },
     });
   }
@@ -58,7 +54,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  processFileInformations(fileInfos: FileResult[]): void {
+  processFileInformation(fileInfos: FileResult[]): void {
     const featureKeys: string[] = ['fileName', 'relativePath', 'fileSize'];
     const data: FileOverview[] = [];
     for (let fileInfo of fileInfos) {
@@ -66,9 +62,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       for (let featureKey in fileInfo.toolResults.summary) {
         featureKeys.push(featureKey);
         fileOverview['fileName'] = { value: fileInfo.fileName };
-        fileOverview['relativePath'] = fileInfo.relativePath
-          ? { value: fileInfo.relativePath }
-          : { value: '' };
+        fileOverview['relativePath'] = fileInfo.relativePath ? { value: fileInfo.relativePath } : { value: '' };
         fileOverview['fileSize'] = {
           value: this.fileSizePipe.transform(fileInfo.fileSize),
         };
@@ -76,9 +70,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           value: fileInfo.toolResults.summary[featureKey].values[0].value,
           confidence: fileInfo.toolResults.summary[featureKey].values[0].score,
           feature: fileInfo.toolResults.summary[featureKey],
-          tooltip: this.getFeatureTooltip(
-            fileInfo.toolResults.summary[featureKey]
-          ),
+          tooltip: this.getFeatureTooltip(fileInfo.toolResults.summary[featureKey]),
         };
       }
       fileOverview['id'] = { value: fileInfo.id };
@@ -95,11 +87,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   getFeatureTooltip(feature: Feature): string {
     let tooltip = '';
     for (let featureValue of feature.values) {
-      tooltip +=
-        '[' + featureValue.value + '; ' + featureValue.score.toFixed(2) + ']: ';
+      tooltip += '[' + featureValue.value + '; ' + featureValue.score.toFixed(2) + ']: ';
       for (let tool of featureValue.tools) {
-        tooltip +=
-          '(' + tool.toolName + '; ' + tool.confidence.toFixed(2) + ')';
+        tooltip += '(' + tool.toolName + '; ' + tool.confidence.toFixed(2) + ')';
       }
       tooltip += '\n';
     }
@@ -108,13 +98,13 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   openDetails(fileOverview: FileOverview): void {
     const id = fileOverview['id']?.value;
-    const fileResult =  this.fileAnalysisService.getFileResult(id);
+    const fileResult = this.fileAnalysisService.getFileResult(id);
     if (fileResult) {
       this.dialog.open(FileOverviewComponent, {
         data: {
-          fileResult: fileResult
-        }, 
-        autoFocus: false
+          fileResult: fileResult,
+        },
+        autoFocus: false,
       });
     } else {
       console.error('file result not found');
