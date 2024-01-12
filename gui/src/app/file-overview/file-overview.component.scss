@@ -8,13 +8,16 @@
 }
 
 .feature-info {
-  display: flex;
-  column-gap: 1em;
-
-  .confidence-value {
-    font-size: 14px;
-    color: gray;
+  overflow-wrap: anywhere;
+  > * {
+    vertical-align: middle;
   }
+}
+
+.confidence-value {
+  font-size: 14px;
+  color: gray;
+  margin-left: 0.25em;
 }
 
 .open-details-button {
