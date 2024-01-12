@@ -19,7 +19,6 @@ interface FileFeature {
   value: string;
   confidence?: number;
   feature?: Feature;
-  tooltip?: string;
 }
 
 @Component({
@@ -70,7 +69,6 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           value: fileInfo.toolResults.summary[featureKey].values[0].value,
           confidence: fileInfo.toolResults.summary[featureKey].values[0].score,
           feature: fileInfo.toolResults.summary[featureKey],
-          tooltip: this.getFeatureTooltip(fileInfo.toolResults.summary[featureKey]),
         };
       }
       fileOverview['id'] = { value: fileInfo.id };
@@ -82,18 +80,6 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     const sortedFeatures = this.fileAnalysisService.sortFeatures(selectedFeatures);
     this.generatedTableColumnList = sortedFeatures;
     this.tableColumnList = sortedFeatures.concat(['status']);
-  }
-
-  getFeatureTooltip(feature: Feature): string {
-    let tooltip = '';
-    for (let featureValue of feature.values) {
-      tooltip += '[' + featureValue.value + '; ' + featureValue.score.toFixed(2) + ']: ';
-      for (let tool of featureValue.tools) {
-        tooltip += '(' + tool.toolName + '; ' + tool.confidence.toFixed(2) + ')';
-      }
-      tooltip += '\n';
-    }
-    return tooltip;
   }
 
   openDetails(fileOverview: FileOverview): void {
