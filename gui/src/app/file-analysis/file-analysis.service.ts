@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 
 // utility
 import { BehaviorSubject } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 export interface FileUpload {
   id: string;
@@ -41,6 +41,17 @@ export interface ToolResult {
   error: string | null;
 }
 
+const OVERVIEW_FEATURES = [
+  'relativePath',
+  'fileName',
+  'fileSize',
+  'puid',
+  'mimeType',
+  'formatVersion',
+  'valid',
+] as const;
+export type OverviewFeature = (typeof OVERVIEW_FEATURES)[number];
+
 export interface Summary {
   [key: string]: Feature;
 }
@@ -65,56 +76,32 @@ export interface ToolConfidence {
   providedIn: 'root',
 })
 export class FileAnalysisService {
-  fileUploads: FileUpload[];
-  fileResults: FileResult[];
-  fileUploadsSubject: BehaviorSubject<FileUpload[]>;
-  fileResultsSubject: BehaviorSubject<FileResult[]>;
-  featureOrder: Map<string, number>;
-  overviewFeatures: string[];
+  fileUploads: FileUpload[] = [];
+  fileResults: FileResult[] = [];
+  fileUploadsSubject = new BehaviorSubject<FileUpload[]>(this.fileUploads);
+  fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
+  readonly featureOrder = new Map<string, number>([
+    ['relativePath', 1],
+    ['fileName', 2],
+    ['fileSize', 3],
+    ['puid', 4],
+    ['mimeType', 5],
+    ['formatVersion', 6],
+    ['encoding', 7],
+    ['', 101],
+    ['wellFormed', 1001],
+    ['valid', 1002],
+  ]);
 
-  constructor(private httpClient: HttpClient) {
-    this.fileUploads = [];
-    this.fileResults = [];
-    this.fileUploadsSubject = new BehaviorSubject<FileUpload[]>(
-      this.fileUploads
-    );
-    this.fileResultsSubject = new BehaviorSubject<FileResult[]>(
-      this.fileResults
-    );
-    this.overviewFeatures = [
-      'relativePath',
-      'fileName',
-      'fileSize',
-      'puid',
-      'mimeType',
-      'formatVersion',
-      'valid',
-    ];
-    this.featureOrder = new Map<string, number>([
-      ['relativePath', 1],
-      ['fileName', 2],
-      ['fileSize', 3],
-      ['puid', 4],
-      ['mimeType', 5],
-      ['formatVersion', 6],
-      ['encoding', 7],
-      ['', 101],
-      ['wellFormed', 1001],
-      ['valid', 1002],
-    ]);
-  }
+  constructor(private httpClient: HttpClient) {}
 
   analyzeFile(file: File): Observable<HttpEvent<ToolResults>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post<ToolResults>(
-      environment.apiEndpoint,
-      formData,
-      {
-        reportProgress: true,
-        observe: 'events',
-      }
-    );
+    return this.httpClient.post<ToolResults>(environment.apiEndpoint, formData, {
+      reportProgress: true,
+      observe: 'events',
+    });
   }
 
   addFileResult(fileUpload: FileUpload, toolResults: ToolResults): void {
@@ -131,9 +118,7 @@ export class FileAnalysisService {
   }
 
   getFileResult(id: string): FileResult | undefined {
-    return this.fileResults.find((fileResult: FileResult) => {
-      return fileResult.id === id;
-    });
+    return this.fileResults.find((fileResult) => fileResult.id === id);
   }
 
   getFileResults(): Observable<FileResult[]> {
@@ -145,13 +130,9 @@ export class FileAnalysisService {
     this.fileResultsSubject.next(this.fileResults);
   }
 
-  addFileUpload(
-    fileName: string,
-    relativePath: string,
-    fileSize: number
-  ): FileUpload {
+  addFileUpload(fileName: string, relativePath: string, fileSize: number): FileUpload {
     const fileUpload: FileUpload = {
-      id: uuidv4(),
+      id: uuid(),
       fileName: fileName,
       relativePath: relativePath,
       fileSize: fileSize,
@@ -196,14 +177,7 @@ export class FileAnalysisService {
     });
   }
 
-  getOverviewFeatures(): string[] {
-    return this.overviewFeatures;
-  }
-
-  selectOverviewFeatures(features: string[]): string[] {
-    const overviewFeatures: string[] = this.getOverviewFeatures();
-    return features.filter((feature: string) => {
-      return overviewFeatures.includes(feature);
-    });
+  isOverviewFeature(feature: string): feature is OverviewFeature {
+    return (OVERVIEW_FEATURES as readonly string[]).includes(feature);
   }
 }

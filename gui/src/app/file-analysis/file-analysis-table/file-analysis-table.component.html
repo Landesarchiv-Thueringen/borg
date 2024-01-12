@@ -13,10 +13,14 @@
           </mat-cell>
         </ng-container>
 
-        <!-- actions column -->
+        <!-- status-icons column -->
         <ng-container matColumnDef="status">
           <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
           <mat-cell *matCellDef="let fileInfo">
+            <mat-icon *ngIf="fileInfo.icons.uncertain" class="uncertain-icon">warning</mat-icon>
+            <mat-icon *ngIf="fileInfo.icons.valid" class="valid-icon">check</mat-icon>
+            <mat-icon *ngIf="fileInfo.icons.invalid" class="invalid-icon">close</mat-icon>
+            <mat-icon *ngIf="fileInfo.icons.error" class="error-icon">error</mat-icon>
             <button
               mat-button
               class="open-details-button"

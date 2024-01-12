@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 const labelMap: { [key: string]: string | undefined } = {
+  tool: 'Werkzeug',
   fileName: 'Dateiname',
   relativePath: 'Pfad',
   fileSize: 'Dateigröße',
@@ -10,6 +11,7 @@ const labelMap: { [key: string]: string | undefined } = {
   valid: 'Valide',
   wellFormed: 'Wohlgeformt',
   encoding: 'Zeichenkodierung',
+  error: 'Fehler',
 };
 
 @Pipe({ name: 'fileFeature' })

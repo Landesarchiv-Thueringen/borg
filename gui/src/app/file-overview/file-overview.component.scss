@@ -3,6 +3,32 @@
   min-width: 70em;
 }
 
+.icon-explanation {
+  display: flex;
+  gap: 2em;
+  margin-left: 2em;
+  margin-right: 25%;
+  margin-bottom: 1em;
+  p {
+    margin-bottom: 6px;
+  }
+  mat-icon {
+    flex-shrink: 0;
+  }
+}
+.uncertain-icon {
+  color: #ff6600;
+}
+.valid-icon {
+  color: #00a000;
+}
+.invalid-icon {
+  color: #c00000;
+}
+.error-icon {
+  color: #c00000;
+}
+
 .mat-mdc-row {
   position: relative;
 }

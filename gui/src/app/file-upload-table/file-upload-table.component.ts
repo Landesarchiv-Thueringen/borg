@@ -44,7 +44,7 @@ export class FileUploadTableComponent implements AfterViewInit {
       'verificationProgress',
     ];
     this.fileAnalysisService.getFileUploads().subscribe({
-      // error can't occure --> no error handling
+      // error can't occur --> no error handling
       next: (fileUploads: FileUpload[]) => {
         this.dataSource.data = fileUploads;
         if (fileUploads.length === 0 && this.uploadInProgress) {
@@ -116,7 +116,7 @@ export class FileUploadTableComponent implements AfterViewInit {
             fileUpload,
             event.body,
           );
-          this.notificationService.show('Formaterkennung, -validierung abgeschlossen: ' 
+          this.notificationService.show('Formaterkennung und -validierung abgeschlossen: ' 
             + fileUpload.fileName);
         }
     }

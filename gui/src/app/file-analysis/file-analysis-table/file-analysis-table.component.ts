@@ -7,13 +7,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 // project
-import { FileResult, FileAnalysisService, Feature } from '../file-analysis.service';
+import { FileResult, FileAnalysisService, Feature, OverviewFeature } from '../file-analysis.service';
 import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
+import { StatusIcons, StatusIconsService } from '../status-icons.service';
 
-interface FileOverview {
-  [key: string]: FileFeature;
-}
+type FileOverview = {
+  [key in OverviewFeature]?: FileFeature;
+} & {
+  id: FileFeature;
+  icons: StatusIcons;
+};
 
 interface FileFeature {
   value: string;
@@ -36,7 +40,8 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   constructor(
     private dialog: MatDialog,
     private fileAnalysisService: FileAnalysisService,
-    private fileSizePipe: FileSizePipe
+    private fileSizePipe: FileSizePipe,
+    private statusIcons: StatusIconsService
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = [];
@@ -57,27 +62,29 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     const featureKeys: string[] = ['fileName', 'relativePath', 'fileSize'];
     const data: FileOverview[] = [];
     for (let fileInfo of fileInfos) {
-      let fileOverview: FileOverview = {};
+      let fileOverview: FileOverview = {
+        id: { value: fileInfo.id },
+        icons: this.statusIcons.getIcons(fileInfo),
+      };
+      fileOverview['fileName'] = { value: fileInfo.fileName };
+      fileOverview['relativePath'] = { value: fileInfo.relativePath ?? '' };
+      fileOverview['fileSize'] = {
+        value: this.fileSizePipe.transform(fileInfo.fileSize),
+      };
       for (let featureKey in fileInfo.toolResults.summary) {
-        featureKeys.push(featureKey);
-        fileOverview['fileName'] = { value: fileInfo.fileName };
-        fileOverview['relativePath'] = fileInfo.relativePath ? { value: fileInfo.relativePath } : { value: '' };
-        fileOverview['fileSize'] = {
-          value: this.fileSizePipe.transform(fileInfo.fileSize),
-        };
-        fileOverview[featureKey] = {
-          value: fileInfo.toolResults.summary[featureKey].values[0].value,
-          confidence: fileInfo.toolResults.summary[featureKey].values[0].score,
-          feature: fileInfo.toolResults.summary[featureKey],
-        };
+        if (this.fileAnalysisService.isOverviewFeature(featureKey) && featureKey !== 'valid') {
+          featureKeys.push(featureKey);
+          fileOverview[featureKey] = {
+            value: fileInfo.toolResults.summary[featureKey].values[0].value,
+            confidence: fileInfo.toolResults.summary[featureKey].values[0].score,
+            feature: fileInfo.toolResults.summary[featureKey],
+          };
+        }
       }
-      fileOverview['id'] = { value: fileInfo.id };
       data.push(fileOverview);
     }
     this.dataSource.data = data;
-    const features = [...new Set(featureKeys)];
-    const selectedFeatures = this.fileAnalysisService.selectOverviewFeatures(features);
-    const sortedFeatures = this.fileAnalysisService.sortFeatures(selectedFeatures);
+    const sortedFeatures = this.fileAnalysisService.sortFeatures([...new Set(featureKeys)]);
     this.generatedTableColumnList = sortedFeatures;
     this.tableColumnList = sortedFeatures.concat(['status']);
   }
