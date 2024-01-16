@@ -157,7 +157,9 @@ export class FileAnalysisService {
     return this.featureOrder;
   }
 
+  /** Sorts feature keys and removes duplicates. */
   sortFeatures(features: string[]): string[] {
+    features = [...new Set(features)];
     return features.sort((f1: string, f2: string) => {
       const featureOrder = this.getFeatureOrder();
       let orderF1: number | undefined = featureOrder.get(f1);

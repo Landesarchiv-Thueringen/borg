@@ -33,6 +33,8 @@ interface FileFeatures {
   [key: string]: FileFeature;
 }
 
+const ALWAYS_VISIBLE_COLUMNS = ['puid', 'mimeType'];
+
 @Component({
   selector: 'app-file-overview',
   templateUrl: './file-overview.component.html',
@@ -77,7 +79,10 @@ export class FileOverviewComponent {
 
   getTableRows(summary: Summary, toolNames: string[], featureNames: string[]): FileFeatures[] {
     const rows: FileFeatures[] = [this.getCumulativeResult(summary, featureNames)];
-    const sortedFeatures: string[] = this.fileAnalysisService.sortFeatures(featureNames);
+    const sortedFeatures: string[] = this.fileAnalysisService.sortFeatures([
+      ...ALWAYS_VISIBLE_COLUMNS,
+      ...featureNames,
+    ]);
     this.tableColumnList = ['tool', ...sortedFeatures];
     if (this.icons.error) {
       this.tableColumnList.push('error');
