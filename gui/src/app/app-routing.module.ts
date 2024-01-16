@@ -1,16 +1,13 @@
-// angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-// project
 import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
 import { FileUploadTableComponent } from './file-upload-table/file-upload-table.component';
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 
 const routes: Routes = [
   {
-    path: "",
-    redirectTo: "auswahl",
+    path: '',
+    redirectTo: 'auswahl',
     pathMatch: 'full',
   },
   {

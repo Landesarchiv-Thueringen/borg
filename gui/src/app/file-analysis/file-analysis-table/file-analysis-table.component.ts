@@ -1,15 +1,10 @@
-// angular
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-
-// material
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-
-// project
-import { FileResult, FileAnalysisService, Feature, OverviewFeature } from '../file-analysis.service';
-import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
+import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
+import { Feature, FileAnalysisService, FileResult, OverviewFeature } from '../file-analysis.service';
 import { StatusIcons, StatusIconsService } from '../status-icons.service';
 
 type FileOverview = {
@@ -41,7 +36,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     private dialog: MatDialog,
     private fileAnalysisService: FileAnalysisService,
     private fileSizePipe: FileSizePipe,
-    private statusIcons: StatusIconsService
+    private statusIcons: StatusIconsService,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = [];

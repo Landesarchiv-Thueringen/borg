@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'fileSize' })
 export class FileSizePipe implements PipeTransform {
@@ -17,8 +17,6 @@ export class FileSizePipe implements PipeTransform {
       console.error('unrealistic large file');
       return value + this.units[0];
     }
-    return (
-      this.decimalPipe.transform(sizeMB, '1.0-2') + ' ' + this.units[unitIndex]
-    );
+    return this.decimalPipe.transform(sizeMB, '1.0-2') + ' ' + this.units[unitIndex];
   }
 }

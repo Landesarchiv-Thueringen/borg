@@ -1,11 +1,8 @@
-// angular
 import { Injectable } from '@angular/core';
-
-// material
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
   messageDuration: number;

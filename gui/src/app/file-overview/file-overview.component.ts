@@ -1,11 +1,6 @@
-// angular
 import { Component, Inject } from '@angular/core';
-
-// material
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-
-// project
 import {
   FeatureValue,
   FileAnalysisService,
@@ -15,8 +10,8 @@ import {
   ToolConfidence,
   ToolResult,
 } from '../file-analysis/file-analysis.service';
-import { ToolOutputComponent } from '../tool-output/tool-output.component';
 import { StatusIconsService } from '../file-analysis/status-icons.service';
+import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
 interface DialogData {
   fileResult: FileResult;
@@ -50,7 +45,7 @@ export class FileOverviewComponent {
     @Inject(MAT_DIALOG_DATA) private data: DialogData,
     private fileAnalysisService: FileAnalysisService,
     private statusIcons: StatusIconsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
     this.initTableData();
   }

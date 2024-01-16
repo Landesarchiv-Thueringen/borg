@@ -1,14 +1,8 @@
-// angular
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-// project
-import { environment } from '../../environments/environment';
-
-// utility
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { v4 as uuid } from 'uuid';
+import { environment } from '../../environments/environment';
 
 export interface FileUpload {
   id: string;

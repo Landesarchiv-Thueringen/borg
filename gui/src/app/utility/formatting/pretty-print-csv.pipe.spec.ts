@@ -10,14 +10,14 @@ describe('PrettyPrintCsvPipe', () => {
           'foo,bar,baz', //
           'foooooooooo,b,bazbazbaz',
           'f,b,b',
-        ].join('\n')
-      )
+        ].join('\n'),
+      ),
     ).toBe(
       [
         'foo        , bar, baz', //
         'foooooooooo, b  , bazbazbaz',
         'f          , b  , b',
-      ].join('\n')
+      ].join('\n'),
     );
   });
 
@@ -28,14 +28,14 @@ describe('PrettyPrintCsvPipe', () => {
           'foo,bar,baz', //
           'foooooooooo',
           'f,b,b',
-        ].join('\n')
-      )
+        ].join('\n'),
+      ),
     ).toBe(
       [
         'foo        , bar, baz', //
         'foooooooooo',
         'f          , b  , b',
-      ].join('\n')
+      ].join('\n'),
     );
   });
 });
