@@ -2,6 +2,10 @@
 *
 !*/
 
+# allow visual studio code config
+!.vscode/settings.json
+!.vscode/extensions.json
+
 # allow gitginore files
 !.gitignore
 
