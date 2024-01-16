@@ -154,6 +154,15 @@ export class FileOverviewComponent {
     }
   }
 
+  exportResult(): void {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.download = 'borg-results.json';
+    a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.fileResult, null, 2));
+    a.click();
+    document.body.removeChild(a);
+  }
+
   private findToolResult(toolName: string): ToolResult | undefined {
     return [
       ...(this.fileResult.toolResults.fileIdentificationResults ?? []),
