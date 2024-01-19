@@ -1,13 +1,11 @@
 <mat-toolbar class="mat-elevation-z4" color="primary">
   <mat-toolbar-row>
-    <button mat-button routerLink="auswahl" [routerLinkActive]="['active']">
-      <mat-icon>checklist</mat-icon>
-      Datei-Auswahl
-    </button>
-    <button mat-button routerLink="auswertung" [routerLinkActive]="['active']">
-      <mat-icon>summarize</mat-icon>
-      Auswertung
-    </button>
+    <a mat-button routerLink="/">
+      <mat-icon class="title-icon material-icons-outlined">check_circle</mat-icon>
+      BORG
+    </a>
+    <a mat-button routerLink="auswahl" [routerLinkActive]="['active']"> Datei-Auswahl </a>
+    <a mat-button routerLink="auswertung" [routerLinkActive]="['active']"> Auswertung </a>
   </mat-toolbar-row>
 </mat-toolbar>
 

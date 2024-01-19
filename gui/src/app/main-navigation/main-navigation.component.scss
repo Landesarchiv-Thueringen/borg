@@ -5,13 +5,19 @@
   min-width: 90em;
   align-content: flex-start;
   flex-direction: column;
+}
 
-  mat-toolbar {
-    z-index: 2;
-    flex-shrink: 0;
+mat-toolbar {
+  z-index: 2;
+  flex-shrink: 0;
+}
 
-    .active {
-      text-decoration: underline;
-    }
-  }
+mat-icon.title-icon {
+  height: 26px;
+  width: 26px;
+  font-size: 26px;
+}
+
+.active {
+  background: rgba(0, 0, 0, 0.3);
 }
