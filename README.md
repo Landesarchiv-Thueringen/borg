@@ -4,10 +4,11 @@ BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierun
 
 ## Roadmap
 
-Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer Werkzeuge und die Extraktion von weitereren Metadaten aus den Werkzeugergebnissen. Folgende Werkzeuge sind für die Integration in den nächsten Veröffentlichungen vorgesehen:
+Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer Werkzeuge und die Extraktion von weitereren Metadaten aus den Werkzeugergebnissen. Folgende Weiterentwicklungen sind für die nächsten Veröffentlichungen vorgesehen:
 
-- [Google Magika](https://github.com/google/magika) für die Formaterkennung, besonders für textbasierte Formate
-- [jpylyzer](https://github.com/openpreserve/jpylyzer) für die Validierung von JP2-Dateien (JPEG 2000 Part 1)
+- Integration des Werkzeugs [Google Magika](https://github.com/google/magika) für die Formaterkennung, besonders für textbasierte Formate
+- Integration des Werkzeugs [jpylyzer](https://github.com/openpreserve/jpylyzer) für die Validierung von JP2-Dateien (JPEG 2000 Part 1)
+- PDF-Export von Gesamt- und Teilergebnissen
 
 ## Motivation
 
@@ -17,15 +18,43 @@ Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung 
 
 ## Funktionsweise
 
-Jedes integrierte Werkzeuge wird mittels Docker in einem eigenen Container gestartet. Die Werkzeug-Container teilen ein gemeinsamen Speicher (Docker Volume) um die Datei, die analysiert werden soll, zu teilen. Der Docker-Server spricht die Werkzeuge bei Bedarf über eine Web-API an. Die Werkzeuge antworten mit den ermittelten Erkennungs-, bzw. Validierungsergebnissen. Der Server fasst die Ergebnisse zu einem Gesamtergebnis zusammen und sendet alle ermittelten Informationen an den Client.
+Jedes Werkzeuge wird mittels Docker in einem eigenen Container gestartet. Die Werkzeug-Container teilen ein gemeinsamen Speicher (Docker Volume) um die Datei, die analysiert werden soll, zu teilen. Der Docker-Server spricht die Werkzeuge bei Bedarf über eine Web-API an. Die Werkzeuge antworten mit den ermittelten Erkennungs-, bzw. Validierungsergebnissen. Der Server fasst die Ergebnisse zu einem Gesamtergebnis zusammen und sendet alle ermittelten Informationen an den Client.
 
-Der Server fordert als erstes Ergebnisse von Formaterkennungs-Werkzeuge
+Der Server fordert als erstes Ergebnisse von allen Erkennungswerkzeugen an. Anhand der Erkennungsergebnisse werden die konfigurierten Bedingungen für die Ausführung der Validatoren geprüft.
 
-## Standalone
+## Standalone Webanwendung
 
-Die Dateiauswahl von Borg ermöglicht die Auswahl von einzelnen Dateien und ganzen Ordnern. Wenn
+Borg stellt eine Webanwendung bereit mit der beliebige Dateien analysiert werden können.
+
+**Datei-Auswahl**
+
+Die Dateiauswahl von Borg ermöglicht die Auswahl von einzelnen Dateien und ganzen Ordnern. Wenn ein Ordner ausgewählt wird, werden auch die Dateien aller enthaltenen Ordner hochgeladen.
 
 ![borg_file_selection](doc/screenshots/borg_file_selection_20240229.png)
+
+**Auswertung**
+
+In der Auswertung wird das Gesamtergebnis für alle ausgewählten Dateien dargestellt. Es werden die wichtigsten extrahierten Eigenschaften und ein Status pro Datei angezeigt. Der Status stellt das Qualität des Gesamtergebnisses symbolisch dar. Jede Zeile stellt das Gesamtergebnis einer Datei dar. Detaillierte Ergebnisse der Werkzeuge können durch einen Klick auf die Zeile inspiziert werden.
+
+![borg_file_results](doc/screenshots/borg_results_20240229.png)
+
+**Detailansicht von Werkzeugergebnissen für einzelne Dateien**
+
+In der Detailansicht einer Datei wird die Zusammenstellung des Gesamtergebnisses aufgeschlüsselt. Es wird dargestellt, welche Werkzeuge mit welcher Gewichtung in das Gesamtergebnis eingegangen sind und wie das Ergebnis laut Status zu interpretieren ist. Die Detailansicht eines Werkzeuges lässt sich durch einen Klick auf die entsprechende Zeile öffnen.
+
+**Detailansicht einer validen Datei**
+
+![borg_file_selection](doc/screenshots/borg_valid_file_20240229.png)
+
+**Detailansicht einer invaliden Datei**
+
+![borg_file_selection](doc/screenshots/borg_invalid_file_20240229.png)
+
+**Detailansicht eines Werkzeugs**
+
+In der Detailansicht eines Werkzeugs werden alle extrahierten Eigenschaften und die komplette Werkzeugausgabe angezeigt.
+
+![borg_file_selection](doc/screenshots/borg_tools_details_20240229.png)
 
 ## Installation
 
@@ -62,7 +91,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert.
 
 - wird immer ausgeführt
 
-##### Extrahierte Eigenschaften
+**Extrahierte Eigenschaften**
 
 | Name | Standard Zuversichtswert |
 | ---- | ------------------------ |
@@ -70,11 +99,11 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert.
 
 #### Tika
 
-##### Bedingung für die Ausführung
+**Bedingung für die Ausführung**
 
 - wird immer ausgeführt
 
-##### Extrahierte Eigenschaften
+**Extrahierte Eigenschaften**
 
 | Name               | Standard Zuversichtswert |
 | ------------------ | ------------------------ |
@@ -84,7 +113,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert.
 
 #### JHOVE
 
-##### Bedingung für die Ausführung
+**Bedingung für die Ausführung**
 
 | Modulname   | Bedingung                                                                       |
 | ----------- | ------------------------------------------------------------------------------- |
@@ -93,7 +122,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert.
 | TIFF-Module | PUID entspricht TIFF (fmt/153)                                                  |
 | JPEG-Module | PUID entspricht TIFF (fmt/153)                                                  |
 
-##### Extrahierte Eigenschaften
+**Extrahierte Eigenschaften**
 
 Die extrahierten Eigenschaften und Zuversichtswerte sind für die meisten JHOVE-Module identisch. Falls die Werte abweichen, sind diese in einer gesonderten Übersicht aufgeführt.
 
@@ -113,7 +142,7 @@ Die extrahierten Eigenschaften und Zuversichtswerte sind für die meisten JHOVE-
 
 #### veraPDF
 
-##### Extrahierte Eigenschaften
+**Extrahierte Eigenschaften**
 
 | Name      | Standard Zuversichtswert |
 | --------- | ------------------------ |
@@ -121,7 +150,7 @@ Die extrahierten Eigenschaften und Zuversichtswerte sind für die meisten JHOVE-
 
 #### ODF Validator
 
-##### Extrahierte Eigenschaften
+**Extrahierte Eigenschaften**
 
 | Name      | Standard Zuversichtswert |
 | --------- | ------------------------ |
@@ -129,7 +158,7 @@ Die extrahierten Eigenschaften und Zuversichtswerte sind für die meisten JHOVE-
 
 #### OOXML-Validator
 
-##### Extrahierte Eigenschaften
+**Extrahierte Eigenschaften**
 
 | Name      | Standard Zuversichtswert |
 | --------- | ------------------------ |
