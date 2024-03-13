@@ -23,7 +23,7 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 
 ## Motivation
 
-Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität ist kein einzelnes Programm dieses vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
+Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität kann kein einzelnes Programm das Problemfeld vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
 
 Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von Systemvorraussetzungen der integrierten Werkzeuge.
 
@@ -35,15 +35,15 @@ Der Server und die Werkzeuge werden in jeweils einem eigenen Container mittels D
 
 **Was passiert mit der übermittelten Datei?**
 
-Nachdem der Server die Datei vom Client erhält, speichert er diese in ein Docker Volume. Auf dieses haben auch alle Werkzeuge Zugriff. Sobald alle notwendigen Werkzeuge die Datei analysiert haben, wird diese gelöscht.
+Nachdem der Server die Datei vom Client erhält, speichert er diese in ein Docker Volume. Auf dieses haben auch alle Werkzeuge Zugriff. Sobald alle notwendigen Werkzeuge die Datei analysiert haben, wird sie gelöscht.
 
 **Welche Werkzeuge werden für eine Datei angesprochen?**
 
-Als erstes werden alle Formaterkennungs-Werkzeuge ausgeführt. Anhand der Erkennungsergebnisse werden die konfigurierten Bedingungen für die Ausführung der Validatoren geprüft. Alle Validatoren für die mindestens eine Bedinung wahr ist, werden ausgeführt.
+Als erstes werden alle Formaterkennungs-Werkzeuge ausgeführt. Anhand der Erkennungsergebnisse werden die konfigurierten Bedingungen für die Ausführung der Validatoren geprüft. Alle Validatoren für die mindestens eine Bedingung erfüllt ist, werden ausgeführt.
 
 **Wir wird das Gesamtergebnis ermittelt?**
 
-Für die Ermittlung eines Gesamtergebnisses müssen die einzelnen Werkzeugergebnisse vergleichbar sein. Zu diesem Zweck werden einzelne Eigenschaften aus den Werkzeugergebnissen extrahiert. Den extrahierten Eigenschaften wird über die Konfiguration eine Gewichtung von 0.0 bis 1.0 zugewiesen. Wenn mehrere Werkzeuge die gleiche Eigenschaft extrahieren, findet eine gewichtete Abstimmung zwischen den Werkzeugeergebnissen statt. Durch die Gewichtung können zuverlässigere Werkzeuge weniger verlässliche Werkzeuge überstimmen. Alle von den Tools extrahierten Werte erhalten durch die Abstimmung eine Gewichtung für das Gesamtergebnis zwischen 0.0 und 1.0. Der extrahierte Wert mit der höchsten Gewichtung wird Teil des Gesamtergebnisses.
+Für die Ermittlung eines Gesamtergebnisses müssen die einzelnen Werkzeugergebnisse vergleichbar sein. Zu diesem Zweck werden einzelne Eigenschaften aus den Werkzeugergebnissen extrahiert. Den extrahierten Eigenschaften wird über die Konfiguration eine Gewichtung von 0 bis 1 zugewiesen. Wenn mehrere Werkzeuge die gleiche Eigenschaft extrahieren, findet eine gewichtete Abstimmung zwischen den Werkzeugeergebnissen statt. Durch die Gewichtung können zuverlässigere Werkzeuge weniger verlässliche Werkzeuge überstimmen. Alle von den Tools extrahierten Werte erhalten durch die Abstimmung eine Gewichtung für das Gesamtergebnis zwischen 0 und 1. Der extrahierte Wert mit der höchsten Gewichtung wird Teil des Gesamtergebnisses.
 
 **Gibt es eine Möglichkeit die Gewichtung einzelner extrahierter Eigeschaften zu verfeinern?**
 
@@ -51,7 +51,7 @@ Neben dem Standardwert der pro Werkzeug und extrahierter Eigenschaft festgelegt 
 
 ## Standalone Webanwendung
 
-Borg stellt eine Webanwendung bereit mit der beliebige Dateien analysiert werden können.
+Borg stellt eine Webanwendung bereit, mit der beliebige Dateien analysiert werden können.
 
 **Datei-Auswahl**
 
@@ -61,13 +61,13 @@ Die Dateiauswahl von Borg ermöglicht die Auswahl von einzelnen Dateien und ganz
 
 **Auswertung**
 
-In der Auswertung wird das Gesamtergebnis für alle ausgewählten Dateien dargestellt. Es werden die wichtigsten extrahierten Eigenschaften und ein Status pro Datei angezeigt. Der Status stellt das Qualität des Gesamtergebnisses symbolisch dar. Jede Zeile stellt das Gesamtergebnis einer Datei dar. Detaillierte Ergebnisse der Werkzeuge können durch einen Klick auf die Zeile inspiziert werden.
+In der Auswertung wird das Gesamtergebnis für alle hochgeladenen Dateien dargestellt. Es werden die wichtigsten extrahierten Eigenschaften und ein Status pro Datei angezeigt. Der Status stellt das Qualität des Gesamtergebnisses symbolisch dar. Jede Zeile stellt das Gesamtergebnis einer Datei dar. Detaillierte Ergebnisse der Werkzeuge können durch einen Klick auf die Zeile aufgerufen werden.
 
 ![borg_file_results](doc/screenshots/borg_results_20240229.png)
 
 **Detailansicht von Werkzeugergebnissen für einzelne Dateien**
 
-In der Detailansicht einer Datei wird die Zusammenstellung des Gesamtergebnisses aufgeschlüsselt. Es wird dargestellt, welche Werkzeuge mit welcher Gewichtung in das Gesamtergebnis eingegangen sind und wie das Ergebnis laut Status zu interpretieren ist. Die Detailansicht eines Werkzeuges lässt sich durch einen Klick auf die entsprechende Zeile öffnen.
+In der Detailansicht einer Datei wird die Zusammenstellung des Gesamtergebnisses aufgeschlüsselt. Es wird dargestellt, welche Werkzeuge mit welcher Gewichtung in das Gesamtergebnis eingegangen sind und wie das der (angezeigte) Status zu interpretieren ist. Die Detailansicht eines Werkzeuges lässt sich durch einen Klick auf die entsprechende Zeile öffnen.
 
 **Detailansicht einer validen Datei**
 
@@ -85,7 +85,7 @@ In der Detailansicht eines Werkzeugs werden alle extrahierten Eigenschaften und 
 
 ## Installation
 
-Für den Betrieb von Borg wird [Docker](https://docs.docker.com/) inklusive [Docker Compose](https://docs.docker.com/compose/). Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Für einen lokalen Test der Standalone-Version von Borg ist der auch der Einsatz von [Docker Desktop](https://docs.docker.com/desktop/) vorstellbar. Um die Anwendung in einem Netzwerk verfügbar zu machen, eignet sich ein Webserver als Reverse-Proxy wie bspw. [NGINX](https://www.nginx.com/), der die Anfragen auf den konfigurierten Port des Servers weiterleitet.
+Für den Betrieb von Borg wird [Docker](https://docs.docker.com/) inklusive [Docker Compose](https://docs.docker.com/compose/) benötigt. Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Für einen lokalen Test der Standalone-Version von Borg ist auch der Einsatz von [Docker Desktop](https://docs.docker.com/desktop/) möglich. Um die Anwendung in einem Netzwerk verfügbar zu machen, eignet sich ein Webserver als Reverse-Proxy wie bspw. [NGINX](https://www.nginx.com/), der die Anfragen auf den konfigurierten Port der Anwendung weiterleitet.
 
 Um alle für den Betrieb von Borg benötigten Container zu starten, genügt der folgende Befehl:
 
