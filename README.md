@@ -4,14 +4,14 @@ BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierun
 
 ## Integrierte Werkzeuge
 
-| Name            | Funktion        | Resourcen                                            | Lizenz                                                                                                        |
-| --------------- | --------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Droid           | Formaterkennung | https://digital-preservation.github.io/droid/        | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
-| Tika            | Formaterkennung | https://tika.apache.org/                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    |
-| JHOVE           | Validierung     | https://jhove.openpreservation.org                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
-| verapdf         | Validierung     | https://verapdf.org/                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |
-| ODF Validator   | Validierung     | https://odftoolkit.org/conformance/ODFValidator.html | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            |
-| OOXML-Validator | Validierung     | https://github.com/mikeebowen/OOXML-Validator        | [MIT License](https://github.com/mikeebowen/ooxml-validator-vscode/blob/main/LICENSE)                         |
+| Name            | Funktion        | Resourcen                                                        | Lizenz                                                                                                        |
+| --------------- | --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Droid           | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
+| Tika            | Formaterkennung | [Homepage](https://tika.apache.org/)                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    |
+| JHOVE           | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
+| verapdf         | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |
+| ODF Validator   | Validierung     | [Homepage](https://odftoolkit.org/conformance/ODFValidator.html) | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            |
+| OOXML Validator | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/ooxml-validator-vscode/blob/main/LICENSE)                         |
 
 ## Roadmap
 
@@ -99,83 +99,35 @@ Das Verhalten des Borg-Servers wird mittels eine [Konfigurationsdatei](server/co
 
 ### Voreinstellungen
 
-Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert.
+Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stellt sich vereinfacht wie folgt dar:
 
-#### Droid
+#### Bedingungen für die Ausführung
 
-**Bedingung für die Ausführung**
+| Werkzeug                  | Bedingung                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------- |
+| DROID                     | wird immer ausgeführt                                                           |
+| Tika                      | wird immer ausgeführt                                                           |
+| JHOVE (PDF-Modul)         | PUID entspricht PDF Version 1.0 bis 1.7                                         |
+| JHOVE (HTML-Modul)        | PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) |
+| JHOVE (TIFF-Modul)        | PUID entspricht TIFF                                                            |
+| JHOVE (JPEG-Modul)        | PUID entspricht JPEG                                                            |
+| JHOVE (JPEG2000-Modul)    | PUID entspricht JP2 (JPEG 2000 part 1)                                          |
+| veraPDF (PDF/A-1a-Profil) | PUID entspricht PDF/A-1a                                                        |
+| veraPDF (PDF/A-1b-Profil) | PUID entspricht PDF/A-1b                                                        |
+| veraPDF (PDF/A-2a-Profil) | PUID entspricht PDF/A-2a                                                        |
+| veraPDF (PDF/A-2b-Profil) | PUID entspricht PDF/A-2b                                                        |
+| veraPDF (PDF/A-2u-Profil) | PUID entspricht PDF/A-2u                                                        |
+| veraPDF (PDF/UA-Profile)  | MIME-Type enthält pdf, nach aktuellen Stand keine PUID verfügbar                |
 
-- wird immer ausgeführt
+#### Gewichtung der extrahierten Eigenschaften
 
-**Extrahierte Eigenschaften**
-
-| Name | Standard Zuversichtswert |
-| ---- | ------------------------ |
-| PUID | 90%                      |
-
-#### Tika
-
-**Bedingung für die Ausführung**
-
-- wird immer ausgeführt
-
-**Extrahierte Eigenschaften**
-
-| Name               | Standard Zuversichtswert |
-| ------------------ | ------------------------ |
-| MIME-Type          | 90%                      |
-| Dateiformatversion | 90%                      |
-| Textkodierung      | 90%                      |
-
-#### JHOVE
-
-**Bedingung für die Ausführung**
-
-| Modulname   | Bedingung                                                                       |
-| ----------- | ------------------------------------------------------------------------------- |
-| PDF-Modul   | PUID entspricht PDF Version 1.0 bis 1.7                                         |
-| HTML-Module | PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) |
-| TIFF-Module | PUID entspricht TIFF (fmt/153)                                                  |
-| JPEG-Module | PUID entspricht TIFF (fmt/153)                                                  |
-
-**Extrahierte Eigenschaften**
-
-Die extrahierten Eigenschaften und Zuversichtswerte sind für die meisten JHOVE-Module identisch. Falls die Werte abweichen, sind diese in einer gesonderten Übersicht aufgeführt.
-
-| Name               | Standard Zuversichtswert |
-| ------------------ | ------------------------ |
-| Validität          | 100%                     |
-| Wohlgeformtheit    | 100%                     |
-| Dateiformatversion | 80%                      |
-
-###### JHOVE (PDF-Modul)
-
-| Name               | Standard Zuversichtswert | Bedingter Zuversichtswert                |
-| ------------------ | ------------------------ | ---------------------------------------- |
-| Validität          | 100%                     | 0% falls die Formatversion PDF/A enthält |
-| Wohlgeformtheit    | 100%                     | 0% falls die Formatversion PDF/A enthält |
-| Dateiformatversion | 80%                      | 0% falls die Formatversion PDF/A enthält |
-
-#### veraPDF
-
-**Extrahierte Eigenschaften**
-
-| Name      | Standard Zuversichtswert |
-| --------- | ------------------------ |
-| Validität | 100%                     |
-
-#### ODF Validator
-
-**Extrahierte Eigenschaften**
-
-| Name      | Standard Zuversichtswert |
-| --------- | ------------------------ |
-| Validität | 100%                     |
-
-#### OOXML-Validator
-
-**Extrahierte Eigenschaften**
-
-| Name      | Standard Zuversichtswert |
-| --------- | ------------------------ |
-| Validität | 100%                     |
+| Werkzeug                 | PUID | MIME-Type | Formatversion         | Validierung            |
+| ------------------------ | ---- | --------- | --------------------- | ---------------------- |
+| DROID                    | 90%  |           |                       |                        |
+| Tika                     |      | 90%       | 90%                   |                        |
+| JHOVE                    |      |           | 80%                   | 100%                   |
+| JHOVE (PDF-Modul)        |      |           | 80% bzw. 0% bei PDF/A | 100% bzw. 0% bei PDF/A |
+| veraPDF                  |      |           |                       | 100%                   |
+| veraPDF (PDF/UA-Profile) |      |           |                       | 30%                    |
+| ODF Validator            |      |           |                       | 100%                   |
+| OOXML Validator          |      |           |                       | 100%                   |
