@@ -15,7 +15,7 @@ BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierun
 
 ## Roadmap
 
-Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer Werkzeuge und die Extraktion von weitereren Metadaten aus den Werkzeugergebnissen. Folgende Weiterentwicklungen sind für die nächsten Veröffentlichungen vorgesehen:
+Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer Werkzeuge und die Extraktion von weitereren Metadaten aus den Werkzeugergebnissen drehen. Folgende Weiterentwicklungen sind für die nächsten Veröffentlichungen vorgesehen:
 
 - Integration des Werkzeugs [Google Magika](https://github.com/google/magika) für die Formaterkennung, besonders für textbasierte Formate
 - Integration des Werkzeugs [jpylyzer](https://github.com/openpreserve/jpylyzer) für die Validierung von JP2-Dateien (JPEG 2000 Part 1)
@@ -23,7 +23,7 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 
 ## Motivation
 
-Die Formaterkennung und -validierung erfordern eine Vielzahl unterschiedlicher Programme. Aufgrund der Komplexität des Problems kann jedoch kein einzelnes Programm dieses vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
+Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität ist kein einzelnes Programm dieses vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
 
 Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von Systemvorraussetzungen der integrierten Werkzeuge.
 
