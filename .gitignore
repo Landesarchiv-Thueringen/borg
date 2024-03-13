@@ -9,8 +9,10 @@
 # allow gitginore files
 !.gitignore
 
-# allow project readme
+# allow project documentation
 !/README.md
+!/readme_dev.md
+!doc/screenshots/*.png
 
 # allow environment file
 !/.env

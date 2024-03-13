@@ -1,6 +1,6 @@
 # BorgFormat
 
-BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Es integriert mehrere externe Programme
+BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert mehrere Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.
 
 ## Roadmap
 
@@ -13,15 +13,23 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 
 Die Formaterkennung und -validierung erfordern eine Vielzahl unterschiedlicher Programme. Aufgrund der Komplexität des Problems kann jedoch kein einzelnes Programm dieses vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
 
-Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Programme werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Programme werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das hat den Vorteil, dass die Abhängigkeit
+Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von den Systemvorraussetzungen der integrierten Werkzeuge.
 
-## Technische Umsetzung
+## Funktionsweise
 
-Jedes integrierte Programm wird mittels Docker in einem eigenen Container gestartet. Die Werkzeug-Container teilen ein gemeinsamen Speicher (Docker Volume) um die übermittelte Datei zu teilen.
+Jedes integrierte Werkzeuge wird mittels Docker in einem eigenen Container gestartet. Die Werkzeug-Container teilen ein gemeinsamen Speicher (Docker Volume) um die Datei, die analysiert werden soll, zu teilen. Der Docker-Server spricht die Werkzeuge bei Bedarf über eine Web-API an. Die Werkzeuge antworten mit den ermittelten Erkennungs-, bzw. Validierungsergebnissen. Der Server fasst die Ergebnisse zu einem Gesamtergebnis zusammen und sendet alle ermittelten Informationen an den Client.
+
+Der Server fordert als erstes Ergebnisse von Formaterkennungs-Werkzeuge
+
+## Standalone
+
+Die Dateiauswahl von Borg ermöglicht die Auswahl von einzelnen Dateien und ganzen Ordnern. Wenn
+
+![borg_file_selection](doc/screenshots/borg_file_selection_20240229.png)
 
 ## Installation
 
-Für den Betrieb von Borg wird [Docker](https://docs.docker.com/) inklusive [Docker Compose](https://docs.docker.com/compose/). Wir empfehlen für den Betrieb die Installation auf einem Linux-Server. Es ist für Testzwecke aber durchaus denkbar Borg lokal
+Für den Betrieb von Borg wird [Docker](https://docs.docker.com/) inklusive [Docker Compose](https://docs.docker.com/compose/). Für einen lokalen Test der Standalone-Version von Borg ist der auch der Einsatz von [Docker Desktop](https://docs.docker.com/desktop/) vorstellbar. Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Um die Anwendung in einem Netzwerk verfügbar zu machen, eignet sich ein Webserver als Reverse-Proxy wie bspw. [NGINX](https://www.nginx.com/), der die Anfragen auf den konfigurierten Port des Servers weiterleitet.
 
 Um alle für den Betrieb von Borg benötigten Container zu starten, genügt der folgende Befehl:
 
@@ -46,7 +54,7 @@ Das Verhalten des Borg-Servers wird mittels eine [Konfigurationsdatei](server/co
 
 ### Voreinstellungen
 
-Borg wird mit einer funktionalen Konfiguration ausgeliefert.
+Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert.
 
 #### Droid
 
