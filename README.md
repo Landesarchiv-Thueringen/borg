@@ -2,6 +2,17 @@
 
 BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert mehrere Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.
 
+## Integrierte Werkzeuge
+
+| Name            | Funktion        | Resourcen                                            | Lizenz                                                                                                        |
+| --------------- | --------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Droid           | Formaterkennung | https://digital-preservation.github.io/droid/        | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
+| Tika            | Formaterkennung | https://tika.apache.org/                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    |
+| JHOVE           | Validierung     | https://jhove.openpreservation.org                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
+| verapdf         | Validierung     | https://verapdf.org/                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |
+| ODF Validator   | Validierung     | https://odftoolkit.org/conformance/ODFValidator.html | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            |
+| OOXML-Validator | Validierung     | https://github.com/mikeebowen/OOXML-Validator        | [MIT License](https://github.com/mikeebowen/ooxml-validator-vscode/blob/main/LICENSE)                         |
+
 ## Roadmap
 
 Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer Werkzeuge und die Extraktion von weitereren Metadaten aus den Werkzeugergebnissen. Folgende Weiterentwicklungen sind für die nächsten Veröffentlichungen vorgesehen:
@@ -14,13 +25,29 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 
 Die Formaterkennung und -validierung erfordern eine Vielzahl unterschiedlicher Programme. Aufgrund der Komplexität des Problems kann jedoch kein einzelnes Programm dieses vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
 
-Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von den Systemvorraussetzungen der integrierten Werkzeuge.
+Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von Systemvorraussetzungen der integrierten Werkzeuge.
 
 ## Funktionsweise
 
-Jedes Werkzeuge wird mittels Docker in einem eigenen Container gestartet. Die Werkzeug-Container teilen ein gemeinsamen Speicher (Docker Volume) um die Datei, die analysiert werden soll, zu teilen. Der Docker-Server spricht die Werkzeuge bei Bedarf über eine Web-API an. Die Werkzeuge antworten mit den ermittelten Erkennungs-, bzw. Validierungsergebnissen. Der Server fasst die Ergebnisse zu einem Gesamtergebnis zusammen und sendet alle ermittelten Informationen an den Client.
+**Wie kommunizieren der Client, der Borg-Server und die Werkzeuge?**
 
-Der Server fordert als erstes Ergebnisse von allen Erkennungswerkzeugen an. Anhand der Erkennungsergebnisse werden die konfigurierten Bedingungen für die Ausführung der Validatoren geprüft.
+Der Server und die Werkzeuge werden in jeweils einem eigenen Container mittels Docker gestartet. Der Client und der Server kommunizieren über eine Web-API. Das Gleiche gilt für die Kommunikation zwischen dem Server und den Werkzeugen. Der Client kommuniziert nie direkt mit den Werkzeugen. Stattdessen sendet er eine Datei an den Server und erhält eine Zusammenfassung aller Werkzeugergebnisse und ein berechnetes Gesamtergebnis zurück.
+
+**Was passiert mit der übermittelten Datei?**
+
+Nachdem der Server die Datei vom Client erhält, speichert er diese in ein Docker Volume. Auf dieses haben auch alle Werkzeuge Zugriff. Sobald alle notwendigen Werkzeuge die Datei analysiert haben, wird diese gelöscht.
+
+**Welche Werkzeuge werden für eine Datei angesprochen?**
+
+Als erstes werden alle Formaterkennungs-Werkzeuge ausgeführt. Anhand der Erkennungsergebnisse werden die konfigurierten Bedingungen für die Ausführung der Validatoren geprüft. Alle Validatoren für die mindestens eine Bedinung wahr ist, werden ausgeführt.
+
+**Wir wird das Gesamtergebnis ermittelt?**
+
+Für die Ermittlung eines Gesamtergebnisses müssen die einzelnen Werkzeugergebnisse vergleichbar sein. Zu diesem Zweck werden einzelne Eigenschaften aus den Werkzeugergebnissen extrahiert. Den extrahierten Eigenschaften wird über die Konfiguration eine Gewichtung von 0.0 bis 1.0 zugewiesen. Wenn mehrere Werkzeuge die gleiche Eigenschaft extrahieren, findet eine gewichtete Abstimmung zwischen den Werkzeugeergebnissen statt. Durch die Gewichtung können zuverlässigere Werkzeuge weniger verlässliche Werkzeuge überstimmen. Alle von den Tools extrahierten Werte erhalten durch die Abstimmung eine Gewichtung für das Gesamtergebnis zwischen 0.0 und 1.0. Der extrahierte Wert mit der höchsten Gewichtung wird Teil des Gesamtergebnisses.
+
+**Gibt es eine Möglichkeit die Gewichtung einzelner extrahierter Eigeschaften zu verfeinern?**
+
+Neben dem Standardwert der pro Werkzeug und extrahierter Eigenschaft festgelegt wird, gibt es auch die Möglichkeit Werte unter bestimmten Bedingungen auf- oder abzuwerten. Die Bedingungen beziehen sich immer auf das Gesamtergebnis. Beispielsweise ist es möglich die Ergebnisse eines Werkzeugs abzuwerten, wenn ein bestimmter MIME-Type ermittelt wurde.
 
 ## Standalone Webanwendung
 
@@ -58,24 +85,13 @@ In der Detailansicht eines Werkzeugs werden alle extrahierten Eigenschaften und 
 
 ## Installation
 
-Für den Betrieb von Borg wird [Docker](https://docs.docker.com/) inklusive [Docker Compose](https://docs.docker.com/compose/). Für einen lokalen Test der Standalone-Version von Borg ist der auch der Einsatz von [Docker Desktop](https://docs.docker.com/desktop/) vorstellbar. Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Um die Anwendung in einem Netzwerk verfügbar zu machen, eignet sich ein Webserver als Reverse-Proxy wie bspw. [NGINX](https://www.nginx.com/), der die Anfragen auf den konfigurierten Port des Servers weiterleitet.
+Für den Betrieb von Borg wird [Docker](https://docs.docker.com/) inklusive [Docker Compose](https://docs.docker.com/compose/). Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Für einen lokalen Test der Standalone-Version von Borg ist der auch der Einsatz von [Docker Desktop](https://docs.docker.com/desktop/) vorstellbar. Um die Anwendung in einem Netzwerk verfügbar zu machen, eignet sich ein Webserver als Reverse-Proxy wie bspw. [NGINX](https://www.nginx.com/), der die Anfragen auf den konfigurierten Port des Servers weiterleitet.
 
 Um alle für den Betrieb von Borg benötigten Container zu starten, genügt der folgende Befehl:
 
 ```sh
 docker compose up --build -d
 ```
-
-## Integrierte Programme
-
-| Name            | Funktion        | Resourcen                                            |
-| --------------- | --------------- | ---------------------------------------------------- |
-| Droid           | Formaterkennung | https://digital-preservation.github.io/droid/        |
-| Tika            | Formaterkennung | https://tika.apache.org/                             |
-| JHOVE           | Validierung     | https://jhove.openpreservation.org                   |
-| verapdf         | Validierung     | https://verapdf.org/                                 |
-| ODF Validator   | Validierung     | https://odftoolkit.org/conformance/ODFValidator.html |
-| OOXML-Validator | Validierung     | https://github.com/mikeebowen/OOXML-Validator        |
 
 ## Konfiguration
 
