@@ -12,4 +12,5 @@
 !Dockerfile
 
 # allow third-party tools
-!third_party/*
+!third_party/odfvalidator-0.12.0-jar-with-dependencies.jar
+!third_party/LICENSE.txt

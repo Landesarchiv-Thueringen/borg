@@ -11,7 +11,7 @@ BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierun
 | JHOVE           | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
 | verapdf         | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |
 | ODF Validator   | Validierung     | [Homepage](https://odftoolkit.org/conformance/ODFValidator.html) | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            |
-| OOXML Validator | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/ooxml-validator-vscode/blob/main/LICENSE)                         |
+| OOXML Validator | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/OOXML-Validator/blob/main/LICENSE)                                |
 
 ## Roadmap
 

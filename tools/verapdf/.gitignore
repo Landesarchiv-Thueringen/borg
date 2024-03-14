@@ -13,3 +13,4 @@
 
 # allow veraPDF installer zip
 !/third_party/verapdf-installer.zip
+!/third_party/LICENSE.GPL
