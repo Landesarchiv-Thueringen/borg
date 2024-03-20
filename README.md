@@ -55,7 +55,7 @@ Neben dem Standardwert, der pro Werkzeug und extrahierter Eigenschaft festgelegt
 
 ## Integration in andere Programme
 
-Borg ist dafür gedacht in für die andere Programme integriert zu werden. Der Borg-Server bietet dafür eine Web-API, die von beliebigen Programmen genutzt werden kann, um Dateien auswerten zu lassen.
+Borg kann in andere Programme integriert werden. Der Borg-Server bietet dafür eine Web-API, die von beliebigen Programmen genutzt werden kann, um Dateien auswerten zu lassen.
 
 ## Standalone Webanwendung
 
