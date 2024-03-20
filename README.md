@@ -24,6 +24,7 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 - Integration des Werkzeugs [Google Magika](https://github.com/google/magika) für die Formaterkennung, besonders für textbasierte Formate
 - Integration des Werkzeugs [jpylyzer](https://github.com/openpreserve/jpylyzer) für die Validierung von JP2-Dateien (JPEG 2000 Part 1)
 - PDF-Export von Gesamt- und Teilergebnissen
+- Verfeinerung der Bedingungen für das Ansprechen der Validatoren durch Kombination der verschiedenen extrahierten Eigenschaften (Erweiterung der Konfiguration)
 
 ## Motivation
 
