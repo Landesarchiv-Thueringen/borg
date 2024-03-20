@@ -49,6 +49,10 @@ Für die Ermittlung eines Gesamtergebnisses müssen die einzelnen Werkzeugergebn
 
 Neben dem Standardwert, der pro Werkzeug und extrahierter Eigenschaft festgelegt wird, gibt es auch die Möglichkeit Werte unter bestimmten Bedingungen auf- oder abzuwerten. Die Bedingungen beziehen sich immer auf das Gesamtergebnis. Beispielsweise ist es möglich die Ergebnisse eines Werkzeugs abzuwerten, wenn ein bestimmter MIME-Type ermittelt wurde.
 
+## Integration in andere Programme
+
+Borg ist dafür gedacht in für die andere Programme integriert zu werden. Der Borg-Server bietet dafür eine Web-API, die von beliebigen Programmen genutzt werden kann, um Dateien auswerten zu lassen.
+
 ## Standalone Webanwendung
 
 Borg stellt eine Webanwendung bereit, mit der beliebige Dateien analysiert werden können.
