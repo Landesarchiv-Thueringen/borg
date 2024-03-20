@@ -21,6 +21,10 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 - Integration des Werkzeugs [jpylyzer](https://github.com/openpreserve/jpylyzer) für die Validierung von JP2-Dateien (JPEG 2000 Part 1)
 - PDF-Export von Gesamt- und Teilergebnissen
 
+## Lizenz
+
+Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.de.html) veröffentlicht. Weitere Informationen finden Sie in der [LICENSE-Datei](LICENSE).
+
 ## Motivation
 
 Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität kann kein einzelnes Programm das Problemfeld vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Formatfamilie bzw. eine kleine Gruppe von Dateiformaten zu validieren.  
