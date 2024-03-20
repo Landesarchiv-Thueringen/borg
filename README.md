@@ -59,7 +59,7 @@ Borg kann in andere Programme integriert werden. Der Borg-Server bietet dafür e
 
 ## Standalone Webanwendung
 
-Borg stellt eine Webanwendung bereit, mit der beliebige Dateien analysiert werden können.
+Borg stellt zusätzlich eine Webanwendung bereit, mit der beliebige Dateien analysiert werden können.
 
 **Datei-Auswahl**
 
