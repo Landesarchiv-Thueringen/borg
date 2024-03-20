@@ -1,5 +1,4 @@
 services:
-
   gui:
     container_name: borg-gui
     restart: unless-stopped
@@ -22,8 +21,6 @@ services:
         - HTTPS_PROXY=${HTTPS_PROXY}
     volumes:
       - "file-store:/borg/file-store"
-    ports:
-      - ${BORG_SERVER_HOST_PORT}:80
     environment:
       - GIN_MODE=${GIN_MODE}
 

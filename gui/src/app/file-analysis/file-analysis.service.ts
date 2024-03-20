@@ -2,7 +2,6 @@ import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { v4 as uuid } from 'uuid';
-import { environment } from '../../environments/environment';
 
 export interface FileUpload {
   id: string;
@@ -92,7 +91,7 @@ export class FileAnalysisService {
   analyzeFile(file: File): Observable<HttpEvent<ToolResults>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post<ToolResults>(environment.apiEndpoint, formData, {
+    return this.httpClient.post<ToolResults>("/analyze-file", formData, {
       reportProgress: true,
       observe: 'events',
     });
