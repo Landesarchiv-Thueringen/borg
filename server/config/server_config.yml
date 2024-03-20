@@ -35,8 +35,6 @@ formatValidationTools:
     toolVersion: "1.28.0"
     endpoint: "http://jhove-api/validate/pdf"
     trigger:
-      - feature: "mimeType"
-        regEx: "pdf"
       - feature: "puid"
         regEx: "^fmt/14$" # PDF 1.0
       - feature: "puid"
