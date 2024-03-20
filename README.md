@@ -1,6 +1,6 @@
 # BorgFormat
 
-BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert mehrere Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.
+BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert verschiedene Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.
 
 ## Integrierte Werkzeuge
 
@@ -23,9 +23,9 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 
 ## Motivation
 
-Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität kann kein einzelnes Programm das Problemfeld vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Auswahl an Dateiformaten zu validieren.
-
-Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits einige Anwendungen, die verschiedene Programme für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt. Für Borg wurde jedoch ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von Systemvorraussetzungen der integrierten Werkzeuge.
+Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität kann kein einzelnes Programm das Problemfeld vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Formatfamilie bzw. eine kleine Gruppe von Dateiformaten zu validieren.  
+Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits vereinzelt Programme, die mehrere Werkzeuge für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt.  
+Für Borg wurde ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von Systemvorraussetzungen der verwendeten Werkzeuge.
 
 ## Funktionsweise
 
@@ -47,7 +47,7 @@ Für die Ermittlung eines Gesamtergebnisses müssen die einzelnen Werkzeugergebn
 
 **Gibt es eine Möglichkeit die Gewichtung einzelner extrahierter Eigeschaften zu verfeinern?**
 
-Neben dem Standardwert der pro Werkzeug und extrahierter Eigenschaft festgelegt wird, gibt es auch die Möglichkeit Werte unter bestimmten Bedingungen auf- oder abzuwerten. Die Bedingungen beziehen sich immer auf das Gesamtergebnis. Beispielsweise ist es möglich die Ergebnisse eines Werkzeugs abzuwerten, wenn ein bestimmter MIME-Type ermittelt wurde.
+Neben dem Standardwert, der pro Werkzeug und extrahierter Eigenschaft festgelegt wird, gibt es auch die Möglichkeit Werte unter bestimmten Bedingungen auf- oder abzuwerten. Die Bedingungen beziehen sich immer auf das Gesamtergebnis. Beispielsweise ist es möglich die Ergebnisse eines Werkzeugs abzuwerten, wenn ein bestimmter MIME-Type ermittelt wurde.
 
 ## Standalone Webanwendung
 
@@ -55,19 +55,19 @@ Borg stellt eine Webanwendung bereit, mit der beliebige Dateien analysiert werde
 
 **Datei-Auswahl**
 
-Die Dateiauswahl von Borg ermöglicht die Auswahl von einzelnen Dateien und ganzen Ordnern. Wenn ein Ordner ausgewählt wird, werden auch die Dateien aller enthaltenen Ordner hochgeladen.
+Der Reiter Dateiauswahl ermöglicht die Auswahl von einzelnen Dateien und ganzen Ordnern für die Analyse. Wenn ein Ordner ausgewählt wird, werden auch die Dateien aller enthaltenen Ordner hochgeladen.
 
 ![borg_file_selection](doc/screenshots/borg_file_selection_20240229.png)
 
 **Auswertung**
 
-In der Auswertung wird das Gesamtergebnis für alle hochgeladenen Dateien dargestellt. Es werden die wichtigsten extrahierten Eigenschaften und ein Status pro Datei angezeigt. Der Status stellt das Qualität des Gesamtergebnisses symbolisch dar. Jede Zeile stellt das Gesamtergebnis einer Datei dar. Detaillierte Ergebnisse der Werkzeuge können durch einen Klick auf die Zeile aufgerufen werden.
+Im Reiter Auswertung wird das Gesamtergebnis für alle hochgeladenen Dateien dargestellt. Für jede Datei werden in einer eigenen Zeile die wichtigsten extrahierten Eigenschaften sowie der Status angezeigt. Der Status stellt die Qualität des Gesamtergebnisses symbolisch dar. Detaillierte Ergebnisse der Werkzeuge können durch einen Klick auf die Zeile aufgerufen werden.
 
 ![borg_file_results](doc/screenshots/borg_results_20240229.png)
 
 **Detailansicht von Werkzeugergebnissen für einzelne Dateien**
 
-In der Detailansicht einer Datei wird die Zusammenstellung des Gesamtergebnisses aufgeschlüsselt. Es wird dargestellt, welche Werkzeuge mit welcher Gewichtung in das Gesamtergebnis eingegangen sind und wie das der (angezeigte) Status zu interpretieren ist. Die Detailansicht eines Werkzeuges lässt sich durch einen Klick auf die entsprechende Zeile öffnen.
+In der Detailansicht einer Datei wird die Zusammenstellung des Gesamtergebnisses aufgeschlüsselt. Es wird dargestellt, welche Werkzeuge mit welcher Gewichtung in das Gesamtergebnis eingegangen sind und wie der (angezeigte) Status zu interpretieren ist. Die Detailansicht eines Werkzeuges lässt sich durch einen Klick auf die entsprechende Zeile öffnen.
 
 **Detailansicht einer validen Datei**
 
@@ -79,7 +79,7 @@ In der Detailansicht einer Datei wird die Zusammenstellung des Gesamtergebnisses
 
 **Detailansicht eines Werkzeugs**
 
-In der Detailansicht eines Werkzeugs werden alle extrahierten Eigenschaften und die komplette Werkzeugausgabe angezeigt.
+In der Detailansicht eines Werkzeugs werden alle extrahierten Eigenschaften und die vollständige Werkzeugausgabe angezeigt.
 
 ![borg_file_selection](doc/screenshots/borg_tools_details_20240229.png)
 
@@ -103,21 +103,23 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 
 #### Bedingungen für die Ausführung
 
-| Werkzeug                  | Bedingung                                                                       |
-| ------------------------- | ------------------------------------------------------------------------------- |
-| DROID                     | wird immer ausgeführt                                                           |
-| Tika                      | wird immer ausgeführt                                                           |
-| JHOVE (PDF-Modul)         | PUID entspricht PDF Version 1.0 bis 1.7                                         |
-| JHOVE (HTML-Modul)        | PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) |
-| JHOVE (TIFF-Modul)        | PUID entspricht TIFF                                                            |
-| JHOVE (JPEG-Modul)        | PUID entspricht JPEG                                                            |
-| JHOVE (JPEG2000-Modul)    | PUID entspricht JP2 (JPEG 2000 part 1)                                          |
-| veraPDF (PDF/A-1a-Profil) | PUID entspricht PDF/A-1a                                                        |
-| veraPDF (PDF/A-1b-Profil) | PUID entspricht PDF/A-1b                                                        |
-| veraPDF (PDF/A-2a-Profil) | PUID entspricht PDF/A-2a                                                        |
-| veraPDF (PDF/A-2b-Profil) | PUID entspricht PDF/A-2b                                                        |
-| veraPDF (PDF/A-2u-Profil) | PUID entspricht PDF/A-2u                                                        |
-| veraPDF (PDF/UA-Profile)  | MIME-Type enthält pdf, nach aktuellen Stand keine PUID verfügbar                |
+| Werkzeug                  | Bedingung                                                                                                   |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| DROID                     | wird immer ausgeführt                                                                                       |
+| Tika                      | wird immer ausgeführt                                                                                       |
+| JHOVE (PDF-Modul)         | PUID entspricht PDF Version 1.0 bis 1.7 oder MIME-Type enthält /pdf                                         |
+| JHOVE (HTML-Modul)        | PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) oder MIME-Type enthält html |
+| JHOVE (TIFF-Modul)        | PUID entspricht TIFF oder MIME-Type enthält tiff                                                            |
+| JHOVE (JPEG-Modul)        | PUID entspricht JPEG oder MIME-Type enthält jpeg                                                            |
+| JHOVE (JPEG2000-Modul)    | PUID entspricht JP2 (JPEG 2000 part 1) oder MIME-Type enthält jp2                                           |
+| veraPDF (PDF/A-1a-Profil) | PUID entspricht PDF/A-1a oder Formatversion entspricht PDF/A-1a                                             |
+| veraPDF (PDF/A-1b-Profil) | PUID entspricht PDF/A-1b oder Formatversion entspricht PDF/A-1b                                             |
+| veraPDF (PDF/A-2a-Profil) | PUID entspricht PDF/A-2a oder Formatversion entspricht PDF/A-2a                                             |
+| veraPDF (PDF/A-2b-Profil) | PUID entspricht PDF/A-2b oder Formatversion entspricht PDF/A-2b                                             |
+| veraPDF (PDF/A-2u-Profil) | PUID entspricht PDF/A-2u oder Formatversion entspricht PDF/A-2u                                             |
+| veraPDF (PDF/UA-Profile)  | MIME-Type enthält pdf, nach aktuellen Stand keine PUID verfügbar                                            |
+| ODF Validator             | MIME-Type beginnt mit application/vnd.oasis.opendocument.                                                   |
+| OOXML Validator           | MIME-Type beginnt mit application/vnd.openxmlformats-officedocument.                                        |
 
 #### Gewichtung der extrahierten Eigenschaften
 
