@@ -94,6 +94,8 @@ func validateFile(path string) (bool, string, error) {
 		"java",
 		"-jar",
 		"third_party/odfvalidator-0.12.0-jar-with-dependencies.jar",
+		"-c",
+		"-e",
 		path,
 	)
 	output, err := cmd.CombinedOutput()
