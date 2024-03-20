@@ -411,14 +411,12 @@ func calculateFeatureValueScore(features *map[string]Feature) {
 			}
 		}
 		for valueIndex, featureValue := range feature.Values {
-			// if only one tool has extracted the feature
-			if len(featureValue.Tools) == 1 {
-				// total confidence is equal to tool confidence
-				(*features)[featureKey].Values[valueIndex].Score = totalValueConfidence[featureValue.Value]
+			if totalFeatureConfidence == 0 {
+				(*features)[featureKey].Values[valueIndex].Score = 0
 			} else {
-				// if multiple tools have extracted the feature, calculate the ratio
-				(*features)[featureKey].Values[valueIndex].Score =
-					totalValueConfidence[featureValue.Value] / totalFeatureConfidence
+				valueConfidence := totalValueConfidence[featureValue.Value]
+				normalizedValueConfidence := valueConfidence / totalFeatureConfidence
+				(*features)[featureKey].Values[valueIndex].Score = min(valueConfidence, normalizedValueConfidence)
 			}
 		}
 	}
