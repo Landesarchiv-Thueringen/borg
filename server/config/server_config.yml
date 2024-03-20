@@ -6,6 +6,15 @@ formatIdentificationTools:
       - key: "puid"
         confidence:
           defaultValue: 0.9
+      - key: "mimeType"
+        confidence:
+          defaultValue: 0.9
+      - key: "formatName"
+        confidence:
+          defaultValue: 0.9
+      - key: "formatVersion"
+        confidence:
+          defaultValue: 0.9
 
   - toolName: "Tika"
     toolVersion: "2.9.0"

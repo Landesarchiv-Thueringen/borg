@@ -36,9 +36,10 @@ type ToolResponse struct {
 	Error             *string
 }
 
-var defaultResponse = "DROID API is running"
-var workDir = "/borg/tools/droid"
-var storeDir = "/borg/file-store"
+const defaultResponse = "DROID API is running"
+const workDir = "/borg/tools/droid"
+const storeDir = "/borg/file-store"
+
 var signatureFilePath = filepath.Join(workDir, "third_party/DROID_SignatureFile_V114.xml")
 var containerSignatureFilePath = filepath.Join(workDir, "third_party/container-signature-20230822.xml")
 var outputFormat = "csv"
@@ -74,7 +75,6 @@ func identifyFileFormat(context *gin.Context) {
 		signatureFilePath,
 		"-Nc",
 		containerSignatureFilePath,
-		"-Nr",
 		fileStorePath,
 	)
 	droidOutput, err := cmd.Output()
@@ -88,11 +88,12 @@ func identifyFileFormat(context *gin.Context) {
 		return
 	}
 	droidOutputString := string(droidOutput)
+	log.Println(droidOutputString)
 	csvReader := csv.NewReader(strings.NewReader(droidOutputString))
 	formats, err := csvReader.ReadAll()
 	if err != nil {
 		log.Println(err.Error())
-		errorMessage := "unable to DROID csv output"
+		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
 			ToolOutput:   &droidOutputString,
 			OutputFormat: &outputFormat,
@@ -107,9 +108,19 @@ func identifyFileFormat(context *gin.Context) {
 		OutputFormat:      &outputFormat,
 		ExtractedFeatures: &extractedFeatures,
 	}
-	// TODO: discuss returning multiple results
-	if len(formats) > 1 && formats[1][1] != "" {
-		extractedFeatures["puid"] = formats[1][1]
+	if len(formats) == 0 || len(formats[1]) < 18 {
+		errorMessage := "unable to parse DROID csv output"
+		response := ToolResponse{
+			ToolOutput:   &droidOutputString,
+			OutputFormat: &outputFormat,
+			Error:        &errorMessage,
+		}
+		context.JSON(http.StatusOK, response)
+		return
 	}
+	extractedFeatures["puid"] = formats[1][14]
+	extractedFeatures["mimeType"] = formats[1][15]
+	extractedFeatures["formatName"] = formats[1][16]
+	extractedFeatures["formatVersion"] = formats[1][17]
 	context.JSON(http.StatusOK, response)
 }

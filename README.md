@@ -125,7 +125,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 
 | Werkzeug                 | PUID | MIME-Type | Formatversion         | Validierung            |
 | ------------------------ | ---- | --------- | --------------------- | ---------------------- |
-| DROID                    | 90%  |           |                       |                        |
+| DROID                    | 90%  | 90%       | 90%                   |                        |
 | Tika                     |      | 90%       | 90%                   |                        |
 | JHOVE                    |      |           | 80%                   | 100%                   |
 | JHOVE (PDF-Modul)        |      |           | 80% bzw. 0% bei PDF/A | 100% bzw. 0% bei PDF/A |

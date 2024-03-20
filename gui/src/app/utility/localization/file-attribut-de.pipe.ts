@@ -22,6 +22,7 @@ const labelMap: { [key: string]: string | undefined } = {
   fileName: 'Dateiname',
   relativePath: 'Pfad',
   fileSize: 'Dateigröße',
+  formatName: 'Formatbezeichnung',
   formatVersion: 'Formatversion',
   mimeType: 'MIME-Type',
   puid: 'PUID',
