@@ -2,6 +2,10 @@
 
 BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert verschiedene Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.
 
+## Lizenz
+
+Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.de.html) veröffentlicht. Weitere Informationen finden Sie in der [LICENSE-Datei](LICENSE).
+
 ## Integrierte Werkzeuge
 
 | Name            | Funktion        | Resourcen                                                        | Lizenz                                                                                                        |
@@ -20,10 +24,6 @@ Die Weiterentwicklung von Borg wird sich hauptsächlich um die Integration neuer
 - Integration des Werkzeugs [Google Magika](https://github.com/google/magika) für die Formaterkennung, besonders für textbasierte Formate
 - Integration des Werkzeugs [jpylyzer](https://github.com/openpreserve/jpylyzer) für die Validierung von JP2-Dateien (JPEG 2000 Part 1)
 - PDF-Export von Gesamt- und Teilergebnissen
-
-## Lizenz
-
-Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.de.html) veröffentlicht. Weitere Informationen finden Sie in der [LICENSE-Datei](LICENSE).
 
 ## Motivation
 
