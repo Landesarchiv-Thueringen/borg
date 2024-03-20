@@ -118,9 +118,17 @@ func identifyFileFormat(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures["puid"] = formats[1][14]
-	extractedFeatures["mimeType"] = formats[1][15]
-	extractedFeatures["formatName"] = formats[1][16]
-	extractedFeatures["formatVersion"] = formats[1][17]
+	if formats[1][14] != "" {
+		extractedFeatures["puid"] = formats[1][14]
+	}
+	if formats[1][15] != "" {
+		extractedFeatures["mimeType"] = formats[1][15]
+	}
+	if formats[1][16] != "" {
+		extractedFeatures["formatName"] = formats[1][16]
+	}
+	if formats[1][17] != "" {
+		extractedFeatures["formatVersion"] = formats[1][17]
+	}
 	context.JSON(http.StatusOK, response)
 }
