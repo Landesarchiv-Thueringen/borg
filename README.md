@@ -8,14 +8,14 @@ Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](htt
 
 ## Integrierte Werkzeuge
 
-| Name            | Funktion        | Resourcen                                                        | Lizenz                                                                                                        |
-| --------------- | --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Droid           | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
-| Tika            | Formaterkennung | [Homepage](https://tika.apache.org/)                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    |
-| JHOVE           | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
-| verapdf         | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |
-| ODF Validator   | Validierung     | [Homepage](https://odftoolkit.org/conformance/ODFValidator.html) | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            |
-| OOXML Validator | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/OOXML-Validator/blob/main/LICENSE)                                |
+| Name            | Funktion        | Resourcen                                                        | Lizenz                                                                                                        | Version |
+| --------------- | --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------- |
+| Droid           | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           | 6.7.0   |
+| Tika            | Formaterkennung | [Homepage](https://tika.apache.org/)                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    | 2.9.0   |
+| JHOVE           | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               | 1.28.0  |
+| verapdf         | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) | 1.24.1  |
+| ODF Validator   | Validierung     | [Homepage](https://odftoolkit.org/conformance/ODFValidator.html) | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            | 0.12.0  |
+| OOXML Validator | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/OOXML-Validator/blob/main/LICENSE)                                | 2.1.1   |
 
 ## Roadmap
 
@@ -116,7 +116,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 | ------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | DROID                     | wird immer ausgeführt                                                                                       |
 | Tika                      | wird immer ausgeführt                                                                                       |
-| JHOVE (PDF-Modul)         | PUID entspricht PDF Version 1.0 bis 1.7                                         |
+| JHOVE (PDF-Modul)         | PUID entspricht PDF Version 1.0 bis 1.7                                                                     |
 | JHOVE (HTML-Modul)        | PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) oder MIME-Type enthält html |
 | JHOVE (TIFF-Modul)        | PUID entspricht TIFF oder MIME-Type enthält tiff                                                            |
 | JHOVE (JPEG-Modul)        | PUID entspricht JPEG oder MIME-Type enthält jpeg                                                            |
