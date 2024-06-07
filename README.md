@@ -8,14 +8,14 @@ Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](htt
 
 ## Integrierte Werkzeuge
 
-| Name            | Funktion        | Resourcen                                                        | Lizenz                                                                                                        | Version |
-| --------------- | --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------- |
-| Droid           | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           | 6.7.0   |
-| Tika            | Formaterkennung | [Homepage](https://tika.apache.org/)                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    | 2.9.0   |
-| JHOVE           | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               | 1.28.0  |
-| verapdf         | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) | 1.24.1  |
-| ODF Validator   | Validierung     | [Homepage](https://odftoolkit.org/conformance/ODFValidator.html) | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            | 0.12.0  |
-| OOXML Validator | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/OOXML-Validator/blob/main/LICENSE)                                | 2.1.1   |
+| Name            | Version | Funktion        | Resourcen                                                        | Lizenz                                                                                                        |
+| --------------- | ------- | --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Droid           | 6.7.0   | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
+| Tika            | 2.9.0   | Formaterkennung | [Homepage](https://tika.apache.org/)                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    |
+| JHOVE           | 1.28.0  | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
+| verapdf         | 1.24.1  | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |
+| ODF Validator   | 0.12.0  | Validierung     | [Homepage](https://odftoolkit.org/conformance/ODFValidator.html) | [Apache License, Version 2.0](https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt)            |
+| OOXML Validator | 2.1.1   | Validierung     | [GitHub](https://github.com/mikeebowen/OOXML-Validator)          | [MIT License](https://github.com/mikeebowen/OOXML-Validator/blob/main/LICENSE)                                |
 
 ## Roadmap
 
