@@ -26,6 +26,7 @@ export interface FileUpload {
   relativePath: string;
   fileSize: number;
   uploadProgress?: number;
+  error?: string;
 }
 
 export interface FileResult {
@@ -108,7 +109,7 @@ export class FileAnalysisService {
   analyzeFile(file: File): Observable<HttpEvent<ToolResults>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post<ToolResults>("/analyze-file", formData, {
+    return this.httpClient.post<ToolResults>('/analyze-file', formData, {
       reportProgress: true,
       observe: 'events',
     });

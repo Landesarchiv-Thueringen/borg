@@ -92,8 +92,8 @@ export class FileUploadTableComponent implements AfterViewInit {
   uploadFile(file: File, fileUpload: FileUpload): void {
     this.uploadInProgress = true;
     this.fileAnalysisService.analyzeFile(file).subscribe({
-      error: (error: any) => {
-        console.error(error);
+      error: (error) => {
+        fileUpload.error = error.statusText;
       },
       next: (httpEvent: HttpEvent<ToolResults>) => {
         this.handleHttpEvent(httpEvent, fileUpload);
