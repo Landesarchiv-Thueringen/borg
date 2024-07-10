@@ -16,7 +16,7 @@
  */
 
 import { DecimalPipe, registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import localeDe from '@angular/common/locales/de';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,11 +62,11 @@ registerLocaleData(localeDe);
     PrettyPrintJsonPipe,
     ToolOutputComponent,
   ],
+  bootstrap: [AppComponent],
   imports: [
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
-    HttpClientModule,
     MatButtonModule,
     MatDialogModule,
     MatExpansionModule,
@@ -87,7 +87,7 @@ registerLocaleData(localeDe);
     DecimalPipe,
     FileFeaturePipe,
     FileSizePipe,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
