@@ -12,6 +12,7 @@
 !/src/**/*.ts
 !/src/**/*.html
 !/src/**/*.scss
+!/src/proxy.conf.mjs
 
 # allow assets
 !/src/assets/**/*.*
