@@ -73,9 +73,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close color="primary">Schließen</button>
-  <button mat-stroked-button (click)="exportResult()" color="primary">
+  <button mat-flat-button class="button-left" (click)="exportResult()">
     <mat-icon>summarize</mat-icon>
     Datei-Ergebnis exportieren
   </button>
+  <button mat-button mat-dialog-close>Schließen</button>
 </mat-dialog-actions>

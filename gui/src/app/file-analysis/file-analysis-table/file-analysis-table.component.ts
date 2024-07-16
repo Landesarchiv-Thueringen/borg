@@ -110,6 +110,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           fileResult: fileResult,
         },
         autoFocus: false,
+        maxWidth: '80vw',
       });
     } else {
       console.error('file result not found');

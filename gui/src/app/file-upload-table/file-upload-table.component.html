@@ -1,5 +1,5 @@
 <div class="file-upload-section">
-  <div class="file-upload-table mat-elevation-z8">
+  <div class="file-upload-table">
     <div class="table-content">
       <table mat-table [dataSource]="dataSource" matSort matSortActive="receivedAt" matSortDirection="desc">
         <!-- file name column -->
@@ -58,14 +58,14 @@
       </table>
     </div>
 
-    <mat-toolbar class="table-toolbar">
+    <div class="table-toolbar">
       <input #fileInput type="file" (change)="addFile($event)" />
-      <button mat-stroked-button (click)="fileInput.click()" color="primary">
+      <button mat-flat-button (click)="fileInput.click()" color="primary">
         <mat-icon>upload_file</mat-icon>
         Einzeldatei hinzufügen
       </button>
       <input #folderInput type="file" (change)="addFolder($event)" webkitdirectory />
-      <button mat-stroked-button (click)="folderInput.click()" color="primary">
+      <button mat-flat-button (click)="folderInput.click()" color="primary">
         <mat-icon>drive_folder_upload</mat-icon>
         Ordner hinzufügen
       </button>
@@ -76,6 +76,6 @@
         showFirstLastButtons
         aria-label="Dateien auswählen"
       ></mat-paginator>
-    </mat-toolbar>
+    </div>
   </div>
 </div>

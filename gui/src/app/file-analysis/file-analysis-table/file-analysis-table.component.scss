@@ -1,3 +1,5 @@
+@import "../../../styles/mixins.scss";
+
 :host {
   display: block;
   padding-top: 3em;
@@ -16,6 +18,7 @@
   width: 100%;
   min-width: 80em;
   max-width: 150em;
+  @include tableBorder;
 }
 
 .table-content {
@@ -67,7 +70,10 @@
 }
 
 .table-toolbar {
-  background-color: white;
+  display: flex;
+  padding: 0 16px;
+  align-items: center;
+  height: 64px;
   column-gap: 1em;
 
   mat-paginator {

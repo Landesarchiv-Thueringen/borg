@@ -1,65 +1,71 @@
+@import "../../styles/mixins.scss";
+
 :host {
   display: block;
   padding-top: 3em;
   padding-bottom: 3em;
   padding-left: 5em;
   padding-right: 5em;
+}
 
-  .file-upload-section {
+.file-upload-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2em;
+}
+
+.file-upload-table {
+  width: 100%;
+  min-width: 80em;
+  max-width: 150em;
+  @include tableBorder;
+
+  // no other possibility to center the text of a sort header
+  ::ng-deep .progress-header .mat-sort-header-container {
+    justify-content: center;
+  }
+}
+
+.table-content {
+  overflow: auto;
+
+  .task-progress {
+    width: 20em;
+  }
+
+  .progress-cell {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    margin-top: 2em;
+    justify-content: center;
 
-    .file-upload-table {
-      width: 100%;
-      min-width: 80em;
-      max-width: 150em;
-
-      // no other possibility to center the text of a sort header
-      ::ng-deep .progress-header .mat-sort-header-container {
-        justify-content: center;
-      }
-
-      .table-content {
-        overflow: auto;
-
-        .task-progress {
-          width: 20em;
-        }
-
-        .progress-cell {
-          width: 100%;
-          display: flex;
-          justify-content: center;
-
-          mat-spinner {
-            margin-left: 1em;
-          }
-        }
-      }
-
-      .table-toolbar {
-        background-color: white;
-        column-gap: 1em;
-
-        mat-paginator {
-          background: transparent;
-        }
-
-        .spacer {
-          flex: 1 1 auto;
-        }
-
-        input[type="file"] {
-          display: none;
-        }
-      }
+    mat-spinner {
+      margin-left: 1em;
     }
   }
+}
 
-  .upload-action-section {
-    display: flex;
-    column-gap: 1em;
-    padding-bottom: 3em;
+.table-toolbar {
+  display: flex;
+  padding: 0 16px;
+  align-items: center;
+  height: 64px;
+  column-gap: 1em;
+
+  mat-paginator {
+    background: transparent;
   }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+.upload-action-section {
+  display: flex;
+  column-gap: 1em;
+  padding-bottom: 3em;
 }

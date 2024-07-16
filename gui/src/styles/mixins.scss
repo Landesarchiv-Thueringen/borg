@@ -1,0 +1,5 @@
+@mixin tableBorder {
+  border-radius: 12px;
+  border: 1px solid var(--mat-table-row-item-outline-color);
+  overflow: hidden;
+}

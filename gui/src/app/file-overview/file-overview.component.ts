@@ -162,6 +162,7 @@ export class FileOverviewComponent {
           toolResult,
         },
         autoFocus: false,
+        maxWidth: '80vw',
       });
     }
   }

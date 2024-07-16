@@ -10,7 +10,8 @@
   margin-right: 25%;
   margin-bottom: 1em;
   p {
-    margin-bottom: 6px;
+    margin-top: 4px;
+    margin-bottom: 4px;
   }
   mat-icon {
     flex-shrink: 0;
@@ -62,5 +63,11 @@
     height: 100%;
     background-color: currentColor;
     opacity: 0.04;
+  }
+}
+
+mat-dialog-actions {
+  .button-left {
+    margin-right: auto;
   }
 }
