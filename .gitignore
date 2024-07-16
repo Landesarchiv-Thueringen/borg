@@ -12,14 +12,14 @@
 # allow project documentation
 !/README.md
 !/CHANGELOG.md
-!/readme_dev.md
+!/README_DEV.md
 !doc/screenshots/*.png
 
 # allow environment file
-!/.env
+!/.env.example
 
 # allow docker compose file
-!/docker-compose.yml
+!/compose.yml
 
 # allow go workspace files
 !/go.work

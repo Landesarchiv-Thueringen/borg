@@ -7,9 +7,9 @@ services:
       args:
         - HTTP_PROXY=${HTTP_PROXY}
         - HTTPS_PROXY=${HTTPS_PROXY}
-        - CONFIGURATION=${BORG_GUI_CONFIGURATION}
+        - CONFIGURATION=${GUI_CONFIGURATION}
     ports:
-      - ${BORG_GUI_HOST_PORT}:80
+      - ${PORT}:80
 
   server:
     container_name: borg-server
