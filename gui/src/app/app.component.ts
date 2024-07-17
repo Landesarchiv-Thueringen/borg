@@ -17,13 +17,14 @@
 
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MainNavigationComponent],
 })
 export class AppComponent {
   constructor(router: Router) {
