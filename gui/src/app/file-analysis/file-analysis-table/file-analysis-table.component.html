@@ -37,11 +37,11 @@
     </div>
 
     <div class="table-toolbar">
-      <button mat-flat-button (click)="clearToolResults()" color="primary" [disabled]="dataSource.data.length === 0">
+      <button mat-button (click)="clearToolResults()" color="primary" [disabled]="dataSource.data.length === 0">
         <mat-icon>cleaning_services</mat-icon>
         Auswertung leeren
       </button>
-      <button mat-flat-button (click)="exportResults()" color="primary" [disabled]="dataSource.data.length === 0">
+      <button mat-button (click)="exportResults()" color="primary" [disabled]="dataSource.data.length === 0">
         <mat-icon>summarize</mat-icon>
         Ergebnisse exportieren
       </button>
