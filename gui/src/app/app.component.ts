@@ -16,7 +16,7 @@
  */
 
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -25,4 +25,10 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterOutlet],
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(router: Router) {
+    // Any results are lost when the app (re-)loads. Navigate to the upload
+    // page, which is the only useful page now.
+    router.navigate(['.']);
+  }
+}
