@@ -36,8 +36,8 @@
   .progress-cell {
     width: 100%;
     display: flex;
-    justify-content: center;
-
+    align-items: center;
+    gap: 1em;
     mat-spinner {
       margin-left: 1em;
     }

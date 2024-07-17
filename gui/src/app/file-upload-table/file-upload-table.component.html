@@ -1,29 +1,29 @@
 <div class="file-upload-section">
   <div class="file-upload-table">
     <div class="table-content">
-      <table mat-table [dataSource]="dataSource" matSort matSortActive="receivedAt" matSortDirection="desc">
+      <mat-table [dataSource]="dataSource" matSort matSortActive="receivedAt" matSortDirection="desc">
         <!-- file name column -->
         <ng-container matColumnDef="fileName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dateiname</th>
-          <td mat-cell *matCellDef="let file">{{ file.fileName }}</td>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Dateiname</mat-header-cell>
+          <mat-cell *matCellDef="let file">{{ file.fileName }}</mat-cell>
         </ng-container>
 
         <!-- relative path column -->
         <ng-container matColumnDef="relativePath">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Pfad</th>
-          <td mat-cell *matCellDef="let file">{{ file.relativePath }}</td>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Pfad</mat-header-cell>
+          <mat-cell *matCellDef="let file">{{ file.relativePath }}</mat-cell>
         </ng-container>
 
         <!-- file size column -->
         <ng-container matColumnDef="fileSize">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dateigröße</th>
-          <td mat-cell *matCellDef="let file">{{ file.fileSize | fileSize }}</td>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Dateigröße</mat-header-cell>
+          <mat-cell *matCellDef="let file">{{ file.fileSize | fileSize }}</mat-cell>
         </ng-container>
 
         <!-- upload progress column -->
         <ng-container matColumnDef="uploadProgress">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header">Upload</th>
-          <td mat-cell *matCellDef="let file" class="task-progress">
+          <mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header">Upload</mat-header-cell>
+          <mat-cell *matCellDef="let file" class="task-progress">
             <div class="progress-cell">
               @if (file.error) {
                 <mat-icon>close</mat-icon>
@@ -37,25 +37,27 @@
                 <mat-icon>check</mat-icon>
               }
             </div>
-          </td>
+          </mat-cell>
         </ng-container>
 
         <!-- format verification column -->
         <ng-container matColumnDef="verificationProgress">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header">Formatverifikation</th>
-          <td mat-cell *matCellDef="let file" class="task-progress">
+          <mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header"
+            >Formatverifikation</mat-header-cell
+          >
+          <mat-cell *matCellDef="let file" class="task-progress">
             <div class="progress-cell">
               @if (!file.error && file.uploadProgress === 100) {
                 <span>wird durchgeführt</span>
                 <mat-spinner diameter="25"></mat-spinner>
               }
             </div>
-          </td>
+          </mat-cell>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
     </div>
 
     <div class="table-toolbar">
