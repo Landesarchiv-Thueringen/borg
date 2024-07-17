@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { DecimalPipe, registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import localeDe from '@angular/common/locales/de';
 import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
@@ -23,7 +23,6 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { FileSizePipe } from './utility/formatting/file-size.pipe';
 import { PaginatorDeService } from './utility/localization/paginator-de.service';
 
 registerLocaleData(localeDe);
@@ -36,7 +35,5 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     { provide: LOCALE_ID, useValue: 'de' },
     { provide: MatPaginatorIntl, useClass: PaginatorDeService },
-    DecimalPipe,
-    FileSizePipe,
   ],
 };

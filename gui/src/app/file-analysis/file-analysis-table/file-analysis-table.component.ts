@@ -23,8 +23,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
+import { formatFileSize } from 'src/app/utility/formatting/file-size.pipe';
 import { FileFeaturePipe } from 'src/app/utility/localization/file-attribut-de.pipe';
-import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
 import { Feature, FileAnalysisService, FileResult, OverviewFeature } from '../file-analysis.service';
 import { StatusIcons, StatusIconsService } from '../status-icons.service';
 
@@ -58,7 +58,6 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   constructor(
     private dialog: MatDialog,
     private fileAnalysisService: FileAnalysisService,
-    private fileSizePipe: FileSizePipe,
     private statusIcons: StatusIconsService,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
@@ -87,7 +86,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       fileOverview['fileName'] = { value: fileInfo.fileName };
       fileOverview['relativePath'] = { value: fileInfo.relativePath ?? '' };
       fileOverview['fileSize'] = {
-        value: this.fileSizePipe.transform(fileInfo.fileSize),
+        value: formatFileSize(fileInfo.fileSize),
       };
       for (let featureKey in fileInfo.toolResults.summary) {
         if (this.fileAnalysisService.isOverviewFeature(featureKey) && featureKey !== 'valid') {
