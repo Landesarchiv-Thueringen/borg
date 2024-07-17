@@ -36,32 +36,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
-import { FileOverviewComponent } from './file-overview/file-overview.component';
-import { FileUploadTableComponent } from './file-upload-table/file-upload-table.component';
-import { MainNavigationComponent } from './main-navigation/main-navigation.component';
-import { ToolOutputComponent } from './tool-output/tool-output.component';
 import { FileSizePipe } from './utility/formatting/file-size.pipe';
-import { PrettyPrintCsvPipe } from './utility/formatting/pretty-print-csv.pipe';
-import { PrettyPrintJsonPipe } from './utility/formatting/pretty-print-json.pipe';
 import { FileFeaturePipe } from './utility/localization/file-attribut-de.pipe';
 import { PaginatorDeService } from './utility/localization/paginator-de.service';
 
 registerLocaleData(localeDe);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    FileAnalysisTableComponent,
-    FileFeaturePipe,
-    FileOverviewComponent,
-    FileSizePipe,
-    FileUploadTableComponent,
-    MainNavigationComponent,
-    PrettyPrintCsvPipe,
-    PrettyPrintJsonPipe,
-    ToolOutputComponent,
-  ],
+  declarations: [AppComponent],
   bootstrap: [AppComponent],
   imports: [
     AppRoutingModule,
@@ -80,14 +62,15 @@ registerLocaleData(localeDe);
     MatTableModule,
     MatToolbarModule,
     MatTooltipModule,
+    FileFeaturePipe,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'de' },
     { provide: MatPaginatorIntl, useClass: PaginatorDeService },
     DecimalPipe,
     FileFeaturePipe,
-    FileSizePipe,
     provideHttpClient(withInterceptorsFromDi()),
+    FileSizePipe,
   ],
 })
 export class AppModule {}

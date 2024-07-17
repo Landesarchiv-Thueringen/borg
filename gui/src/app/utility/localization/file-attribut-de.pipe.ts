@@ -32,7 +32,7 @@ const labelMap: { [key: string]: string | undefined } = {
   error: 'Fehler',
 };
 
-@Pipe({ name: 'fileFeature' })
+@Pipe({ name: 'fileFeature', standalone: true })
 export class FileFeaturePipe implements PipeTransform {
   transform(value: string): string {
     const label = labelMap[value];

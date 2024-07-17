@@ -19,6 +19,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'prettyPrintCsv',
+  standalone: true,
 })
 export class PrettyPrintCsvPipe implements PipeTransform {
   transform(csvString: string): string {

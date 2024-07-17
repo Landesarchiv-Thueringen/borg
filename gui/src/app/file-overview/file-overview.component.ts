@@ -15,9 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
   FeatureValue,
   FileAnalysisService,
@@ -29,6 +32,7 @@ import {
 } from '../file-analysis/file-analysis.service';
 import { StatusIconsService } from '../file-analysis/status-icons.service';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
+import { FileFeaturePipe } from '../utility/localization/file-attribut-de.pipe';
 
 interface DialogData {
   fileResult: FileResult;
@@ -51,6 +55,8 @@ const ALWAYS_VISIBLE_COLUMNS = ['puid', 'mimeType'];
   selector: 'app-file-overview',
   templateUrl: './file-overview.component.html',
   styleUrls: ['./file-overview.component.scss'],
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule, MatIconModule, CommonModule, MatTableModule, FileFeaturePipe],
 })
 export class FileOverviewComponent {
   readonly fileResult: FileResult = this.data.fileResult;
@@ -85,7 +91,6 @@ export class FileOverviewComponent {
         }
       }
       this.dataSource.data = this.getTableRows(summary, toolNames, featureNames);
-      console.log('table rows', this.dataSource.data);
     }
   }
 

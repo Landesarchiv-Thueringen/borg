@@ -15,11 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
+import { FileFeaturePipe } from 'src/app/utility/localization/file-attribut-de.pipe';
 import { FileSizePipe } from '../../utility/formatting/file-size.pipe';
 import { Feature, FileAnalysisService, FileResult, OverviewFeature } from '../file-analysis.service';
 import { StatusIcons, StatusIconsService } from '../status-icons.service';
@@ -41,6 +45,8 @@ interface FileFeature {
   selector: 'app-file-analysis-table',
   templateUrl: './file-analysis-table.component.html',
   styleUrls: ['./file-analysis-table.component.scss'],
+  standalone: true,
+  imports: [MatTableModule, MatIconModule, MatButtonModule, MatPaginatorModule, FileFeaturePipe, CommonModule],
 })
 export class FileAnalysisTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileOverview>;

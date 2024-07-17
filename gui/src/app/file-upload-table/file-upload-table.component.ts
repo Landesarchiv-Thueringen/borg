@@ -17,17 +17,33 @@
 
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/utility/notification/notification.service';
 import { FileAnalysisService, FileUpload, ToolResults } from '../file-analysis/file-analysis.service';
+import { FileSizePipe } from '../utility/formatting/file-size.pipe';
 
 @Component({
   selector: 'app-file-upload-table',
   templateUrl: './file-upload-table.component.html',
   styleUrls: ['./file-upload-table.component.scss'],
+  standalone: true,
+  imports: [
+    FileSizePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatTableModule,
+  ],
 })
 export class FileUploadTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileUpload>;
