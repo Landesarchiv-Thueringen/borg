@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
 import { formatFileSize } from 'src/app/utility/formatting/file-size.pipe';
@@ -46,7 +47,15 @@ interface FileFeature {
   templateUrl: './file-analysis-table.component.html',
   styleUrls: ['./file-analysis-table.component.scss'],
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatPaginatorModule, FileFeaturePipe, CommonModule],
+  imports: [
+    CommonModule,
+    FileFeaturePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+  ],
 })
 export class FileAnalysisTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileOverview>;
@@ -54,6 +63,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   tableColumnList: string[];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private dialog: MatDialog,
@@ -73,6 +83,19 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => {
+      switch (sortHeaderId) {
+        case 'status':
+          return Object.entries(data.icons)
+            .filter(([_, value]) => value)
+            .map(([key, _]) => key)
+            .join();
+        default:
+          const feature = data[sortHeaderId as keyof FileOverview] as FileFeature;
+          return feature?.value;
+      }
+    };
   }
 
   processFileInformation(fileInfos: FileResult[]): void {

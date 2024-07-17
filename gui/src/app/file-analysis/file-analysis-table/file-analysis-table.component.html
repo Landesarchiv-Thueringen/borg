@@ -2,9 +2,9 @@
   <h1>Geprüfte Dateien ({{ dataSource.data.length }})</h1>
   <div class="file-analysis-table">
     <div class="table-content">
-      <mat-table [dataSource]="dataSource">
+      <mat-table [dataSource]="dataSource" matSort>
         <ng-container *ngFor="let tableColumn of generatedTableColumnList" matColumnDef="{{ tableColumn }}">
-          <mat-header-cell *matHeaderCellDef>{{ tableColumn | fileFeature }}</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ tableColumn | fileFeature }}</mat-header-cell>
           <mat-cell *matCellDef="let fileInfo">
             <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'true'">check</mat-icon>
             <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'false'">close</mat-icon>
@@ -16,7 +16,7 @@
 
         <!-- status-icons column -->
         <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
           <mat-cell *matCellDef="let fileInfo">
             <mat-icon *ngIf="fileInfo.icons.uncertain" class="uncertain-icon">warning</mat-icon>
             <mat-icon *ngIf="fileInfo.icons.valid" class="valid-icon">check</mat-icon>
