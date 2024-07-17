@@ -18,7 +18,10 @@
 import { DecimalPipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'fileSize', standalone: true })
+@Pipe({
+  name: 'fileSize',
+  standalone: true,
+})
 export class FileSizePipe implements PipeTransform {
   readonly units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
 
