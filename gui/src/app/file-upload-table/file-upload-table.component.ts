@@ -15,8 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -24,10 +24,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { NotificationService } from 'src/app/utility/notification/notification.service';
-import { FileAnalysisService, FileUpload, ToolResults } from '../file-analysis/file-analysis.service';
+import { FileAnalysisService, FileUpload } from '../file-analysis/file-analysis.service';
 import { FileSizePipe } from '../utility/formatting/file-size.pipe';
+import { UploadService } from '../utility/upload.service';
 
 @Component({
   selector: 'app-file-upload-table',
@@ -48,29 +47,25 @@ import { FileSizePipe } from '../utility/formatting/file-size.pipe';
 export class FileUploadTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileUpload>;
   displayedColumns: string[];
-  uploadInProgress: boolean;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fileAnalysisService: FileAnalysisService,
-    private notificationService: NotificationService,
-    private router: Router,
+    private upload: UploadService,
   ) {
-    this.uploadInProgress = false;
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = ['relativePath', 'fileName', 'fileSize', 'uploadProgress', 'verificationProgress'];
-    this.fileAnalysisService.getFileUploads().subscribe({
-      // error can't occur --> no error handling
-      next: (fileUploads: FileUpload[]) => {
-        this.dataSource.data = fileUploads;
-        if (fileUploads.length === 0 && this.uploadInProgress) {
-          this.uploadInProgress = false;
-          this.router.navigate(['auswertung']);
-        }
-      },
-    });
+    this.fileAnalysisService
+      .getFileUploads()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        // error can't occur --> no error handling
+        next: (fileUploads: FileUpload[]) => {
+          this.dataSource.data = fileUploads;
+        },
+      });
   }
 
   ngAfterViewInit(): void {
@@ -84,7 +79,7 @@ export class FileUploadTableComponent implements AfterViewInit {
     if (files && files.length === 1) {
       const file = files[0];
       const fileUpload = this.fileAnalysisService.addFileUpload(file.name, 'Einzeldatei', file.size);
-      this.uploadFile(file, fileUpload);
+      this.upload.uploadFile(file, fileUpload);
     }
   }
 
@@ -92,40 +87,14 @@ export class FileUploadTableComponent implements AfterViewInit {
     const input = event.currentTarget as HTMLInputElement;
     const files: FileList | null = input.files;
     if (files && files.length > 1) {
-      const data = this.dataSource.data;
       for (let fileIndex = 0; fileIndex < files.length; ++fileIndex) {
         const file = files[fileIndex];
         const fileUpload = this.fileAnalysisService.addFileUpload(
           file.name,
-          file.webkitRelativePath.replace(new RegExp(file.name + '$'), ''),
+          file.webkitRelativePath.replace(new RegExp('/' + file.name + '$'), ''),
           file.size,
         );
-        this.uploadFile(file, fileUpload);
-      }
-    }
-  }
-
-  uploadFile(file: File, fileUpload: FileUpload): void {
-    this.uploadInProgress = true;
-    this.fileAnalysisService.analyzeFile(file).subscribe({
-      error: (error) => {
-        fileUpload.error = error.statusText;
-      },
-      next: (httpEvent: HttpEvent<ToolResults>) => {
-        this.handleHttpEvent(httpEvent, fileUpload);
-      },
-    });
-  }
-
-  private handleHttpEvent(event: HttpEvent<ToolResults>, fileUpload: FileUpload): void {
-    if (event.type === HttpEventType.UploadProgress) {
-      if (event.total && event.total > 0.0) {
-        fileUpload.uploadProgress = Math.round(100 * (event.loaded / event.total));
-      }
-    } else if (event.type === HttpEventType.Response) {
-      if (event.body) {
-        this.fileAnalysisService.addFileResult(fileUpload, event.body);
-        this.notificationService.show('Formaterkennung und -validierung abgeschlossen: ' + fileUpload.fileName);
+        this.upload.uploadFile(file, fileUpload);
       }
     }
   }

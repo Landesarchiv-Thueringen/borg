@@ -23,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
 import { formatFileSize } from 'src/app/utility/formatting/file-size.pipe';
 import { FileFeaturePipe } from 'src/app/utility/localization/file-attribut-de.pipe';
@@ -69,6 +70,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     private dialog: MatDialog,
     private fileAnalysisService: FileAnalysisService,
     private statusIcons: StatusIconsService,
+    private router: Router,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = [];
@@ -147,6 +149,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   clearToolResults(): void {
     this.fileAnalysisService.clearFileResults();
+    this.router.navigate(['auswahl']);
   }
 
   exportResults(): void {
