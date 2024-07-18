@@ -19,11 +19,14 @@ Build or rebuild images as required and start backend and frontend services:
 docker compose up --build
 ```
 
+## Embedding
+
+Borg can be embedded in other Angular applications.
+See [./gui/src/app/features/file-analysis/README.md](./gui/src/app/features/file-analysis/README.md).
+
 ## Development
 
-### Frontend
-
-#### Start a Development Server
+### Start a Frontend Development Server
 
 In the directory `gui` run
 

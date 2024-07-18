@@ -7,8 +7,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FileAnalysisService, FileUpload } from '../../features/file-analysis/file-analysis.service';
 import { FileSizePipe } from '../../features/file-analysis/pipes/file-size.pipe';
+import { FileAnalysisService, FileUpload } from '../../services/file-analysis.service';
 import { UploadService } from '../../services/upload.service';
 
 @Component({
@@ -40,8 +40,8 @@ export class UploadPageComponent implements AfterViewInit {
   ) {
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = ['relativePath', 'fileName', 'fileSize', 'uploadProgress', 'verificationProgress'];
-    this.fileAnalysisService
-      .getFileUploads()
+    this.upload
+      .getAll()
       .pipe(takeUntilDestroyed())
       .subscribe({
         // error can't occur --> no error handling
@@ -61,8 +61,8 @@ export class UploadPageComponent implements AfterViewInit {
     const files: FileList | null = input.files;
     if (files && files.length === 1) {
       const file = files[0];
-      const fileUpload = this.fileAnalysisService.addFileUpload(file.name, 'Einzeldatei', file.size);
-      this.upload.uploadFile(file, fileUpload);
+      const fileUpload = this.upload.add(file.name, 'Einzeldatei', file.size);
+      this.upload.upload(file, fileUpload);
     }
   }
 
@@ -72,12 +72,12 @@ export class UploadPageComponent implements AfterViewInit {
     if (files && files.length > 1) {
       for (let fileIndex = 0; fileIndex < files.length; ++fileIndex) {
         const file = files[fileIndex];
-        const fileUpload = this.fileAnalysisService.addFileUpload(
+        const fileUpload = this.upload.add(
           file.name,
           file.webkitRelativePath.replace(new RegExp('/' + file.name + '$'), ''),
           file.size,
         );
-        this.upload.uploadFile(file, fileUpload);
+        this.upload.upload(file, fileUpload);
       }
     }
   }

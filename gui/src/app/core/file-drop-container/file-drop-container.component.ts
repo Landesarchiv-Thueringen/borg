@@ -1,7 +1,6 @@
 import { Component, HostBinding, HostListener, NgZone } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { FileAnalysisService } from 'src/app/features/file-analysis/file-analysis.service';
 import { UploadService } from '../../services/upload.service';
 
 @Component({
@@ -15,7 +14,6 @@ export class FileDropContainerComponent {
   @HostBinding('class.file-over') fileOver = false;
 
   constructor(
-    private fileAnalysisService: FileAnalysisService,
     private ngZone: NgZone,
     private router: Router,
     private upload: UploadService,
@@ -65,12 +63,8 @@ export class FileDropContainerComponent {
     if (entry instanceof FileSystemFileEntry) {
       entry.file((file) => {
         this.ngZone.run(() => {
-          const fileUpload = this.fileAnalysisService.addFileUpload(
-            file.name,
-            path.join('/') || 'Einzeldatei',
-            file.size,
-          );
-          this.upload.uploadFile(file, fileUpload);
+          const fileUpload = this.upload.add(file.name, path.join('/') || 'Einzeldatei', file.size);
+          this.upload.upload(file, fileUpload);
         });
       });
     } else if (entry instanceof FileSystemDirectoryEntry) {

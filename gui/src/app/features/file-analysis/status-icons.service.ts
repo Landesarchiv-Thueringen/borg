@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FileResult } from './file-analysis.service';
+import { FileResult } from './results';
 
 const UNCERTAIN_REQUIRED_FEATURES = ['mimeType', 'puid'];
 const UNCERTAIN_CONFIDENCE_THRESHOLD = 0.75;

@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { Feature, FileAnalysisService, FileResult, OverviewFeature } from '../file-analysis.service';
+import { isOverviewFeature, OverviewFeature, sortFeatures } from '../file-feature';
 import { FileOverviewComponent } from '../file-overview/file-overview.component';
 import { FileFeaturePipe } from '../pipes/file-attribut-de.pipe';
 import { formatFileSize } from '../pipes/file-size.pipe';
+import { Feature, FileResult } from '../results';
 import { StatusIcons, StatusIconsService } from '../status-icons.service';
 
 type FileOverview = {
@@ -46,24 +46,27 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   generatedTableColumnList: string[];
   tableColumnList: string[];
 
+  private _results?: FileResult[];
+  @Input()
+  get results(): FileResult[] | undefined {
+    return this._results;
+  }
+  set results(value: FileResult[] | undefined) {
+    this._results = value;
+    this.processFileInformation(value ?? []);
+  }
+  @Input() getResult!: (id: string) => Promise<FileResult | undefined>;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private dialog: MatDialog,
-    private fileAnalysisService: FileAnalysisService,
     private statusIcons: StatusIconsService,
-    private router: Router,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
     this.tableColumnList = [];
     this.generatedTableColumnList = ['fileName', 'relativePath', 'fileSize'];
-    this.fileAnalysisService.getFileResults().subscribe({
-      // error can't occur --> no error handling
-      next: (fileInfos: FileResult[]) => {
-        this.processFileInformation(fileInfos);
-      },
-    });
   }
 
   ngAfterViewInit(): void {
@@ -83,7 +86,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     };
   }
 
-  processFileInformation(fileInfos: FileResult[]): void {
+  private processFileInformation(fileInfos: FileResult[]): void {
     const featureKeys: string[] = ['fileName', 'relativePath', 'fileSize'];
     const data: FileOverview[] = [];
     for (let fileInfo of fileInfos) {
@@ -97,7 +100,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
         value: formatFileSize(fileInfo.fileSize),
       };
       for (let featureKey in fileInfo.toolResults.summary) {
-        if (this.fileAnalysisService.isOverviewFeature(featureKey) && featureKey !== 'valid') {
+        if (isOverviewFeature(featureKey) && featureKey !== 'valid') {
           featureKeys.push(featureKey);
           fileOverview[featureKey] = {
             value: fileInfo.toolResults.summary[featureKey].values[0].value,
@@ -109,14 +112,14 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       data.push(fileOverview);
     }
     this.dataSource.data = data;
-    const sortedFeatures = this.fileAnalysisService.sortFeatures(featureKeys);
+    const sortedFeatures = sortFeatures(featureKeys);
     this.generatedTableColumnList = sortedFeatures;
     this.tableColumnList = sortedFeatures.concat(['status']);
   }
 
-  openDetails(fileOverview: FileOverview): void {
+  async openDetails(fileOverview: FileOverview): Promise<void> {
     const id = fileOverview['id']?.value;
-    const fileResult = this.fileAnalysisService.getFileResult(id);
+    const fileResult = await this.getResult(id);
     if (fileResult) {
       this.dialog.open(FileOverviewComponent, {
         data: {
@@ -128,21 +131,5 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     } else {
       console.error('file result not found');
     }
-  }
-
-  clearToolResults(): void {
-    this.fileAnalysisService.clearFileResults();
-    this.router.navigate(['auswahl']);
-  }
-
-  exportResults(): void {
-    const a = document.createElement('a');
-    document.body.appendChild(a);
-    a.download = 'borg-results.json';
-    a.href =
-      'data:text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(this.fileAnalysisService.fileResults, null, 2));
-    a.click();
-    document.body.removeChild(a);
   }
 }

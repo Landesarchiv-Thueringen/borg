@@ -4,16 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import {
-  FeatureValue,
-  FileAnalysisService,
-  FileResult,
-  OverviewFeature,
-  Summary,
-  ToolConfidence,
-  ToolResult,
-} from '../file-analysis.service';
+import { isOverviewFeature, OverviewFeature, sortFeatures } from '../file-feature';
 import { FileFeaturePipe } from '../pipes/file-attribut-de.pipe';
+import { FeatureValue, FileResult, Summary, ToolConfidence, ToolResult } from '../results';
 import { StatusIconsService } from '../status-icons.service';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
@@ -49,7 +42,6 @@ export class FileOverviewComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: DialogData,
-    private fileAnalysisService: FileAnalysisService,
     private statusIcons: StatusIconsService,
     private dialog: MatDialog,
   ) {
@@ -69,7 +61,7 @@ export class FileOverviewComponent {
         toolNames.push(toolResult.toolName);
       });
       for (let featureKey in summary) {
-        if (this.fileAnalysisService.isOverviewFeature(featureKey)) {
+        if (isOverviewFeature(featureKey)) {
           featureNames.push(featureKey);
         }
       }
@@ -79,10 +71,7 @@ export class FileOverviewComponent {
 
   getTableRows(summary: Summary, toolNames: string[], featureNames: string[]): FileFeatures[] {
     const rows: FileFeatures[] = [this.getCumulativeResult(summary, featureNames)];
-    const sortedFeatures: string[] = this.fileAnalysisService.sortFeatures([
-      ...ALWAYS_VISIBLE_COLUMNS,
-      ...featureNames,
-    ]);
+    const sortedFeatures: string[] = sortFeatures([...ALWAYS_VISIBLE_COLUMNS, ...featureNames]);
     this.tableColumnList = ['tool', ...sortedFeatures];
     if (this.icons.error) {
       this.tableColumnList.push('error');
