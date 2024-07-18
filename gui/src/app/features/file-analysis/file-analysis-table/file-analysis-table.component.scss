@@ -15,7 +15,6 @@
 
 .file-analysis-table {
   width: 100%;
-  min-width: 80em;
   max-width: 150em;
   @include tableBorder;
 }
@@ -70,16 +69,15 @@
 
 .table-toolbar {
   display: flex;
-  padding: 0 16px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  padding: 4px 16px;
   align-items: center;
-  height: 64px;
+  min-height: 64px;
   column-gap: 1em;
 
   mat-paginator {
     background: transparent;
-  }
-
-  .spacer {
-    flex: 1 1 auto;
+    margin-left: auto;
   }
 }
