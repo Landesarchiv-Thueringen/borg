@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { MainNavigationComponent } from './main-navigation/main-navigation.component';
-import { FileDropContainerComponent } from './utility/file-drop-container/file-drop-container.component';
+import { FileDropContainerComponent } from './core/file-drop-container/file-drop-container.component';
+import { MainNavigationComponent } from './core/main-navigation/main-navigation.component';
 
 @Component({
   selector: 'app-root',

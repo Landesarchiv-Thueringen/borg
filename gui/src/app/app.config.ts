@@ -6,7 +6,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { PaginatorDeService } from './utility/localization/paginator-de.service';
+import { PaginatorDeService } from './core/paginator-de.service';
 
 registerLocaleData(localeDe);
 

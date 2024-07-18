@@ -1,8 +1,8 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { FileAnalysisService, FileUpload, ToolResults } from '../file-analysis/file-analysis.service';
-import { NotificationService } from './notification/notification.service';
+import { FileAnalysisService, FileUpload, ToolResults } from '../features/file-analysis/file-analysis.service';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',

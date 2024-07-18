@@ -7,10 +7,10 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { FileOverviewComponent } from 'src/app/file-overview/file-overview.component';
-import { formatFileSize } from 'src/app/utility/formatting/file-size.pipe';
-import { FileFeaturePipe } from 'src/app/utility/localization/file-attribut-de.pipe';
 import { Feature, FileAnalysisService, FileResult, OverviewFeature } from '../file-analysis.service';
+import { FileOverviewComponent } from '../file-overview/file-overview.component';
+import { FileFeaturePipe } from '../pipes/file-attribut-de.pipe';
+import { formatFileSize } from '../pipes/file-size.pipe';
 import { StatusIcons, StatusIconsService } from '../status-icons.service';
 
 type FileOverview = {

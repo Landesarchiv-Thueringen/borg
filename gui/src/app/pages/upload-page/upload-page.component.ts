@@ -7,14 +7,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FileAnalysisService, FileUpload } from '../file-analysis/file-analysis.service';
-import { FileSizePipe } from '../utility/formatting/file-size.pipe';
-import { UploadService } from '../utility/upload.service';
+import { FileAnalysisService, FileUpload } from '../../features/file-analysis/file-analysis.service';
+import { FileSizePipe } from '../../features/file-analysis/pipes/file-size.pipe';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
-  selector: 'app-file-upload-table',
-  templateUrl: './file-upload-table.component.html',
-  styleUrls: ['./file-upload-table.component.scss'],
+  selector: 'app-upload-page',
+  templateUrl: './upload-page.component.html',
+  styleUrls: ['./upload-page.component.scss'],
   standalone: true,
   imports: [
     FileSizePipe,
@@ -27,7 +27,7 @@ import { UploadService } from '../utility/upload.service';
     MatTableModule,
   ],
 })
-export class FileUploadTableComponent implements AfterViewInit {
+export class UploadPageComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileUpload>;
   displayedColumns: string[];
 

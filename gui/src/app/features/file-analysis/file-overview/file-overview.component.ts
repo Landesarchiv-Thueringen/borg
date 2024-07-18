@@ -12,10 +12,10 @@ import {
   Summary,
   ToolConfidence,
   ToolResult,
-} from '../file-analysis/file-analysis.service';
-import { StatusIconsService } from '../file-analysis/status-icons.service';
+} from '../file-analysis.service';
+import { FileFeaturePipe } from '../pipes/file-attribut-de.pipe';
+import { StatusIconsService } from '../status-icons.service';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
-import { FileFeaturePipe } from '../utility/localization/file-attribut-de.pipe';
 
 interface DialogData {
   fileResult: FileResult;

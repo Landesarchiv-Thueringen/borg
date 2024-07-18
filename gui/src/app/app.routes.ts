@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { FileAnalysisTableComponent } from './file-analysis/file-analysis-table/file-analysis-table.component';
-import { FileUploadTableComponent } from './file-upload-table/file-upload-table.component';
+import { ResultsPageComponent } from './pages/results-page/results-page.component';
+import { UploadPageComponent } from './pages/upload-page/upload-page.component';
 
 export const routes: Routes = [
   {
@@ -8,6 +8,6 @@ export const routes: Routes = [
     redirectTo: 'auswahl',
     pathMatch: 'full',
   },
-  { path: 'auswahl', component: FileUploadTableComponent },
-  { path: 'auswertung', component: FileAnalysisTableComponent },
+  { path: 'auswahl', component: UploadPageComponent },
+  { path: 'auswertung', component: ResultsPageComponent },
 ];

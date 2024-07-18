@@ -1,8 +1,8 @@
 import { Component, HostBinding, HostListener, NgZone } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { FileAnalysisService } from 'src/app/file-analysis/file-analysis.service';
-import { UploadService } from '../upload.service';
+import { FileAnalysisService } from 'src/app/features/file-analysis/file-analysis.service';
+import { UploadService } from '../../services/upload.service';
 
 @Component({
   selector: 'app-file-drop-container',
