@@ -1,6 +1,10 @@
 :host {
   display: block;
-  min-width: 70em;
+}
+
+h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .icon-explanation {

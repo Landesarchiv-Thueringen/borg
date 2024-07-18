@@ -41,7 +41,7 @@ export class FileOverviewComponent {
   tableColumnList: string[] = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: DialogData,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private statusIcons: StatusIconsService,
     private dialog: MatDialog,
   ) {
