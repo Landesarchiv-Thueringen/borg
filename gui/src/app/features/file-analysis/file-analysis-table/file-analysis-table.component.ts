@@ -6,24 +6,37 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { isOverviewFeature, OverviewFeature, sortFeatures } from '../file-feature';
 import { FileOverviewComponent } from '../file-overview/file-overview.component';
-import { FileFeaturePipe } from '../pipes/file-attribut-de.pipe';
-import { formatFileSize } from '../pipes/file-size.pipe';
-import { Feature, FileResult } from '../results';
+import { FileFeaturePipe } from '../pipes/file-feature.pipe';
+import { FileResult, RowValue } from '../results';
 import { StatusIcons, StatusIconsService } from '../status-icons.service';
 
 type FileOverview = {
-  [key in OverviewFeature]?: FileFeature;
-} & {
-  id: FileFeature;
+  id: string;
+  values: { [key in string]?: RowValue };
   icons: StatusIcons;
 };
 
-interface FileFeature {
-  value: string;
-  confidence?: number;
-  feature?: Feature;
+/** Properties to show in the table and / or the details dialog. */
+export interface FilePropertyDefinition {
+  /**
+   * The property key.
+   *
+   * Either `filename`, a tool-result property, or a field of `info`.
+   */
+  key: string;
+  /**
+   * A label to be used column header.
+   *
+   * Can be omitted for native properties (`filename`, tool results).
+   */
+  label?: string;
+  /**
+   * Whether to show the property in the table. Default: true.
+   *
+   * When false, the property will be shown only in the details dialog.
+   */
+  inTable?: boolean;
 }
 
 @Component({
@@ -43,8 +56,6 @@ interface FileFeature {
 })
 export class FileAnalysisTableComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileOverview>;
-  generatedTableColumnList: string[];
-  tableColumnList: string[];
 
   private _results?: FileResult[];
   @Input()
@@ -55,7 +66,40 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     this._results = value;
     this.processFileInformation(value ?? []);
   }
+
   @Input() getResult!: (id: string) => Promise<FileResult | undefined>;
+
+  private _properties: FilePropertyDefinition[] = [
+    { key: 'path', label: 'Pfad' },
+    { key: 'filename' },
+    { key: 'fileSize', label: 'Dateigröße' },
+    { key: 'puid' },
+    { key: 'mimeType' },
+    { key: 'formatVersion' },
+    { key: 'status' },
+  ];
+  /**
+   * Properties to be displayed in the table and in the details dialog.
+   *
+   * Available values are combined from
+   *  - filename
+   *  - puid, mimeType, and formatVersion from tool results
+   *  - any field provided with the `info` property on file results
+   *
+   * You have to provide labels for columns based on properties from `info`.
+   */
+  @Input()
+  get properties(): FilePropertyDefinition[] {
+    return this._properties;
+  }
+  set properties(value: FilePropertyDefinition[]) {
+    this._properties = value;
+    this.tableProperties = value.filter((p) => p.inTable !== false);
+    this.columns = this.tableProperties.map(({ key }) => key);
+  }
+
+  tableProperties = this.properties.filter((p) => p.inTable !== false);
+  columns = this.tableProperties.map(({ key }) => key);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -65,8 +109,6 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     private statusIcons: StatusIconsService,
   ) {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
-    this.tableColumnList = [];
-    this.generatedTableColumnList = ['fileName', 'relativePath', 'fileSize'];
   }
 
   ngAfterViewInit(): void {
@@ -80,52 +122,41 @@ export class FileAnalysisTableComponent implements AfterViewInit {
             .map(([key, _]) => key)
             .join();
         default:
-          const feature = data[sortHeaderId as keyof FileOverview] as FileFeature;
-          return feature?.value;
+          return data.values[sortHeaderId]?.value ?? '';
       }
     };
   }
 
-  private processFileInformation(fileInfos: FileResult[]): void {
-    const featureKeys: string[] = ['fileName', 'relativePath', 'fileSize'];
+  private processFileInformation(results: FileResult[]): void {
     const data: FileOverview[] = [];
-    for (let fileInfo of fileInfos) {
+    for (let result of results) {
       let fileOverview: FileOverview = {
-        id: { value: fileInfo.id },
-        icons: this.statusIcons.getIcons(fileInfo),
+        id: result.id,
+        icons: this.statusIcons.getIcons(result),
+        values: {
+          filename: { value: result.filename },
+          puid: { value: result.toolResults.summary['puid']?.values[0].value },
+          mimeType: { value: result.toolResults.summary['mimeType']?.values[0].value },
+          formatVersion: { value: result.toolResults.summary['formatVersion']?.values[0].value },
+          ...result.info,
+        },
       };
-      fileOverview['fileName'] = { value: fileInfo.fileName };
-      fileOverview['relativePath'] = { value: fileInfo.relativePath ?? '' };
-      fileOverview['fileSize'] = {
-        value: formatFileSize(fileInfo.fileSize),
-      };
-      for (let featureKey in fileInfo.toolResults.summary) {
-        if (isOverviewFeature(featureKey) && featureKey !== 'valid') {
-          featureKeys.push(featureKey);
-          fileOverview[featureKey] = {
-            value: fileInfo.toolResults.summary[featureKey].values[0].value,
-            confidence: fileInfo.toolResults.summary[featureKey].values[0].score,
-            feature: fileInfo.toolResults.summary[featureKey],
-          };
-        }
-      }
       data.push(fileOverview);
     }
     this.dataSource.data = data;
-    const sortedFeatures = sortFeatures(featureKeys);
-    this.generatedTableColumnList = sortedFeatures;
-    this.tableColumnList = sortedFeatures.concat(['status']);
   }
 
   async openDetails(fileOverview: FileOverview): Promise<void> {
-    const id = fileOverview['id']?.value;
+    const id = fileOverview.id;
     const fileResult = await this.getResult(id);
     if (fileResult) {
       this.dialog.open(FileOverviewComponent, {
         data: {
           fileResult: fileResult,
+          properties: this.properties,
         },
         autoFocus: false,
+        width: '1200px',
         maxWidth: '80vw',
       });
     } else {

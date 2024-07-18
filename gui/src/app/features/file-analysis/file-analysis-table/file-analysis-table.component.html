@@ -3,36 +3,29 @@
   <div class="file-analysis-table">
     <div class="table-content">
       <mat-table [dataSource]="dataSource" matSort>
-        <ng-container *ngFor="let tableColumn of generatedTableColumnList" matColumnDef="{{ tableColumn }}">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ tableColumn | fileFeature }}</mat-header-cell>
-          <mat-cell *matCellDef="let fileInfo">
-            <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'true'">check</mat-icon>
-            <mat-icon *ngIf="fileInfo[tableColumn]?.value === 'false'">close</mat-icon>
-            <div *ngIf="fileInfo[tableColumn] && !['true', 'false'].includes(fileInfo[tableColumn].value)">
-              {{ fileInfo[tableColumn].value }}
-            </div>
+        <ng-container *ngFor="let column of tableProperties" matColumnDef="{{ column.key }}">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{
+            column.label ?? (column.key | fileFeature)
+          }}</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            @if (column.key === "status") {
+              <mat-icon *ngIf="row.icons.uncertain" class="uncertain-icon">warning</mat-icon>
+              <mat-icon *ngIf="row.icons.valid" class="valid-icon">check</mat-icon>
+              <mat-icon *ngIf="row.icons.invalid" class="invalid-icon">close</mat-icon>
+              <mat-icon *ngIf="row.icons.error" class="error-icon">error</mat-icon>
+              <button
+                mat-button
+                class="open-details-button"
+                (click)="openDetails(row)"
+                aria-label="Details anzeigen"
+              ></button>
+            } @else if (row.values[column.key]) {
+              {{ row.values[column.key].displayString ?? row.values[column.key].value }}
+            }
           </mat-cell>
         </ng-container>
-
-        <!-- status-icons column -->
-        <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
-          <mat-cell *matCellDef="let fileInfo">
-            <mat-icon *ngIf="fileInfo.icons.uncertain" class="uncertain-icon">warning</mat-icon>
-            <mat-icon *ngIf="fileInfo.icons.valid" class="valid-icon">check</mat-icon>
-            <mat-icon *ngIf="fileInfo.icons.invalid" class="invalid-icon">close</mat-icon>
-            <mat-icon *ngIf="fileInfo.icons.error" class="error-icon">error</mat-icon>
-            <button
-              mat-button
-              class="open-details-button"
-              (click)="openDetails(fileInfo)"
-              aria-label="Details anzeigen"
-            ></button>
-          </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="tableColumnList"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: tableColumnList"></mat-row>
+        <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columns"></mat-row>
       </mat-table>
     </div>
 

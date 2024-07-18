@@ -7,9 +7,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FileSizePipe } from '../../features/file-analysis/pipes/file-size.pipe';
-import { FileAnalysisService, FileUpload } from '../../services/file-analysis.service';
+import { FileUpload } from '../../services/file-analysis.service';
 import { UploadService } from '../../services/upload.service';
+import { FileSizePipe } from '../../shared/file-size.pipe';
 
 @Component({
   selector: 'app-upload-page',
@@ -34,12 +34,9 @@ export class UploadPageComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(
-    private fileAnalysisService: FileAnalysisService,
-    private upload: UploadService,
-  ) {
+  constructor(private upload: UploadService) {
     this.dataSource = new MatTableDataSource<FileUpload>();
-    this.displayedColumns = ['relativePath', 'fileName', 'fileSize', 'uploadProgress', 'verificationProgress'];
+    this.displayedColumns = ['path', 'filename', 'fileSize', 'uploadProgress', 'verificationProgress'];
     this.upload
       .getAll()
       .pipe(takeUntilDestroyed())

@@ -5,8 +5,8 @@ import { ToolResults } from '../features/file-analysis/results';
 
 export interface FileUpload {
   id: string;
-  fileName: string;
-  relativePath: string;
+  filename: string;
+  path: string;
   fileSize: number;
   uploadProgress?: number;
   error?: string;

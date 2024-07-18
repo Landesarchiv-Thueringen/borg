@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -102,8 +100,8 @@ func analyzeFile(context *gin.Context) {
 		return
 	}
 	// generate unique file name for storing
-	fileName := uuid.New().String() + "_" + file.Filename
-	fileStorePath := filepath.Join(storePath, fileName)
+	filename := uuid.New().String() + "_" + file.Filename
+	fileStorePath := filepath.Join(storePath, filename)
 	err = context.SaveUploadedFile(file, fileStorePath)
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -112,8 +110,8 @@ func analyzeFile(context *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
-	identificationResults := runFileIdentificationTools(fileName)
-	validationResults := runFileValidationTools(fileName, identificationResults)
+	identificationResults := runFileIdentificationTools(filename)
+	validationResults := runFileValidationTools(filename, identificationResults)
 	summary := summarizeToolResults(identificationResults, validationResults)
 	fileAnalysis := FileAnalysis{
 		Summary:                   summary,
@@ -123,7 +121,7 @@ func analyzeFile(context *gin.Context) {
 	context.JSON(http.StatusOK, fileAnalysis)
 }
 
-func runFileIdentificationTools(fileName string) []ToolResponse {
+func runFileIdentificationTools(filename string) []ToolResponse {
 	var responseChannels []chan ToolResponse
 	// for every identification tool
 	for _, tool := range serverConfig.FormatIdentificationTools {
@@ -135,7 +133,7 @@ func runFileIdentificationTools(fileName string) []ToolResponse {
 			tool.ToolVersion,
 			tool.Endpoint,
 			tool.Features,
-			fileName,
+			filename,
 			rc,
 		)
 	}
@@ -148,7 +146,7 @@ func runFileIdentificationTools(fileName string) []ToolResponse {
 	return results
 }
 
-func runFileValidationTools(fileName string, identificationResults []ToolResponse) []ToolResponse {
+func runFileValidationTools(filename string, identificationResults []ToolResponse) []ToolResponse {
 	var responseChannels []chan ToolResponse
 	// for every validation tool
 	for _, tool := range serverConfig.FormatValidationTools {
@@ -163,7 +161,7 @@ func runFileValidationTools(fileName string, identificationResults []ToolRespons
 					tool.ToolVersion,
 					tool.Endpoint,
 					tool.Features,
-					fileName,
+					filename,
 					rc,
 				)
 				// don't check other triggers, tool response already requested
@@ -200,7 +198,7 @@ func getToolResponse(
 	toolVersion string,
 	endpoint string,
 	toolFeatureConfig []config.FeatureConfig,
-	fileName string,
+	filename string,
 	rc chan ToolResponse,
 ) {
 	toolResponse := ToolResponse{
@@ -219,7 +217,7 @@ func getToolResponse(
 	}
 	// add file path URL parameter
 	query := req.URL.Query()
-	query.Add("path", fileName)
+	query.Add("path", filename)
 	req.URL.RawQuery = query.Encode()
 	// send get request
 	response, err := http.Get(req.URL.String())

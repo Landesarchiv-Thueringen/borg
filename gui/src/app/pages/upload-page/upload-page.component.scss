@@ -1,5 +1,3 @@
-@import "../../../styles/mixins.scss";
-
 :host {
   display: block;
   padding-top: 3em;
@@ -16,7 +14,9 @@
 .file-upload-table {
   width: 100%;
   max-width: 150em;
-  @include tableBorder;
+  border-radius: 12px;
+  border: 1px solid var(--mat-table-row-item-outline-color);
+  overflow: hidden;
 
   // no other possibility to center the text of a sort header
   ::ng-deep .progress-header .mat-sort-header-container {

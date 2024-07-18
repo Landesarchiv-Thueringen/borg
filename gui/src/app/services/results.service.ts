@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FileResult, ToolResults } from '../features/file-analysis/results';
+import { formatFileSize } from '../shared/file-size.pipe';
 import { FileUpload } from './file-analysis.service';
 
 @Injectable({
@@ -13,9 +14,14 @@ export class ResultsService {
   add(fileUpload: FileUpload, toolResults: ToolResults): void {
     const fileResult: FileResult = {
       id: fileUpload.id,
-      fileName: fileUpload.fileName,
-      relativePath: fileUpload.relativePath,
-      fileSize: fileUpload.fileSize,
+      filename: fileUpload.filename,
+      info: {
+        path: { value: fileUpload.path },
+        fileSize: {
+          value: fileUpload.fileSize,
+          displayString: formatFileSize(fileUpload.fileSize),
+        },
+      },
       toolResults: toolResults,
     };
     this.fileResults.push(fileResult);

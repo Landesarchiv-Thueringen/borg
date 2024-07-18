@@ -42,11 +42,11 @@ export class UploadService {
     });
   }
 
-  add(fileName: string, relativePath: string, fileSize: number): FileUpload {
+  add(filename: string, path: string, fileSize: number): FileUpload {
     const fileUpload: FileUpload = {
       id: uuid(),
-      fileName: fileName,
-      relativePath: relativePath,
+      filename: filename,
+      path: path,
       fileSize: fileSize,
     };
     this.fileUploads.push(fileUpload);
@@ -74,7 +74,7 @@ export class UploadService {
       if (event.body) {
         this.results.add(fileUpload, event.body);
         this.remove(fileUpload);
-        this.notificationService.show('Formaterkennung und -validierung abgeschlossen: ' + fileUpload.fileName);
+        this.notificationService.show('Formaterkennung und -validierung abgeschlossen: ' + fileUpload.filename);
       }
     }
   }

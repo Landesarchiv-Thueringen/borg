@@ -4,15 +4,15 @@
     <div class="table-content">
       <mat-table [dataSource]="dataSource" matSort matSortActive="receivedAt" matSortDirection="desc">
         <!-- file name column -->
-        <ng-container matColumnDef="fileName">
+        <ng-container matColumnDef="filename">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Dateiname</mat-header-cell>
-          <mat-cell *matCellDef="let file">{{ file.fileName }}</mat-cell>
+          <mat-cell *matCellDef="let file">{{ file.filename }}</mat-cell>
         </ng-container>
 
-        <!-- relative path column -->
-        <ng-container matColumnDef="relativePath">
+        <!-- path column -->
+        <ng-container matColumnDef="path">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Pfad</mat-header-cell>
-          <mat-cell *matCellDef="let file">{{ file.relativePath }}</mat-cell>
+          <mat-cell *matCellDef="let file">{{ file.path }}</mat-cell>
         </ng-container>
 
         <!-- file size column -->

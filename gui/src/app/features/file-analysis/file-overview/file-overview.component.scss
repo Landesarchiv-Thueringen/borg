@@ -2,14 +2,37 @@
   display: block;
 }
 
-h1 {
+h2 {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.info-table {
+  display: flex;
+  flex-direction: column;
+  color: black;
+  [role="row"] {
+    display: flex;
+  }
+
+  [role="cell"] {
+    flex: 1 0 0;
+    min-width: 0;
+    padding: 0.5em;
+    &:first-child {
+      flex: 0 0 12em;
+    }
+  }
+
+  a {
+    margin: -6px -8px -10px;
+  }
 }
 
 .icon-explanation {
   display: flex;
   gap: 2em;
+  margin-top: 1em;
   margin-left: 2em;
   margin-right: 25%;
   margin-bottom: 1em;

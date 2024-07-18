@@ -1,9 +1,21 @@
 export interface FileResult {
   id: string;
-  fileName: string;
-  relativePath?: string;
-  fileSize: number;
+  filename: string;
+  info: { [key: string]: RowValue };
   toolResults: ToolResults;
+}
+
+export interface RowValue {
+  /**
+   * The field's value.
+   *
+   * Used for sorting and display if `displayString` is not set.
+   */
+  value: string | number;
+  /** A string to display instead of `value`. Optional. */
+  displayString?: string;
+  /** Makes the field a router link to open in a new tab. Optional. */
+  routerLink?: any;
 }
 
 export interface ToolResults {
