@@ -4,7 +4,9 @@ BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierun
 
 ## Lizenz
 
-Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.de.html) veröffentlicht. Weitere Informationen finden Sie in der [LICENSE-Datei](LICENSE).
+Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.de.html) veröffentlicht. Weitere Informationen finden Sie in der Datei [LICENSE](LICENSE).
+
+Diese Lizenz gilt nicht für eingebundene Werkzeuge, die jeweils unter eigenen Lizenzen stehen (siehe unten).
 
 ## Integrierte Werkzeuge
 
