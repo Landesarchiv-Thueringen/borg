@@ -21,9 +21,11 @@ export class FileDropContainerComponent {
     private upload: UploadService,
   ) {}
 
-  @HostListener('dragenter')
-  onDragEnter() {
-    this.fileOver = true;
+  @HostListener('dragenter', ['$event'])
+  onDragEnter(event: DragEvent) {
+    if (event.dataTransfer?.items.length) {
+      this.fileOver = true;
+    }
   }
 
   @HostListener('dragleave', ['$event'])
@@ -35,7 +37,9 @@ export class FileDropContainerComponent {
 
   @HostListener('dragover', ['$event'])
   onDragOver(event: DragEvent) {
-    event.preventDefault();
+    if (event.dataTransfer?.items.length) {
+      event.preventDefault();
+    }
   }
 
   @HostListener('drop', ['$event'])
