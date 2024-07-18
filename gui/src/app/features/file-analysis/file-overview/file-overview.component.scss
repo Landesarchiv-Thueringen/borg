@@ -34,6 +34,11 @@
   position: relative;
 }
 
+.summary-row {
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
 .feature-info {
   overflow-wrap: anywhere;
   > * {

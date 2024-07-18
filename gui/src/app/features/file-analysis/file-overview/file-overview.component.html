@@ -68,7 +68,10 @@
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="tableColumnList"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: tableColumnList"></mat-row>
+    <mat-row
+      *matRowDef="let row; columns: tableColumnList"
+      [class.summary-row]="row.tool.value === 'Gesamtergebnis'"
+    ></mat-row>
   </mat-table>
 </mat-dialog-content>
 
