@@ -74,7 +74,9 @@ export class UploadService {
       if (event.body) {
         this.results.add(fileUpload, event.body);
         this.remove(fileUpload);
-        this.notificationService.show('Formaterkennung und -validierung abgeschlossen: ' + fileUpload.filename);
+        this.notificationService.show(
+          'Formaterkennung und -validierung abgeschlossen: ' + fileUpload.filename,
+        );
       }
     }
   }

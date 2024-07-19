@@ -2,7 +2,12 @@
   <h1>Zu prüfende Dateien ({{ dataSource.data.length }})</h1>
   <div class="file-upload-table">
     <div class="table-content">
-      <mat-table [dataSource]="dataSource" matSort matSortActive="receivedAt" matSortDirection="desc">
+      <mat-table
+        [dataSource]="dataSource"
+        matSort
+        matSortActive="receivedAt"
+        matSortDirection="desc"
+      >
         <!-- file name column -->
         <ng-container matColumnDef="filename">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Dateiname</mat-header-cell>
@@ -23,7 +28,9 @@
 
         <!-- upload progress column -->
         <ng-container matColumnDef="uploadProgress">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header">Upload</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header class="progress-header"
+            >Upload</mat-header-cell
+          >
           <mat-cell *matCellDef="let file" class="task-progress">
             <div class="progress-cell">
               @if (file.error) {
@@ -33,7 +40,8 @@
                 <span>wartet auf Serverkapazität</span>
                 <mat-spinner diameter="25"></mat-spinner>
               } @else if (file.uploadProgress < 100) {
-                <mat-progress-bar mode="determinate" [value]="file.uploadProgress"> </mat-progress-bar>
+                <mat-progress-bar mode="determinate" [value]="file.uploadProgress">
+                </mat-progress-bar>
               } @else if (file.uploadProgress === 100) {
                 <mat-icon>check</mat-icon>
               }

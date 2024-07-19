@@ -38,7 +38,8 @@ export class ResultsPageComponent {
     document.body.appendChild(a);
     a.download = 'borg-results.json';
     a.href =
-      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.resultsService.fileResults, null, 2));
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(this.resultsService.fileResults, null, 2));
     a.click();
     document.body.removeChild(a);
   }

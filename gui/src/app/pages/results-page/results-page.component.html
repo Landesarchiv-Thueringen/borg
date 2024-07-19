@@ -1,9 +1,21 @@
 <app-file-analysis-table [results]="results" [getResult]="getResult">
-  <button toolbar-button mat-button (click)="clearToolResults()" color="primary" [disabled]="!results?.length">
+  <button
+    toolbar-button
+    mat-button
+    (click)="clearToolResults()"
+    color="primary"
+    [disabled]="!results?.length"
+  >
     <mat-icon>cleaning_services</mat-icon>
     Auswertung leeren
   </button>
-  <button toolbar-button mat-button (click)="exportResults()" color="primary" [disabled]="!results?.length">
+  <button
+    toolbar-button
+    mat-button
+    (click)="exportResults()"
+    color="primary"
+    [disabled]="!results?.length"
+  >
     <mat-icon>summarize</mat-icon>
     Ergebnisse exportieren
   </button>

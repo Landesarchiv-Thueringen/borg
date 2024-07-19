@@ -36,7 +36,13 @@ export class UploadPageComponent implements AfterViewInit {
 
   constructor(private upload: UploadService) {
     this.dataSource = new MatTableDataSource<FileUpload>();
-    this.displayedColumns = ['path', 'filename', 'fileSize', 'uploadProgress', 'verificationProgress'];
+    this.displayedColumns = [
+      'path',
+      'filename',
+      'fileSize',
+      'uploadProgress',
+      'verificationProgress',
+    ];
     this.upload
       .getAll()
       .pipe(takeUntilDestroyed())
