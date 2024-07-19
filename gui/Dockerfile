@@ -1,4 +1,6 @@
-FROM node:alpine3.19 AS build
+# Bug in 22.5 that causes the build to fail. Node version can be removed when
+# resolved upstream.
+FROM node:22.4-alpine3.19 AS build
 
 WORKDIR /build
 COPY package.json package-lock.json ./
@@ -8,6 +10,6 @@ COPY src ./src
 ARG CONFIGURATION
 RUN npm run build -- --configuration $CONFIGURATION
 
-FROM nginx:alpine3.18 AS prod
+FROM nginx:alpine3.19 AS prod
 COPY --from=build /build/dist/borg-gui /app/
 COPY build/nginx/default.conf /etc/nginx/conf.d/default.conf
