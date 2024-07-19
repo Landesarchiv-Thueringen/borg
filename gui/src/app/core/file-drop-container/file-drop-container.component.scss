@@ -5,10 +5,10 @@
 .file-over-indicator {
   display: grid;
   z-index: 100;
-  position: absolute;
+  position: fixed;
   width: 100%;
-  height: 100%;
-  top: 0;
+  height: calc(100vh - 64px);
+  top: 64px;
   left: 0;
   background-color: rgba(0, 128, 0, 0.25);
   outline: 2px dashed rgba(0, 128, 0, 0.5);
@@ -19,5 +19,6 @@
     width: 50vh;
     height: 50vh;
     font-size: 50vh;
+    pointer-events: none;
   }
 }

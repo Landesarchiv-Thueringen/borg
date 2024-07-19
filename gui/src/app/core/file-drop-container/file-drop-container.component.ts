@@ -1,4 +1,5 @@
 import { Component, HostBinding, HostListener, NgZone } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { UploadService } from '../../services/upload.service';
@@ -17,7 +18,14 @@ export class FileDropContainerComponent {
     private ngZone: NgZone,
     private router: Router,
     private upload: UploadService,
-  ) {}
+    private dialog: MatDialog,
+  ) {
+    document.documentElement.addEventListener('dragenter', (event) => {
+      if (event.dataTransfer?.items.length) {
+        this.dialog.closeAll();
+      }
+    });
+  }
 
   @HostListener('dragenter', ['$event'])
   onDragEnter(event: DragEvent) {
