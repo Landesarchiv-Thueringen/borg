@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -17,13 +15,11 @@ import (
 const storeDir = "/borg/file-store"
 const defaultResponse = "ODF Validator API is running"
 
-var outputFormat = "text"
-
 type ToolResponse struct {
-	ToolOutput        *string
-	OutputFormat      *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolOutput   string            `json:"toolOutput"`
+	OutputFormat string            `json:"outputFormat"`
+	Features     map[string]string `json:"features"`
+	Error        string            `json:"error"`
 }
 
 func main() {
@@ -44,9 +40,8 @@ func validate(context *gin.Context) {
 	path := filepath.Join(storeDir, context.Query("path"))
 	valid, output, err := validateFile(path)
 	if err != nil {
-		errorMessage := err.Error()
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: err.Error(),
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -54,9 +49,9 @@ func validate(context *gin.Context) {
 	extractedFeatures := make(map[string]string)
 	extractedFeatures["valid"] = strconv.FormatBool(valid)
 	response := ToolResponse{
-		ToolOutput:        &output,
-		OutputFormat:      &outputFormat,
-		ExtractedFeatures: &extractedFeatures,
+		ToolOutput:   output,
+		OutputFormat: "text",
+		Features:     extractedFeatures,
 	}
 	context.JSON(http.StatusOK, response)
 }

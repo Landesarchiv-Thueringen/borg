@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FileResult, ToolResults } from '../features/file-analysis/results';
+import { FileAnalysis, FileResult } from '../features/file-analysis/results';
 import { formatFileSize } from '../shared/file-size.pipe';
 import { FileUpload } from './file-analysis.service';
 
@@ -8,10 +8,11 @@ import { FileUpload } from './file-analysis.service';
   providedIn: 'root',
 })
 export class ResultsService {
+  analysisDetails: { [key: string]: FileAnalysis } = {};
   fileResults: FileResult[] = [];
   fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
 
-  add(fileUpload: FileUpload, toolResults: ToolResults): void {
+  add(fileUpload: FileUpload, analysis: FileAnalysis): void {
     const fileResult: FileResult = {
       id: fileUpload.id,
       filename: fileUpload.filename,
@@ -22,14 +23,15 @@ export class ResultsService {
           displayString: formatFileSize(fileUpload.fileSize),
         },
       },
-      toolResults: toolResults,
+      summary: analysis.summary,
     };
     this.fileResults.push(fileResult);
     this.fileResultsSubject.next(this.fileResults);
+    this.analysisDetails[fileUpload.id] = analysis;
   }
 
-  async get(id: string): Promise<FileResult | undefined> {
-    return this.fileResults.find((fileResult) => fileResult.id === id);
+  async get(id: string): Promise<FileAnalysis | undefined> {
+    return this.analysisDetails[id];
   }
 
   getAll(): Observable<FileResult[]> {

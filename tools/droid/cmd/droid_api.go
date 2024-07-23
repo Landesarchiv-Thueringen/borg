@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -15,10 +13,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        *string
-	OutputFormat      *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolOutput   string            `json:"toolOutput"`
+	OutputFormat string            `json:"outputFormat"`
+	Features     map[string]string `json:"features"`
+	Error        string            `json:"error"`
 }
 
 const defaultResponse = "DROID API is running"
@@ -27,7 +25,6 @@ const storeDir = "/borg/file-store"
 
 var signatureFilePath = filepath.Join(workDir, "third_party/DROID_SignatureFile_V114.xml")
 var containerSignatureFilePath = filepath.Join(workDir, "third_party/container-signature-20230822.xml")
-var outputFormat = "csv"
 
 func main() {
 	router := gin.Default()
@@ -46,9 +43,8 @@ func identifyFileFormat(context *gin.Context) {
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
-		errorMessage := "error processing file: " + fileStorePath
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: "error processing file: " + fileStorePath,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -65,9 +61,8 @@ func identifyFileFormat(context *gin.Context) {
 	droidOutput, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
-		errorMessage := "error executing DROID command"
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: "error executing DROID command",
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -78,42 +73,40 @@ func identifyFileFormat(context *gin.Context) {
 	formats, err := csvReader.ReadAll()
 	if err != nil {
 		log.Println(err.Error())
-		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
-			ToolOutput:   &droidOutputString,
-			OutputFormat: &outputFormat,
-			Error:        &errorMessage,
+			ToolOutput:   droidOutputString,
+			OutputFormat: "text",
+			Error:        "unable to parse DROID csv output",
 		}
 		context.JSON(http.StatusOK, response)
 		return
-	}
-	extractedFeatures := make(map[string]string)
-	response := ToolResponse{
-		ToolOutput:        &droidOutputString,
-		OutputFormat:      &outputFormat,
-		ExtractedFeatures: &extractedFeatures,
 	}
 	if len(formats) == 0 || len(formats[1]) < 18 {
-		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
-			ToolOutput:   &droidOutputString,
-			OutputFormat: &outputFormat,
-			Error:        &errorMessage,
+			ToolOutput:   droidOutputString,
+			OutputFormat: "csv",
+			Error:        "unable to parse DROID csv output",
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
+	features := make(map[string]string)
 	if formats[1][14] != "" {
-		extractedFeatures["puid"] = formats[1][14]
+		features["puid"] = formats[1][14]
 	}
 	if formats[1][15] != "" {
-		extractedFeatures["mimeType"] = formats[1][15]
+		features["mimeType"] = formats[1][15]
 	}
 	if formats[1][16] != "" {
-		extractedFeatures["formatName"] = formats[1][16]
+		features["formatName"] = formats[1][16]
 	}
 	if formats[1][17] != "" {
-		extractedFeatures["formatVersion"] = formats[1][17]
+		features["formatVersion"] = formats[1][17]
+	}
+	response := ToolResponse{
+		ToolOutput:   droidOutputString,
+		OutputFormat: "csv",
+		Features:     features,
 	}
 	context.JSON(http.StatusOK, response)
 }

@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -17,10 +15,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        *string
-	OutputFormat      *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolOutput   string            `json:"toolOutput"`
+	OutputFormat string            `json:"outputFormat"`
+	Features     map[string]string `json:"features"`
+	Error        string            `json:"error"`
 }
 
 type JhoveOutput struct {
@@ -41,7 +39,6 @@ var defaultResponse = "JHOVE API is running"
 var storeDir = "/borg/file-store"
 var wellFormedRegEx = regexp.MustCompile("Well-Formed")
 var validRegEx = regexp.MustCompile("Well-Formed and valid")
-var outputFormat = "json"
 
 func main() {
 	router := gin.Default()
@@ -61,7 +58,7 @@ func validateFile(context *gin.Context) {
 		errorMessage := "no JHOVE module declared"
 		log.Println(errorMessage)
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -73,7 +70,7 @@ func validateFile(context *gin.Context) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -83,7 +80,7 @@ func validateFile(context *gin.Context) {
 		"-m",
 		module+"-hul",
 		"-h",
-		outputFormat,
+		"json",
 		fileStorePath,
 	)
 	jhoveOutput, err := cmd.Output()
@@ -92,7 +89,7 @@ func validateFile(context *gin.Context) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -109,18 +106,18 @@ func processJhoveOutput(context *gin.Context, output string) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			ToolOutput:   &output,
-			OutputFormat: &outputFormat,
-			Error:        &errorMessage,
+			ToolOutput:   output,
+			OutputFormat: "text",
+			Error:        errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        &output,
-		OutputFormat:      &outputFormat,
-		ExtractedFeatures: &extractedFeatures,
+		ToolOutput:   output,
+		OutputFormat: "json",
+		Features:     extractedFeatures,
 	}
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
 		repInfo := parsedJhoveOutput.Root.RepInfo[0]

@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -15,10 +13,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        *string
-	OutputFormat      *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolOutput   string            `json:"toolOutput"`
+	OutputFormat string            `json:"outputFormat"`
+	Features     map[string]string `json:"features"`
+	Error        string            `json:"error"`
 }
 
 type TikaOutput struct {
@@ -31,7 +29,6 @@ type TikaOutput struct {
 var defaultResponse = "Tika API is running"
 var workDir = "/borg/tools/tika"
 var storeDir = "/borg/file-store"
-var outputFormat = "json"
 
 func main() {
 	router := gin.Default()
@@ -53,7 +50,7 @@ func extractMetadata(context *gin.Context) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -63,7 +60,7 @@ func extractMetadata(context *gin.Context) {
 		"-jar",
 		filepath.Join(workDir, "third_party/tika-app-2.9.0.jar"),
 		"--metadata",
-		"--"+outputFormat,
+		"--json",
 		fileStorePath,
 	)
 	tikaOutput, err := cmd.Output()
@@ -72,7 +69,7 @@ func extractMetadata(context *gin.Context) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -89,18 +86,18 @@ func processTikaOutput(context *gin.Context, output string) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			ToolOutput:   &output,
-			OutputFormat: &outputFormat,
-			Error:        &errorMessage,
+			ToolOutput:   output,
+			OutputFormat: "text",
+			Error:        errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        &output,
-		OutputFormat:      &outputFormat,
-		ExtractedFeatures: &extractedFeatures,
+		ToolOutput:   output,
+		OutputFormat: "json",
+		Features:     extractedFeatures,
 	}
 	if parsedTikaOutput.MimeType != nil {
 		// removes charset from MIME-Type if existing, example: text/x-yaml; charset=ISO-8859-1

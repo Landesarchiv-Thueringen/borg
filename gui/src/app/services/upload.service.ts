@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { v4 as uuid } from 'uuid';
-import { ToolResults } from '../features/file-analysis/results';
+import { FileAnalysis } from '../features/file-analysis/results';
 import { FileAnalysisService, FileUpload } from './file-analysis.service';
 import { NotificationService } from './notification.service';
 import { ResultsService } from './results.service';
@@ -36,7 +36,7 @@ export class UploadService {
       error: (error) => {
         fileUpload.error = error.statusText;
       },
-      next: (httpEvent: HttpEvent<ToolResults>) => {
+      next: (httpEvent: HttpEvent<FileAnalysis>) => {
         this.handleHttpEvent(httpEvent, fileUpload);
       },
     });
@@ -65,7 +65,7 @@ export class UploadService {
     this.fileUploadsSubject.next(this.fileUploads);
   }
 
-  private handleHttpEvent(event: HttpEvent<ToolResults>, fileUpload: FileUpload): void {
+  private handleHttpEvent(event: HttpEvent<FileAnalysis>, fileUpload: FileUpload): void {
     if (event.type === HttpEventType.UploadProgress) {
       if (event.total && event.total > 0.0) {
         fileUpload.uploadProgress = Math.round(100 * (event.loaded / event.total));

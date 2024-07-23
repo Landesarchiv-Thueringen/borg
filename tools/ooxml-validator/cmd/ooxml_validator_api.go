@@ -1,9 +1,7 @@
-
-
 package main
 
 import (
-	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,13 +15,11 @@ import (
 const storeDir = "/borg/file-store"
 const defaultResponse = "OOXML-Validator API is running"
 
-var outputFormat = "json"
-
 type ToolResponse struct {
-	ToolOutput        *string
-	OutputFormat      *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolOutput   string            `json:"toolOutput"`
+	OutputFormat string            `json:"outputFormat"`
+	Features     map[string]string `json:"features"`
+	Error        string            `json:"error"`
 }
 
 func main() {
@@ -44,9 +40,8 @@ func validate(context *gin.Context) {
 	path := filepath.Join(storeDir, context.Query("path"))
 	valid, output, err := validateFile(path)
 	if err != nil {
-		errorMessage := err.Error()
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: err.Error(),
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -54,9 +49,9 @@ func validate(context *gin.Context) {
 	extractedFeatures := make(map[string]string)
 	extractedFeatures["valid"] = strconv.FormatBool(valid)
 	response := ToolResponse{
-		ToolOutput:        &output,
-		OutputFormat:      &outputFormat,
-		ExtractedFeatures: &extractedFeatures,
+		ToolOutput:   output,
+		OutputFormat: "text",
+		Features:     extractedFeatures,
 	}
 	context.JSON(http.StatusOK, response)
 }
@@ -67,29 +62,21 @@ func validate(context *gin.Context) {
 // - a boolean indicating whether the file is valid OOXML
 // - the command's combined stdout and stderr output
 // - an error if validation failed for unforeseen reasons.
-func validateFile(path string) (bool, string, error) {
-	_, err := os.Stat(path)
+func validateFile(path string) (valid bool, output string, err error) {
+	_, err = os.Stat(path)
 	if err != nil {
-		errorMessage := "error processing file: " + path
-		log.Println(errorMessage)
+		err = fmt.Errorf("error processing file %s: %w", path, err)
 		log.Println(err)
-		return false, "", errors.New(errorMessage)
+		return false, "", err
 	}
-	cmd := exec.Command(
-		"third_party/OOXMLValidatorCLI",
-		path,
-	)
-	output, err := cmd.CombinedOutput()
+	cmd := exec.Command("third_party/OOXMLValidatorCLI", path)
+	outputBytes, err := cmd.CombinedOutput()
+	output = string(outputBytes)
 	if err != nil {
-		errorMessage := "error executing OOXML-Validator command"
-		log.Println(string(output))
-		log.Println(errorMessage)
+		err = fmt.Errorf("error executing OOXML-Validator command: %w", err)
 		log.Println(err)
-		return false, string(output), errors.New(errorMessage)
+		return false, output, err
 	}
-	if string(output) != "[]" {
-		// Determined the given file to be invalid.
-		return false, string(output), nil
-	}
-	return true, string(output), nil
+	valid = output == "[]"
+	return valid, output, nil
 }

@@ -1,5 +1,3 @@
-
-
 package main
 
 import (
@@ -17,10 +15,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput        *string
-	OutputFormat      *string
-	ExtractedFeatures *map[string]string
-	Error             *string
+	ToolOutput   string
+	OutputFormat string
+	Features     map[string]string
+	Error        string
 }
 
 type VeraPDFOutput struct {
@@ -43,7 +41,6 @@ type ValidationResult struct {
 var defaultResponse = "veraPDF API is running"
 var workDir = "/borg/tools/verapdf"
 var storeDir = "/borg/file-store"
-var outputFormat = "json"
 
 func main() {
 	router := gin.Default()
@@ -63,7 +60,7 @@ func validateFile(context *gin.Context) {
 		errorMessage := "no veraPDF profile declared"
 		log.Println(errorMessage)
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -75,7 +72,7 @@ func validateFile(context *gin.Context) {
 		log.Println(errorMessage)
 		log.Println(err.Error())
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -83,12 +80,9 @@ func validateFile(context *gin.Context) {
 	cmd := exec.Command(
 		"/bin/ash",
 		filepath.Join(workDir, "third_party/verapdf"),
-		"-f",
-		profile,
-		"--format",
-		outputFormat,
-		"-v",
-		fileStorePath,
+		"-f", profile,
+		"--format", "json",
+		"-v", fileStorePath,
 	)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
@@ -99,7 +93,7 @@ func validateFile(context *gin.Context) {
 		log.Println(stderr.String())
 		errorMessage := "error executing verPDF\n" + stderr.String()
 		response := ToolResponse{
-			Error: &errorMessage,
+			Error: errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -116,18 +110,18 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 		log.Println(errorMessage)
 		log.Println(err.Error())
 		response := ToolResponse{
-			ToolOutput:   &output,
-			OutputFormat: &outputFormat,
-			Error:        &errorMessage,
+			ToolOutput:   output,
+			OutputFormat: "text",
+			Error:        errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
 	extractedFeatures := make(map[string]string)
 	response := ToolResponse{
-		ToolOutput:        &output,
-		OutputFormat:      &outputFormat,
-		ExtractedFeatures: &extractedFeatures,
+		ToolOutput:   output,
+		OutputFormat: "json",
+		Features:     extractedFeatures,
 	}
 	if veraPDFOutput.Report.Jobs != nil && len(veraPDFOutput.Report.Jobs) > 0 {
 		extractedFeatures["valid"] = strconv.FormatBool(

@@ -16,7 +16,7 @@ import { ResultsService } from '../../services/results.service';
 })
 export class ResultsPageComponent {
   results?: FileResult[];
-  getResult = (id: string) => this.resultsService.get(id);
+  getDetails = (id: string) => this.resultsService.get(id);
 
   constructor(
     private router: Router,
