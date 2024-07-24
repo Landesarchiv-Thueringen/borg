@@ -1,7 +1,7 @@
 formatIdentificationTools:
   - toolName: "DROID"
     toolVersion: "6.7.0"
-    endpoint: "http://droid-api/identify-file-format"
+    endpoint: "http://droid/identify-file-format"
     features:
       - key: "puid"
         confidence:
@@ -18,7 +18,7 @@ formatIdentificationTools:
 
   - toolName: "Tika"
     toolVersion: "2.9.0"
-    endpoint: "http://tika-api/extract-metadata"
+    endpoint: "http://tika/extract-metadata"
     features:
       - key: "mimeType"
         confidence:
@@ -33,7 +33,7 @@ formatIdentificationTools:
 formatValidationTools:
   - toolName: "JHOVE (PDF-Modul)"
     toolVersion: "1.28.0"
-    endpoint: "http://jhove-api/validate/pdf"
+    endpoint: "http://jhove/validate/pdf"
     trigger:
       - feature: "puid"
         regEx: "^fmt/14$" # PDF 1.0
@@ -76,7 +76,7 @@ formatValidationTools:
 
   - toolName: "JHOVE (HTML-Modul)"
     toolVersion: "1.28.0"
-    endpoint: "http://jhove-api/validate/html"
+    endpoint: "http://jhove/validate/html"
     trigger:
       - feature: "mimeType"
         regEx: "html"
@@ -100,7 +100,7 @@ formatValidationTools:
 
   - toolName: "JHOVE (TIFF-Modul)"
     toolVersion: "1.28.0"
-    endpoint: "http://jhove-api/validate/tiff"
+    endpoint: "http://jhove/validate/tiff"
     trigger:
       - feature: "mimeType"
         regEx: "tiff"
@@ -119,7 +119,7 @@ formatValidationTools:
 
   - toolName: "JHOVE (JPEG-Modul)"
     toolVersion: "1.28.0"
-    endpoint: "http://jhove-api/validate/jpeg"
+    endpoint: "http://jhove/validate/jpeg"
     trigger:
       - feature: "mimeType"
         regEx: "jpeg"
@@ -138,7 +138,7 @@ formatValidationTools:
 
   - toolName: "JHOVE (JPEG2000-Modul)"
     toolVersion: "1.28.0"
-    endpoint: "http://jhove-api/validate/jpeg2000"
+    endpoint: "http://jhove/validate/jpeg2000"
     trigger:
       - feature: "mimeType"
         regEx: "^jp2$"
@@ -157,7 +157,7 @@ formatValidationTools:
 
   - toolName: "veraPDF (PDF/A-1a-Profil)"
     toolVersion: "1.24.1"
-    endpoint: "http://verapdf-api/validate/1a"
+    endpoint: "http://verapdf/validate/1a"
     trigger:
       - feature: "formatVersion"
         regEx: "PDF/A-1a"
@@ -170,7 +170,7 @@ formatValidationTools:
 
   - toolName: "veraPDF (PDF/A-1b-Profil)"
     toolVersion: "1.24.1"
-    endpoint: "http://verapdf-api/validate/1b"
+    endpoint: "http://verapdf/validate/1b"
     trigger:
       - feature: "formatVersion"
         regEx: "PDF/A-1b"
@@ -183,7 +183,7 @@ formatValidationTools:
 
   - toolName: "veraPDF (PDF/A-2a-Profil)"
     toolVersion: "1.24.1"
-    endpoint: "http://verapdf-api/validate/2a"
+    endpoint: "http://verapdf/validate/2a"
     trigger:
       - feature: "formatVersion"
         regEx: "PDF/A-2a"
@@ -196,7 +196,7 @@ formatValidationTools:
 
   - toolName: "veraPDF (PDF/A-2b-Profil)"
     toolVersion: "1.24.1"
-    endpoint: "http://verapdf-api/validate/2b"
+    endpoint: "http://verapdf/validate/2b"
     trigger:
       - feature: "formatVersion"
         regEx: "PDF/A-2b"
@@ -209,7 +209,7 @@ formatValidationTools:
 
   - toolName: "veraPDF (PDF/A-2u-Profil)"
     toolVersion: "1.24.1"
-    endpoint: "http://verapdf-api/validate/2u"
+    endpoint: "http://verapdf/validate/2u"
     trigger:
       - feature: "formatVersion"
         regEx: "PDF/A-2u"
@@ -222,7 +222,7 @@ formatValidationTools:
 
   - toolName: "veraPDF (PDF/UA-Profil)"
     toolVersion: "1.24.1"
-    endpoint: "http://verapdf-api/validate/ua1"
+    endpoint: "http://verapdf/validate/ua1"
     trigger:
       - # PDF/UA has no entry in the PRONOM database
         feature: "mimeType"
@@ -234,7 +234,7 @@ formatValidationTools:
 
   - toolName: "ODF Validator"
     toolVersion: "0.12.0"
-    endpoint: "http://odf-validator-api/validate"
+    endpoint: "http://odf-validator/validate"
     trigger:
       - feature: "mimeType"
         regEx: "^application/vnd\\.oasis\\.opendocument\\."
@@ -245,7 +245,7 @@ formatValidationTools:
 
   - toolName: "OOXML-Validator"
     toolVersion: "2.1.1"
-    endpoint: "http://ooxml-validator-api/validate"
+    endpoint: "http://ooxml-validator/validate"
     trigger:
       - feature: "mimeType"
         regEx: "^application/vnd\\.openxmlformats-officedocument\\."

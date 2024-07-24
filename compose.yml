@@ -1,6 +1,5 @@
 services:
   gui:
-    container_name: borg-gui
     restart: unless-stopped
     build:
       context: ./gui
@@ -12,7 +11,6 @@ services:
       - ${PORT}:80
 
   server:
-    container_name: borg-server
     restart: unless-stopped
     build:
       context: ./server
@@ -24,8 +22,7 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
-  droid-api:
-    container_name: droid-api
+  droid:
     restart: unless-stopped
     build:
       context: ./tools/droid
@@ -37,8 +34,7 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
-  tika-api:
-    container_name: tika-api
+  tika:
     restart: unless-stopped
     build:
       context: ./tools/tika
@@ -50,8 +46,7 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
-  jhove-api:
-    container_name: jhove-api
+  jhove:
     restart: unless-stopped
     build:
       context: ./tools/jhove
@@ -63,8 +58,7 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
-  verapdf-api:
-    container_name: verapdf-api
+  verapdf:
     restart: unless-stopped
     build:
       context: ./tools/verapdf
@@ -76,8 +70,7 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
-  odf-validator-api:
-    container_name: odf-validator-api
+  odf-validator:
     restart: unless-stopped
     build:
       context: ./tools/odf-validator
@@ -89,8 +82,7 @@ services:
     environment:
       - GIN_MODE=${GIN_MODE}
 
-  ooxml-validator-api:
-    container_name: ooxml-validator-api
+  ooxml-validator:
     restart: unless-stopped
     build:
       context: ./tools/ooxml-validator
