@@ -43,7 +43,6 @@ func RunIdentificationTools(filename string) []ToolResult {
 		rc := make(chan ToolResult)
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
-		tool := tool
 		go func() {
 			response := getToolResponse(tool.Endpoint, filename)
 			rc <- ToolResult{
@@ -76,7 +75,6 @@ func RunValidationTools(filename string, identificationResults []ToolResult) []T
 				rc := make(chan ToolResult)
 				responseChannels = append(responseChannels, rc)
 				// request tool results concurrent
-				tool := tool
 				go func() {
 					response := getToolResponse(tool.Endpoint, filename)
 					rc <- ToolResult{
