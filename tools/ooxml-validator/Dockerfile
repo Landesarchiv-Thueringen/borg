@@ -1,11 +1,11 @@
-FROM golang:alpine AS build
+FROM golang:alpine3.20 AS build
 WORKDIR /build
 COPY go.mod go.sum ./
 RUN go mod download
 COPY cmd ./cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -o ooxml_validator_api cmd/ooxml_validator_api.go
 
-FROM alpine:3.19 AS prod
+FROM alpine:3.20 AS prod
 WORKDIR /app
 RUN apk update
 RUN apk add libgcc libstdc++ gcompat icu-libs

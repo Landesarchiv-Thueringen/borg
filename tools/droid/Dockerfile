@@ -1,11 +1,11 @@
-FROM golang:alpine AS build
+FROM golang:alpine3.20 AS build
 WORKDIR /borg/tools/droid
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o droidapi cmd/droid_api.go
 
-FROM alpine:3.18 AS prod
+FROM alpine:3.20 AS prod
 WORKDIR /borg/tools/droid
 RUN apk update
 RUN apk add unzip openjdk17
