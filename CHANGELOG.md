@@ -5,6 +5,7 @@
 - Feature: Drag-and-drop-Unterstützung
 - Feature: Umstieg auf Material-Design 3
 - Feature: Sortierbare Ergebnis-Tabelle
+- Feature: Filterbare Ergebnis-Tabelle
 - Feature: Verbesserte Fehlerbehandlung
 - Feature: Verschiedene kleinere UI-Anpassungen
 - Feature: Häufiger automatische Umleitung zu passender Seite
