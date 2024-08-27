@@ -9,8 +9,10 @@ import { FileUpload } from './file-analysis.service';
 })
 export class ResultsService {
   analysisDetails: { [key: string]: FileAnalysis } = {};
-  fileResults: FileResult[] = [];
-  fileResultsSubject = new BehaviorSubject<FileResult[]>(this.fileResults);
+  get fileResults() {
+    return this.fileResultsSubject.value;
+  }
+  private fileResultsSubject = new BehaviorSubject<FileResult[]>([]);
 
   add(fileUpload: FileUpload, analysis: FileAnalysis): void {
     const fileResult: FileResult = {
@@ -25,8 +27,7 @@ export class ResultsService {
       },
       summary: analysis.summary,
     };
-    this.fileResults.push(fileResult);
-    this.fileResultsSubject.next(this.fileResults);
+    this.fileResultsSubject.next([...this.fileResultsSubject.value, fileResult]);
     this.analysisDetails[fileUpload.id] = analysis;
   }
 
@@ -39,7 +40,6 @@ export class ResultsService {
   }
 
   clear(): void {
-    this.fileResults = [];
-    this.fileResultsSubject.next(this.fileResults);
+    this.fileResultsSubject.next([]);
   }
 }
