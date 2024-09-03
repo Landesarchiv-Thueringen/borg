@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
 export default {
-  "/analyze-file": {
+  "/api": {
     target: `http://localhost:${process.env.PORT}`,
     secure: false,
   },

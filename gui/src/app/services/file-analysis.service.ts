@@ -21,7 +21,7 @@ export class FileAnalysisService {
   analyzeFile(file: File): Observable<HttpEvent<FileAnalysis>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.httpClient.post<FileAnalysis>('/analyze-file', formData, {
+    return this.httpClient.post<FileAnalysis>('/api/analyze-file', formData, {
       reportProgress: true,
       observe: 'events',
     });

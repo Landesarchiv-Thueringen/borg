@@ -27,6 +27,7 @@ type fileAnalysis struct {
 	ToolResults []internal.ToolResult `json:"toolResults"`
 }
 
+const version = "1.1.0"
 const defaultResponse = "borg server is running"
 const storePath = "/borg/file-store"
 
@@ -42,19 +43,24 @@ func main() {
 	// It's important that the cors configuration is used before declaring the routes.
 	router.Use(cors.New(corsConfig))
 	router.GET("", getDefaultResponse)
-	router.POST("analyze-file", analyzeFile)
+	router.GET("api/version", getVersion)
+	router.POST("api/analyze-file", analyzeFile)
 	router.Run("0.0.0.0:80")
 }
 
-func getDefaultResponse(context *gin.Context) {
-	context.String(http.StatusOK, defaultResponse)
+func getDefaultResponse(c *gin.Context) {
+	c.String(http.StatusOK, defaultResponse)
 }
 
-func analyzeFile(context *gin.Context) {
-	file, err := context.FormFile("file")
+func getVersion(c *gin.Context) {
+	c.String(http.StatusOK, version)
+}
+
+func analyzeFile(c *gin.Context) {
+	file, err := c.FormFile("file")
 	// no file received
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "no file received",
 		})
 		return
@@ -62,9 +68,9 @@ func analyzeFile(context *gin.Context) {
 	// generate unique file name for storing
 	filename := uuid.New().String() + "_" + file.Filename
 	fileStorePath := filepath.Join(storePath, filename)
-	err = context.SaveUploadedFile(file, fileStorePath)
+	err = c.SaveUploadedFile(file, fileStorePath)
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "unable to save file",
 		})
 		return
@@ -78,5 +84,5 @@ func analyzeFile(context *gin.Context) {
 		Features:    features,
 		ToolResults: results,
 	}
-	context.JSON(http.StatusOK, fileAnalysis)
+	c.JSON(http.StatusOK, fileAnalysis)
 }
