@@ -244,7 +244,7 @@ formatValidationTools:
           defaultValue: 1.0
 
   - toolName: "OOXML-Validator"
-    toolVersion: "2.1.1"
+    toolVersion: "2.1.5"
     endpoint: "http://ooxml-validator/validate"
     trigger:
       - feature: "mimeType"
