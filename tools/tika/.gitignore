@@ -12,5 +12,5 @@
 !Dockerfile
 
 # allow tika jar
-!/third_party/tika-app-2.9.0.jar
+!/third_party/tika-app-2.9.2.jar
 !/third_party/LICENSE-2.0.txt

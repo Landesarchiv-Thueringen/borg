@@ -17,7 +17,7 @@ formatIdentificationTools:
           defaultValue: 0.9
 
   - toolName: "Tika"
-    toolVersion: "2.9.0"
+    toolVersion: "2.9.2"
     endpoint: "http://tika/extract-metadata"
     features:
       - key: "mimeType"

@@ -58,7 +58,7 @@ func extractMetadata(context *gin.Context) {
 	cmd := exec.Command(
 		"java",
 		"-jar",
-		filepath.Join(workDir, "third_party/tika-app-2.9.0.jar"),
+		filepath.Join(workDir, "third_party/tika-app-2.9.2.jar"),
 		"--metadata",
 		"--json",
 		fileStorePath,
