@@ -1,6 +1,6 @@
 formatIdentificationTools:
   - toolName: "DROID"
-    toolVersion: "6.7.0"
+    toolVersion: "6.8.0"
     endpoint: "http://droid/identify-file-format"
     features:
       - key: "puid"

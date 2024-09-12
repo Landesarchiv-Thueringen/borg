@@ -12,7 +12,7 @@ Diese Lizenz gilt nicht für eingebundene Werkzeuge, die jeweils unter eigenen L
 
 | Name            | Version | Funktion        | Resourcen                                                        | Lizenz                                                                                                        |
 | --------------- | ------- | --------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Droid           | 6.7.0   | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
+| Droid           | 6.8.0   | Formaterkennung | [Homepage ](https://digital-preservation.github.io/droid/)       | [BSD License](https://github.com/digital-preservation/droid/blob/master/license.md)                           |
 | Tika            | 2.9.0   | Formaterkennung | [Homepage](https://tika.apache.org/)                             | [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)                                    |
 | JHOVE           | 1.28.0  | Validierung     | [Homepage](https://jhove.openpreservation.org)                   | [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html)                               |
 | verapdf         | 1.24.1  | Validierung     | [Homepage](https://verapdf.org/)                                 | [GNU General Public License v3.0](https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL) |

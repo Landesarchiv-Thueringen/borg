@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+
+- Feature: Update DROID 6.7.0 -> 6.8.0
+
 ## 1.1.0
 
 - Feature: Drag-and-drop-Unterstützung
