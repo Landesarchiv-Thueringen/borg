@@ -3,6 +3,7 @@
 ## Next
 
 - Feature: Update DROID 6.7.0 -> 6.8.0
+- Fix: Reverse-Proxy-Weiterleitung von API-Requests
 
 ## 1.1.0
 
