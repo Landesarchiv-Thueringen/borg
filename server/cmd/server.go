@@ -27,7 +27,7 @@ type fileAnalysis struct {
 	ToolResults []internal.ToolResult `json:"toolResults"`
 }
 
-const version = "1.1.0"
+const version = "1.2.0"
 const defaultResponse = "borg server is running"
 const storePath = "/borg/file-store"
 
