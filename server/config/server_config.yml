@@ -156,7 +156,7 @@ formatValidationTools:
           defaultValue: 0.8
 
   - toolName: "veraPDF (PDF/A-1a-Profil)"
-    toolVersion: "1.24.1"
+    toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/1a"
     trigger:
       - feature: "formatVersion"
@@ -169,7 +169,7 @@ formatValidationTools:
           defaultValue: 1.0
 
   - toolName: "veraPDF (PDF/A-1b-Profil)"
-    toolVersion: "1.24.1"
+    toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/1b"
     trigger:
       - feature: "formatVersion"
@@ -182,7 +182,7 @@ formatValidationTools:
           defaultValue: 1.0
 
   - toolName: "veraPDF (PDF/A-2a-Profil)"
-    toolVersion: "1.24.1"
+    toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/2a"
     trigger:
       - feature: "formatVersion"
@@ -195,7 +195,7 @@ formatValidationTools:
           defaultValue: 1.0
 
   - toolName: "veraPDF (PDF/A-2b-Profil)"
-    toolVersion: "1.24.1"
+    toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/2b"
     trigger:
       - feature: "formatVersion"
@@ -208,7 +208,7 @@ formatValidationTools:
           defaultValue: 1.0
 
   - toolName: "veraPDF (PDF/A-2u-Profil)"
-    toolVersion: "1.24.1"
+    toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/2u"
     trigger:
       - feature: "formatVersion"
@@ -221,7 +221,7 @@ formatValidationTools:
           defaultValue: 1.0
 
   - toolName: "veraPDF (PDF/UA-Profil)"
-    toolVersion: "1.24.1"
+    toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/ua1"
     trigger:
       - # PDF/UA has no entry in the PRONOM database
