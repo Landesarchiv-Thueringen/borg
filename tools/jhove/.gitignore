@@ -8,9 +8,9 @@
 # allow go source code
 !/**/*.go
 
-# allow tika dockerfile
+# allow dockerfile
 !Dockerfile
 
-# allow tika jar
-!/third_party/jhove_1.28.0.jar
+# allow jhove jar
+!/third_party/jhove_1.30.1.jar
 !/third_party/lgpl-3.0.txt

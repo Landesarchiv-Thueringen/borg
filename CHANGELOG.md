@@ -3,6 +3,7 @@
 ## Next
 
 - Feature: Update DROID 6.7.0 -> 6.8.0
+- Feature: Update JHove 1.28.0 -> 1.30.1
 - Fix: Reverse-Proxy-Weiterleitung von API-Requests
 
 ## 1.1.0
