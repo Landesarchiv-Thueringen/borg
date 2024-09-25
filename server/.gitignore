@@ -10,6 +10,3 @@
 
 # allow server dockerfile
 !Dockerfile
-
-# allow server config
-!config/server_config.yml

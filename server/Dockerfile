@@ -7,5 +7,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o borg cmd/server.go
 
 FROM alpine:3.20 AS prod
 WORKDIR /borg
-COPY --from=build /borg/ .
+COPY --from=build /borg/borg ./borg
 CMD ["./borg"]

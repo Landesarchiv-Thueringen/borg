@@ -10,4 +10,4 @@ RUN npm run build -- --configuration $CONFIGURATION
 
 FROM nginx:1.27-alpine3.19 AS prod
 COPY --from=build /build/dist/borg-gui /app/
-COPY build/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY build/nginx/default.conf.template /etc/nginx/templates/default.conf.template

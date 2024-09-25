@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+
+- Intern: Erlaube Konfiguration zur Laufzeit
+
 ## 1.2.0
 
 - Feature: Update DROID 6.7.0 -> 6.8.0
