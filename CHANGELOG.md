@@ -5,6 +5,7 @@
 - Fix: Fehler bei erster Ausführung von DROID
 - Intern: Erlaube Konfiguration zur Laufzeit
 - Intern: Konfigurierbare Ports
+- Intern: Docker-Images optimieren
 
 ## 1.2.0
 
