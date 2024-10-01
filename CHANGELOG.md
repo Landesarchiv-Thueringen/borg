@@ -2,6 +2,7 @@
 
 ## Next
 
+- Fix: Fehler bei erster Ausführung von DROID
 - Intern: Erlaube Konfiguration zur Laufzeit
 - Intern: Konfigurierbare Ports
 
