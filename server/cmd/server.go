@@ -45,7 +45,7 @@ func main() {
 	router.GET("", getDefaultResponse)
 	router.GET("api/version", getVersion)
 	router.POST("api/analyze-file", analyzeFile)
-	router.Run("0.0.0.0:80")
+	router.Run()
 }
 
 func getDefaultResponse(c *gin.Context) {

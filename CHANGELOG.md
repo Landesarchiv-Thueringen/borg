@@ -3,6 +3,7 @@
 ## Next
 
 - Intern: Erlaube Konfiguration zur Laufzeit
+- Intern: Konfigurierbare Ports
 
 ## 1.2.0
 

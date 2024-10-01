@@ -27,6 +27,7 @@ services:
       - "file-store:/borg/file-store"
       - "./config:/borg/config"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
   droid:
@@ -39,6 +40,7 @@ services:
     volumes:
       - "file-store:/borg/file-store"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
   tika:
@@ -51,6 +53,7 @@ services:
     volumes:
       - "file-store:/borg/file-store"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
   jhove:
@@ -63,6 +66,7 @@ services:
     volumes:
       - "file-store:/borg/file-store"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
   verapdf:
@@ -75,6 +79,7 @@ services:
     volumes:
       - "file-store:/borg/file-store"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
   odf-validator:
@@ -87,6 +92,7 @@ services:
     volumes:
       - "file-store:/borg/file-store"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
   ooxml-validator:
@@ -99,6 +105,7 @@ services:
     volumes:
       - "file-store:/borg/file-store"
     environment:
+      - PORT=80
       - GIN_MODE=${GIN_MODE}
 
 volumes:

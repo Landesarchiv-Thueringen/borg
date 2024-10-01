@@ -35,7 +35,7 @@ func main() {
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
 	router.GET("/extract-metadata", extractMetadata)
-	router.Run("0.0.0.0:80")
+	router.Run()
 }
 
 func getDefaultResponse(context *gin.Context) {

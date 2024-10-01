@@ -27,7 +27,7 @@ func main() {
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
 	router.GET("validate", validate)
-	router.Run("0.0.0.0:80")
+	router.Run()
 }
 
 // getDefaultResponse is the test endpoint for checking if the service is running.
