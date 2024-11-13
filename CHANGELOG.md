@@ -6,6 +6,7 @@
 - Intern: Erlaube Konfiguration zur Laufzeit
 - Intern: Konfigurierbare Ports
 - Intern: Docker-Images optimieren
+- Intern: Migration auf PNPM
 
 ## 1.2.0
 

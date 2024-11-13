@@ -1,7 +1,10 @@
+# prohibit otherwise allowed files in node_modules
+node_modules
+
 # allow project files
 !/.editorconfig
 !/angular.json
-!/package-lock.json
+!/pnpm-lock.yaml
 !/package.json
 !/README.md
 !/tsconfig.app.json

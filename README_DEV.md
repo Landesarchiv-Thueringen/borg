@@ -31,8 +31,8 @@ See [./gui/src/app/features/file-analysis/README.md](./gui/src/app/features/file
 In the directory `gui` run
 
 ```sh
-npm install
-npm start
+pnpm install
+pnpm start
 ```
 
 ### Go Workspaces
