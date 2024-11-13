@@ -11,6 +11,6 @@ COPY src ./src
 ARG CONFIGURATION
 RUN pnpm run build --configuration $CONFIGURATION
 
-FROM nginx:1.27-alpine3.19 AS prod
+FROM nginx:1.27-alpine3.20 AS prod
 COPY --from=build /build/dist/borg-gui /app/
 COPY build/nginx/default.conf.template /etc/nginx/templates/default.conf.template
