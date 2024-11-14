@@ -1,10 +1,11 @@
 # Changelog
 
-## Next
+## 1.3.0
 
 - Fix: Fehler bei erster Ausführung von DROID
 - Intern: Erlaube Konfiguration zur Laufzeit
 - Intern: Konfigurierbare Ports
+- Intern: Konfigurierbare Docker-Image-Namen
 - Intern: Docker-Images optimieren
 - Intern: Migration auf PNPM
 
