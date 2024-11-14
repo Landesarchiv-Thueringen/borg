@@ -1,6 +1,7 @@
 services:
   gui:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/gui:${IMAGE_VERSION}
     build:
       context: ./gui
       args:
@@ -18,6 +19,7 @@ services:
 
   server:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/server:${IMAGE_VERSION}
     build:
       context: ./server
       args:
@@ -32,6 +34,7 @@ services:
 
   droid:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/droid:${IMAGE_VERSION}
     build:
       context: ./tools/droid
       args:
@@ -45,6 +48,7 @@ services:
 
   tika:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/tika:${IMAGE_VERSION}
     build:
       context: ./tools/tika
       args:
@@ -58,6 +62,7 @@ services:
 
   jhove:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/jhove:${IMAGE_VERSION}
     build:
       context: ./tools/jhove
       args:
@@ -71,6 +76,7 @@ services:
 
   verapdf:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/verapdf:${IMAGE_VERSION}
     build:
       context: ./tools/verapdf
       args:
@@ -84,6 +90,7 @@ services:
 
   odf-validator:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/odf-validator:${IMAGE_VERSION}
     build:
       context: ./tools/odf-validator
       args:
@@ -97,6 +104,7 @@ services:
 
   ooxml-validator:
     restart: unless-stopped
+    image: ${IMAGE_PREFIX}/ooxml-validator:${IMAGE_VERSION}
     build:
       context: ./tools/ooxml-validator
       args:
