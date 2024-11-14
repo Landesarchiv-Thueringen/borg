@@ -2,11 +2,11 @@ FROM golang:alpine3.20 AS build
 WORKDIR /build
 COPY go.mod go.sum ./
 RUN go mod download
-COPY . ./
+COPY cmd cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -o droidapi cmd/droid_api.go
 
 FROM alpine:3.20 AS extract
-RUN apk update && apk add unzip
+RUN apk add --no-cache unzip
 COPY third_party /third_party
 WORKDIR /third_party
 RUN unzip droid-binary-6.8.0-bin.zip
@@ -14,7 +14,7 @@ RUN rm droid-binary-6.8.0-bin.zip
 RUN chmod +x droid.sh
 
 FROM alpine:3.20 AS prod
-RUN apk update && apk add openjdk17
+RUN apk add --no-cache openjdk17
 WORKDIR /borg/tools/droid
 COPY --from=build /build/droidapi .
 COPY --from=extract /third_party ./third_party

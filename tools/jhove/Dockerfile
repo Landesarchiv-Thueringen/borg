@@ -1,15 +1,20 @@
 FROM golang:alpine3.20 AS build
-WORKDIR /borg/tools/jhove
+WORKDIR /build
 COPY go.mod go.sum ./
 RUN go mod download
-COPY . ./
+COPY cmd cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -o jhove_api cmd/jhove_api.go
 
-FROM alpine:3.20 AS prod
-WORKDIR /borg/tools/jhove
-RUN apk update
-RUN apk add openjdk17
-COPY --from=build /borg/tools/jhove/ .
+FROM alpine:3.20 AS extract
+RUN apk add --no-cache openjdk17
+COPY third_party /third_party
+WORKDIR /third_party
 # install JHOVE with jar, enter sequence of characters required for the installation wizard
-RUN sh -c '/bin/echo -e "1\njhove\nO\n1\nY\n1" | java -jar third_party/jhove_1.30.1.jar'
+RUN sh -c '/bin/echo -e "1\njhove\nO\n1\nY\n1" | java -jar jhove_1.30.1.jar'
+
+FROM alpine:3.20 AS prod
+RUN apk add --no-cache openjdk17
+WORKDIR /borg/tools/jhove
+COPY --from=build /build/jhove_api .
+COPY --from=extract /third_party/jhove ./jhove
 CMD ["./jhove_api"]
