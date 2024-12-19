@@ -3,6 +3,7 @@
 ## Next
 
 - Intern: Konfliktauflösung Formatversion
+- Fix: DROID-Fehler bei nicht erkannten Format
 
 ## 1.3.0
 
