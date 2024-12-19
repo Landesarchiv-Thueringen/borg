@@ -102,6 +102,11 @@ func identifyFileFormat(context *gin.Context) {
 	}
 	if formats[1][17] != "" {
 		features["formatVersion"] = formats[1][17]
+		// add prefix to format version if format name contains PDF/A
+		formatName, keyExists := features["formatName"]
+		if keyExists && strings.Contains(formatName, "PDF/A") {
+			features["formatVersion"] = "PDF/A-" + features["formatVersion"]
+		}
 	}
 	response := ToolResponse{
 		ToolOutput:   droidOutputString,

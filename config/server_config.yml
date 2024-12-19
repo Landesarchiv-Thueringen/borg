@@ -66,6 +66,13 @@ formatValidationTools:
             - globalFeature: formatVersion
               regEx: "PDF/A"
               value: 0.0 # no PDF/A validator
+      - key: "formatName"
+        confidence:
+          defaultValue: 0.8
+          conditions:
+            - globalFeature: formatVersion
+              regEx: "PDF/A"
+              value: 0.0 # no PDF/A validator
       - key: "formatVersion"
         confidence:
           defaultValue: 0.8
@@ -94,6 +101,9 @@ formatValidationTools:
       - key: "valid"
         confidence:
           defaultValue: 1.0
+      - key: "formatName"
+        confidence:
+          defaultValue: 0.8
       - key: "formatVersion"
         confidence:
           defaultValue: 0.8
@@ -113,6 +123,9 @@ formatValidationTools:
       - key: "valid"
         confidence:
           defaultValue: 1.0
+      - key: "formatName"
+        confidence:
+          defaultValue: 0.8
       - key: "formatVersion"
         confidence:
           defaultValue: 0.8
@@ -132,6 +145,9 @@ formatValidationTools:
       - key: "valid"
         confidence:
           defaultValue: 1.0
+      - key: "formatName"
+        confidence:
+          defaultValue: 0.8
       - key: "formatVersion"
         confidence:
           defaultValue: 0.8
@@ -151,6 +167,9 @@ formatValidationTools:
       - key: "valid"
         confidence:
           defaultValue: 1.0
+      - key: "formatName"
+        confidence:
+          defaultValue: 0.8
       - key: "formatVersion"
         confidence:
           defaultValue: 0.8
