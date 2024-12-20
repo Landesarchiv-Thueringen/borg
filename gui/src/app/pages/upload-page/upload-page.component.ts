@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,13 +27,15 @@ import { FileSizePipe } from '../../shared/file-size.pipe';
     ]
 })
 export class UploadPageComponent implements AfterViewInit {
+  private upload = inject(UploadService);
+
   dataSource: MatTableDataSource<FileUpload>;
   displayedColumns: string[];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private upload: UploadService) {
+  constructor() {
     this.dataSource = new MatTableDataSource<FileUpload>();
     this.displayedColumns = [
       'path',

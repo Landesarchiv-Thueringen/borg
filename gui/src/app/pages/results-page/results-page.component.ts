@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,13 +14,13 @@ import { ResultsService } from '../../services/results.service';
     styleUrl: './results-page.component.scss'
 })
 export class ResultsPageComponent {
+  private router = inject(Router);
+  private resultsService = inject(ResultsService);
+
   results?: FileResult[];
   getDetails = (id: string) => this.resultsService.get(id);
 
-  constructor(
-    private router: Router,
-    private resultsService: ResultsService,
-  ) {
+  constructor() {
     this.resultsService
       .getAll()
       .pipe(takeUntilDestroyed())

@@ -1,5 +1,5 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { v4 as uuid } from 'uuid';
@@ -12,16 +12,16 @@ import { ResultsService } from './results.service';
   providedIn: 'root',
 })
 export class UploadService {
+  private router = inject(Router);
+  private notificationService = inject(NotificationService);
+  private fileAnalysis = inject(FileAnalysisService);
+  private results = inject(ResultsService);
+
   uploadInProgress = false;
   fileUploads: FileUpload[] = [];
   fileUploadsSubject = new BehaviorSubject<FileUpload[]>(this.fileUploads);
 
-  constructor(
-    private router: Router,
-    private notificationService: NotificationService,
-    private fileAnalysis: FileAnalysisService,
-    private results: ResultsService,
-  ) {
+  constructor() {
     this.getAll().subscribe((fileUploads: FileUpload[]) => {
       if (fileUploads.length === 0 && this.uploadInProgress) {
         this.uploadInProgress = false;

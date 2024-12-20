@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener, NgZone } from '@angular/core';
+import { Component, HostBinding, HostListener, NgZone, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
@@ -11,14 +11,14 @@ import { UploadService } from '../../services/upload.service';
     styleUrl: './file-drop-container.component.scss'
 })
 export class FileDropContainerComponent {
+  private ngZone = inject(NgZone);
+  private router = inject(Router);
+  private upload = inject(UploadService);
+  private dialog = inject(MatDialog);
+
   @HostBinding('class.file-over') fileOver = false;
 
-  constructor(
-    private ngZone: NgZone,
-    private router: Router,
-    private upload: UploadService,
-    private dialog: MatDialog,
-  ) {
+  constructor() {
     document.documentElement.addEventListener('dragenter', (event) => {
       if (event.dataTransfer?.items.length) {
         this.dialog.closeAll();

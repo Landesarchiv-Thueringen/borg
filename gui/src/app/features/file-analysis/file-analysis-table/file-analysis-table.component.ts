@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
@@ -67,6 +67,8 @@ export interface FilePropertyDefinition {
     ]
 })
 export class FileAnalysisTableComponent implements AfterViewInit {
+  private dialog = inject(MatDialog);
+
   private _results?: FileResult[];
   @Input()
   get results(): FileResult[] | undefined {
@@ -128,7 +130,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   private resultsMap: { [key: string]: FileResult } = {};
 
-  constructor(private dialog: MatDialog) {
+  constructor() {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
   }
 

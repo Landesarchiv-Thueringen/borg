@@ -1,5 +1,5 @@
 import { HttpClient, HttpEvent } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FileAnalysis } from '../features/file-analysis/results';
 
@@ -16,7 +16,8 @@ export interface FileUpload {
   providedIn: 'root',
 })
 export class FileAnalysisService {
-  constructor(private httpClient: HttpClient) {}
+  private httpClient = inject(HttpClient);
+
 
   analyzeFile(file: File): Observable<HttpEvent<FileAnalysis>> {
     const formData = new FormData();
