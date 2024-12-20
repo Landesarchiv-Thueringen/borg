@@ -4,11 +4,10 @@ import { FileDropContainerComponent } from './core/file-drop-container/file-drop
 import { MainNavigationComponent } from './core/main-navigation/main-navigation.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  standalone: true,
-  imports: [RouterOutlet, MainNavigationComponent, FileDropContainerComponent],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    imports: [RouterOutlet, MainNavigationComponent, FileDropContainerComponent]
 })
 export class AppComponent {
   constructor(router: Router) {

@@ -2,8 +2,9 @@
 
 ## Next
 
-- Intern: Konfliktauflösung Formatversion
 - Fix: DROID-Fehler bei nicht erkannten Format
+- Intern: Konfliktauflösung Formatversion
+- Intern: Angular-Update auf Version 19
 
 ## 1.3.0
 

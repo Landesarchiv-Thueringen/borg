@@ -12,20 +12,19 @@ import { UploadService } from '../../services/upload.service';
 import { FileSizePipe } from '../../shared/file-size.pipe';
 
 @Component({
-  selector: 'app-upload-page',
-  templateUrl: './upload-page.component.html',
-  styleUrls: ['./upload-page.component.scss'],
-  standalone: true,
-  imports: [
-    FileSizePipe,
-    MatButtonModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatSortModule,
-    MatTableModule,
-  ],
+    selector: 'app-upload-page',
+    templateUrl: './upload-page.component.html',
+    styleUrls: ['./upload-page.component.scss'],
+    imports: [
+        FileSizePipe,
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatSortModule,
+        MatTableModule,
+    ]
 })
 export class UploadPageComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileUpload>;

@@ -8,11 +8,10 @@ import { FileResult } from '../../features/file-analysis/results';
 import { ResultsService } from '../../services/results.service';
 
 @Component({
-  selector: 'app-results-page',
-  standalone: true,
-  imports: [FileAnalysisTableComponent, MatIconModule, MatButtonModule],
-  templateUrl: './results-page.component.html',
-  styleUrl: './results-page.component.scss',
+    selector: 'app-results-page',
+    imports: [FileAnalysisTableComponent, MatIconModule, MatButtonModule],
+    templateUrl: './results-page.component.html',
+    styleUrl: './results-page.component.scss'
 })
 export class ResultsPageComponent {
   results?: FileResult[];

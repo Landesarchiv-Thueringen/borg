@@ -5,10 +5,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-main-navigation',
-  templateUrl: './main-navigation.component.html',
-  styleUrls: ['./main-navigation.component.scss'],
-  standalone: true,
-  imports: [MatToolbarModule, MatIconModule, MatButtonModule, RouterModule],
+    selector: 'app-main-navigation',
+    templateUrl: './main-navigation.component.html',
+    styleUrls: ['./main-navigation.component.scss'],
+    imports: [MatToolbarModule, MatIconModule, MatButtonModule, RouterModule]
 })
 export class MainNavigationComponent {}

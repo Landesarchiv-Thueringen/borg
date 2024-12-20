@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { UploadService } from '../../services/upload.service';
 
 @Component({
-  selector: 'app-file-drop-container',
-  standalone: true,
-  imports: [MatIconModule],
-  templateUrl: './file-drop-container.component.html',
-  styleUrl: './file-drop-container.component.scss',
+    selector: 'app-file-drop-container',
+    imports: [MatIconModule],
+    templateUrl: './file-drop-container.component.html',
+    styleUrl: './file-drop-container.component.scss'
 })
 export class FileDropContainerComponent {
   @HostBinding('class.file-over') fileOver = false;
