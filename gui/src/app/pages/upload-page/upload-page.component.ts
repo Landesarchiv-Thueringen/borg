@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,8 +32,8 @@ export class UploadPageComponent implements AfterViewInit {
   dataSource: MatTableDataSource<FileUpload>;
   displayedColumns: string[];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  readonly paginator = viewChild.required(MatPaginator);
+  readonly sort = viewChild.required(MatSort);
 
   constructor() {
     this.dataSource = new MatTableDataSource<FileUpload>();
@@ -56,8 +56,8 @@ export class UploadPageComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator();
+    this.dataSource.sort = this.sort();
   }
 
   addFile(event: Event) {
