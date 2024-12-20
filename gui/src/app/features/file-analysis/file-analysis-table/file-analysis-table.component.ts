@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, inject, input, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, input, viewChild, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,49 +51,26 @@ export interface FilePropertyDefinition {
 }
 
 @Component({
-    selector: 'app-file-analysis-table',
-    templateUrl: './file-analysis-table.component.html',
-    styleUrls: ['./file-analysis-table.component.scss'],
-    imports: [
-        CommonModule,
-        FileFeaturePipe,
-        MatButtonModule,
-        MatChipsModule,
-        MatIconModule,
-        MatMenuModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatTableModule,
-    ]
+  selector: 'app-file-analysis-table',
+  templateUrl: './file-analysis-table.component.html',
+  styleUrls: ['./file-analysis-table.component.scss'],
+  imports: [
+    CommonModule,
+    FileFeaturePipe,
+    MatButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+  ],
 })
 export class FileAnalysisTableComponent implements AfterViewInit {
   private dialog = inject(MatDialog);
 
-  private _results?: FileResult[];
-  @Input()
-  get results(): FileResult[] | undefined {
-    return this._results;
-  }
-  set results(value: FileResult[] | undefined) {
-    this._results = value;
-    this.resultsMap = {};
-    for (const result of value ?? []) {
-      this.resultsMap[result.id] = result;
-    }
-    this.processFileInformation(value ?? []);
-  }
-
+  readonly results = input<FileResult[]>();
   readonly getDetails = input.required<(id: string) => Promise<FileAnalysis | undefined>>();
-
-  private _properties: FilePropertyDefinition[] = [
-    { key: 'path', label: 'Pfad' },
-    { key: 'filename' },
-    { key: 'fileSize', label: 'Dateigröße' },
-    { key: 'puid' },
-    { key: 'mimeType' },
-    { key: 'formatVersion' },
-    { key: 'status' },
-  ];
   /**
    * Properties to be displayed in the table and in the details dialog.
    *
@@ -104,22 +81,29 @@ export class FileAnalysisTableComponent implements AfterViewInit {
    *
    * You have to provide labels for columns based on properties from `info`.
    */
-  @Input()
-  get properties(): FilePropertyDefinition[] {
-    return this._properties;
-  }
-  set properties(value: FilePropertyDefinition[]) {
-    this._properties = value;
-    this.tableProperties = value.filter((p) => p.inTable !== false);
-    this.columns = this.tableProperties.map(({ key }) => key);
-  }
+  readonly properties = input<FilePropertyDefinition[]>([
+    { key: 'path', label: 'Pfad' },
+    { key: 'filename' },
+    { key: 'fileSize', label: 'Dateigröße' },
+    { key: 'puid' },
+    { key: 'mimeType' },
+    { key: 'formatVersion' },
+    { key: 'status' },
+  ]);
 
   readonly paginator = viewChild.required(MatPaginator);
   readonly sort = viewChild.required(MatSort);
 
+  private resultsMap = computed(() =>
+    (this.results() ?? []).reduce(
+      (acc, result) => ((acc[result.id] = result), acc),
+      {} as { [key: string]: FileResult },
+    ),
+  );
+  readonly tableProperties = computed(() => this.properties().filter((p) => p.inTable !== false));
+  readonly columns = computed(() => this.tableProperties().map(({ key }) => key));
+
   dataSource: MatTableDataSource<FileOverview>;
-  tableProperties = this.properties.filter((p) => p.inTable !== false);
-  columns = this.tableProperties.map(({ key }) => key);
   activeFilters = new Set<Filter>([]);
   readonly availableFilters: Filter[] = [
     { key: 'valid', label: 'Valide', icon: 'check' },
@@ -128,10 +112,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     { key: 'error', label: 'Fehler', icon: 'error' },
   ];
 
-  private resultsMap: { [key: string]: FileResult } = {};
-
   constructor() {
     this.dataSource = new MatTableDataSource<FileOverview>([]);
+    effect(() => this.processFileInformation(this.results() ?? []));
   }
 
   ngAfterViewInit(): void {
@@ -173,9 +156,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
       this.dialog.open(FileOverviewComponent, {
         data: {
           filename: overview.values['filename']!.value,
-          info: this.resultsMap[overview.id].info,
+          info: this.resultsMap()[overview.id].info,
           analysis,
-          properties: this.properties,
+          properties: this.properties(),
         },
         autoFocus: false,
         width: '1200px',
