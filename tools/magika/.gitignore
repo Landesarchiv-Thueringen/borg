@@ -1,0 +1,12 @@
+# allow readme
+!README.md
+
+# allow go project files
+!/go.mod
+!/go.sum
+
+# allow go source code
+!/**/*.go
+
+# allow dockerfile
+!Dockerfile

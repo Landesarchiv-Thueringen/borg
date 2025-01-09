@@ -30,6 +30,22 @@ formatIdentificationTools:
         confidence:
           defaultValue: 0.9
 
+  - toolName: "Magika"
+    toolVersion: "2.9.2"
+    endpoint: "http://magika/identify-file-format"
+    features:
+      - key: "mimeType"
+        confidence:
+          defaultValue: 0.5 # low base confidence
+          conditions:
+            # better confidence if text based file type
+            - globalFeature: isText
+              regEx: "true"
+              value: 1.0
+      - key: "isText"
+        confidence:
+          defaultValue: 0.9
+
 formatValidationTools:
   - toolName: "JHOVE (PDF-Modul)"
     toolVersion: "1.30.1"
@@ -135,7 +151,7 @@ formatValidationTools:
     endpoint: "http://jhove/validate/jpeg"
     trigger:
       - feature: "mimeType"
-        regEx: "jpeg"
+        regEx: "jpeg$"
       - feature: "puid"
         regEx: "^fmt/43$" # JPEG
     features:
