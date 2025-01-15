@@ -16,10 +16,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput   string            `json:"toolOutput"`
-	OutputFormat string            `json:"outputFormat"`
-	Features     map[string]string `json:"features"`
-	Error        string            `json:"error"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        string                 `json:"error"`
 }
 
 const defaultResponse = "DROID API is running"
@@ -110,8 +110,8 @@ func identifyFileFormat(context *gin.Context) {
 
 // extractFeatures extracts all relevant information from parsed DROID output.
 // Extracts only features from the first detected format.
-func extractFeatures(formatTable [][]string) (map[string]string, error) {
-	features := make(map[string]string)
+func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
+	features := make(map[string]interface{})
 	keyMap := getKeyMap(formatTable[0])
 	formatNumberAsString, err := extractFeature("FORMAT_COUNT", formatTable[1], keyMap)
 	// key and value errors prevent further processing
@@ -161,11 +161,11 @@ func extractFeatures(formatTable [][]string) (map[string]string, error) {
 	formatVersion, err := extractFeature("FORMAT_VERSION", formatTable[1], keyMap)
 	if err == nil {
 		if formatVersion != "" {
-			features["formatVersion"] = formatVersion
 			// add prefix to format version if format name contains PDF/A
 			if strings.Contains(formatName, "PDF/A") {
-				features["formatVersion"] = "PDF/A-" + features["formatVersion"]
+				formatVersion = "PDF/A-" + formatVersion
 			}
+			features["formatVersion"] = formatVersion
 		}
 
 	} else if errors.As(err, &keyError) {

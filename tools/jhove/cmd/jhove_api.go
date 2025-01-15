@@ -8,17 +8,16 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ToolResponse struct {
-	ToolOutput   string            `json:"toolOutput"`
-	OutputFormat string            `json:"outputFormat"`
-	Features     map[string]string `json:"features"`
-	Error        string            `json:"error"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        string                 `json:"error"`
 }
 
 type JhoveOutput struct {
@@ -113,7 +112,7 @@ func processJhoveOutput(context *gin.Context, output string) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]string)
+	extractedFeatures := make(map[string]interface{})
 	response := ToolResponse{
 		ToolOutput:   output,
 		OutputFormat: "json",
@@ -128,12 +127,8 @@ func processJhoveOutput(context *gin.Context, output string) {
 			extractedFeatures["formatVersion"] = *repInfo.FormatVersion
 		}
 		if repInfo.Validation != nil {
-			extractedFeatures["wellFormed"] = strconv.FormatBool(
-				wellFormedRegEx.MatchString(*repInfo.Validation),
-			)
-			extractedFeatures["valid"] = strconv.FormatBool(
-				validRegEx.MatchString(*repInfo.Validation),
-			)
+			extractedFeatures["wellFormed"] = wellFormedRegEx.MatchString(*repInfo.Validation)
+			extractedFeatures["valid"] = validRegEx.MatchString(*repInfo.Validation)
 		}
 	}
 	context.JSON(http.StatusOK, response)

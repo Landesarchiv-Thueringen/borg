@@ -13,10 +13,10 @@ import (
 )
 
 type ToolResponse struct {
-	ToolOutput   string            `json:"toolOutput"`
-	OutputFormat string            `json:"outputFormat"`
-	Features     map[string]string `json:"features"`
-	Error        string            `json:"error"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        string                 `json:"error"`
 }
 
 type TikaOutput struct {
@@ -93,7 +93,7 @@ func processTikaOutput(context *gin.Context, output string) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]string)
+	extractedFeatures := make(map[string]interface{})
 	response := ToolResponse{
 		ToolOutput:   output,
 		OutputFormat: "json",

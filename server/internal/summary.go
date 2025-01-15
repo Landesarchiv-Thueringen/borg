@@ -41,26 +41,34 @@ func GetSummary(features map[string][]FeatureValue, toolResults []ToolResult) Su
 		FormatUncertain:  isFormatUncertain(features),
 		ValidityConflict: hasValidityConflict(features),
 		Error:            hasError(toolResults),
-		PUID:             getValue(features, "puid"),
-		MimeType:         getValue(features, "mimeType"),
-		FormatVersion:    getValue(features, "formatVersion"),
+		PUID:             getStringValue(features, "puid"),
+		MimeType:         getStringValue(features, "mimeType"),
+		FormatVersion:    getStringValue(features, "formatVersion"),
 	}
 }
 
 func isValid(features map[string][]FeatureValue) bool {
 	values, ok := features["valid"]
-	return ok &&
-		values[0].Value == "true" &&
-		values[0].Score >= validThreshold &&
-		!isFormatUncertain(features)
+	if ok {
+		b, ok := values[0].Value.(bool)
+		return ok &&
+			b &&
+			values[0].Score >= validThreshold &&
+			!isFormatUncertain(features)
+	}
+	return false
 }
 
 func isInvalid(features map[string][]FeatureValue) bool {
 	values, ok := features["valid"]
-	return ok &&
-		values[0].Value == "false" &&
-		values[0].Score >= validThreshold &&
-		!isFormatUncertain(features)
+	if ok {
+		b, ok := values[0].Value.(bool)
+		return ok &&
+			!b &&
+			values[0].Score >= validThreshold &&
+			!isFormatUncertain(features)
+	}
+	return false
 }
 
 func isFormatUncertain(features map[string][]FeatureValue) bool {
@@ -101,10 +109,14 @@ func hasError(toolResults []ToolResult) bool {
 	return false
 }
 
-func getValue(features map[string][]FeatureValue, s string) string {
-	values, ok := features[s]
+func getStringValue(features map[string][]FeatureValue, key string) string {
+	values, ok := features[key]
 	if !ok {
 		return ""
 	}
-	return values[0].Value
+	stringValue, ok := values[0].Value.(string)
+	if !ok {
+		return ""
+	}
+	return stringValue
 }

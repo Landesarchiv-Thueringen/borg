@@ -24,16 +24,16 @@ type ToolResult struct {
 	// "text", "json", and "csv".
 	OutputFormat string `json:"outputFormat"`
 	// Features is a list of features as extracted from the tool's output.
-	Features map[string]string `json:"features"`
+	Features map[string]interface{} `json:"features"`
 	// Error is an error emitted from the tool in case of failure.
 	Error string `json:"error"`
 }
 
 type toolResponse struct {
-	ToolOutput   string            `json:"toolOutput"`
-	OutputFormat string            `json:"outputFormat"`
-	Features     map[string]string `json:"features"`
-	Error        string            `json:"error"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        string                 `json:"error"`
 }
 
 func RunIdentificationTools(filename string) []ToolResult {
@@ -110,8 +110,11 @@ func checkToolTrigger(trigger config.ToolTrigger, identificationResults []ToolRe
 		if toolResponse.Features != nil {
 			features := toolResponse.Features
 			featureValue, ok := features[trigger.Feature]
-			if ok && regex.MatchString(featureValue) {
-				return true
+			if ok {
+				v, ok := featureValue.(string)
+				if ok && regex.MatchString(v) {
+					return true
+				}
 			}
 		}
 	}

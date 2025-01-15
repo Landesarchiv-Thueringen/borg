@@ -2,11 +2,13 @@
 
 ## Next
 
+- Feature: Integration Formaterkennungswerkzeug Magika v0.6.0
 - Fix: DROID-Fehler bei nicht erkannten Format
 - Fix: Filter-Chips können ausgewählt werden
 - Fix: HTML-Attribut `lang`
 - Intern: Konfliktauflösung Formatversion
 - Intern: Angular-Update auf Version 19
+- Intern: Unterstützung für verschiedene Typen extrahierter Werte
 
 ## 1.3.0
 

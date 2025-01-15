@@ -9,7 +9,7 @@ import (
 type FeatureValue struct {
 	// Value is a string representing the feature value, e.g.,
 	// "application/pdf".
-	Value string `json:"value"`
+	Value interface{} `json:"value"`
 	// Score is a number between 0 and 1 that ranks the value against other
 	// values. The sum of scores of all values is at most one, but can be lower,
 	// depending on supporting tools.
@@ -102,8 +102,9 @@ func getCorrectedToolConfidence(
 				scoredFeature, ok := scoredFeatures[condition.GlobalFeature]
 				if ok {
 					regex := regexp.MustCompile(condition.RegEx)
+					stringValue, ok := scoredFeature[0].Value.(string)
 					// the first value has the highest score --> voted truth
-					if regex.MatchString(scoredFeature[0].Value) {
+					if ok && regex.MatchString(stringValue) {
 						return condition.Value
 					}
 				}
@@ -116,7 +117,7 @@ func getCorrectedToolConfidence(
 func calculateFeatureValueScore(featureValues map[string][]FeatureValue) {
 	for key, values := range featureValues {
 		totalFeatureConfidence := 0.0
-		totalValueConfidence := make(map[string]float64)
+		totalValueConfidence := make(map[interface{}]float64)
 		for _, featureValue := range values {
 			totalValueConfidence[featureValue.Value] = 0.0
 			for _, toolConfidence := range featureValue.SupportingTools {

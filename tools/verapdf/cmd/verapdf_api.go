@@ -17,7 +17,7 @@ import (
 type ToolResponse struct {
 	ToolOutput   string
 	OutputFormat string
-	Features     map[string]string
+	Features     map[string]interface{}
 	Error        string
 }
 
@@ -117,13 +117,13 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]string)
+	extractedFeatures := make(map[string]interface{})
 	response := ToolResponse{
 		ToolOutput:   output,
 		OutputFormat: "json",
 		Features:     extractedFeatures,
 	}
-	if veraPDFOutput.Report.Jobs != nil && len(veraPDFOutput.Report.Jobs) > 0 {
+	if len(veraPDFOutput.Report.Jobs) > 0 {
 		extractedFeatures["valid"] = strconv.FormatBool(
 			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant,
 		)

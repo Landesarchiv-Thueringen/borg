@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,10 +15,10 @@ const storeDir = "/borg/file-store"
 const defaultResponse = "OOXML-Validator API is running"
 
 type ToolResponse struct {
-	ToolOutput   string            `json:"toolOutput"`
-	OutputFormat string            `json:"outputFormat"`
-	Features     map[string]string `json:"features"`
-	Error        string            `json:"error"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        string                 `json:"error"`
 }
 
 func main() {
@@ -46,8 +45,8 @@ func validate(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]string)
-	extractedFeatures["valid"] = strconv.FormatBool(valid)
+	extractedFeatures := make(map[string]interface{})
+	extractedFeatures["valid"] = valid
 	response := ToolResponse{
 		ToolOutput:   output,
 		OutputFormat: "text",

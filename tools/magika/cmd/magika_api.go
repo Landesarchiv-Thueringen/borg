@@ -7,16 +7,15 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ToolResponse struct {
-	ToolOutput   string            `json:"toolOutput"`
-	OutputFormat string            `json:"outputFormat"`
-	Features     map[string]string `json:"features"`
-	Error        string            `json:"error"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        string                 `json:"error"`
 }
 
 type Output struct {
@@ -114,13 +113,13 @@ func identifyFileFormat(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
-func extractFeatures(data Data) map[string]string {
-	features := make(map[string]string)
+func extractFeatures(data Data) map[string]interface{} {
+	features := make(map[string]interface{})
 	if data.Result.Status == "ok" {
 		if data.Result.Value.Output.MimeType != "" {
 			features["mimeType"] = data.Result.Value.Output.MimeType
 		}
-		features["isText"] = strconv.FormatBool(data.Result.Value.Output.IsText)
+		features["isText"] = data.Result.Value.Output.IsText
 	}
 	return features
 }
