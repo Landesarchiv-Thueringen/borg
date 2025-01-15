@@ -3,7 +3,6 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"lath/borg/internal/config"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -107,7 +106,7 @@ func RunValidationTools(filename string, identificationResults []ToolResult) []T
 }
 
 // returns true if the trigger fires
-func checkToolTrigger(trigger config.ToolTrigger, identificationResults []ToolResult) bool {
+func checkToolTrigger(trigger ToolTrigger, identificationResults []ToolResult) bool {
 	// j, _ = json.MarshalIndent(identificationResults, "", "\t")
 	// fmt.Printf("identificationResults%s \n", j)
 	regex := regexp.MustCompile(trigger.RegEx)

@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"lath/borg/internal/config"
 	"regexp"
 	"sort"
 )
@@ -75,7 +74,7 @@ func AccumulateFeatures(results []ToolResult) map[string][]FeatureValue {
 	return features
 }
 
-func getFeatureConfig(toolName string) []config.FeatureConfig {
+func getFeatureConfig(toolName string) []FeatureConfig {
 	for _, tool := range serverConfig.FormatIdentificationTools {
 		if tool.ToolName == toolName {
 			return tool.Features

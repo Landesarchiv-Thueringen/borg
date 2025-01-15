@@ -1,12 +1,10 @@
 package internal
 
-import "lath/borg/internal/config"
-
-var serverConfig config.ServerConfig
+var serverConfig ServerConfig
 var toolConfidences map[string]map[string]float64
 
 func init() {
-	serverConfig = config.ParseConfig()
+	serverConfig = ParseConfig()
 	populateToolConfidences()
 }
 

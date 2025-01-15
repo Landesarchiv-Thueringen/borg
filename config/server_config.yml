@@ -1,4 +1,4 @@
-formatIdentificationTools:
+tools:
   - toolName: "DROID"
     toolVersion: "6.8.0"
     endpoint: "http://droid/identify-file-format"
@@ -41,7 +41,6 @@ formatIdentificationTools:
         confidence:
           providedByTool: true
 
-formatValidationTools:
   - toolName: "JHOVE (PDF-Modul)"
     toolVersion: "1.30.1"
     endpoint: "http://jhove/validate/pdf"
