@@ -36,15 +36,10 @@ formatIdentificationTools:
     features:
       - key: "mimeType"
         confidence:
-          defaultValue: 0.5 # low base confidence
-          conditions:
-            # better confidence if text based file type
-            - globalFeature: isText
-              regEx: "true"
-              value: 1.0
+          providedByTool: true
       - key: "isText"
         confidence:
-          defaultValue: 0.9
+          providedByTool: true
 
 formatValidationTools:
   - toolName: "JHOVE (PDF-Modul)"

@@ -1,5 +1,3 @@
-
-
 package config
 
 import (
@@ -16,8 +14,9 @@ type ConfidenceCondition struct {
 }
 
 type ConfidenceConfig struct {
-	DefaultValue float64               `yaml:"defaultValue"`
-	Conditions   []ConfidenceCondition `yaml:"conditions"`
+	ProvidedByTool bool                  `yaml:"providedByTool"`
+	DefaultValue   float64               `yaml:"defaultValue"`
+	Conditions     []ConfidenceCondition `yaml:"conditions"`
 }
 
 type FeatureConfig struct {

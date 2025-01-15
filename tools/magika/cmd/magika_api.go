@@ -15,6 +15,7 @@ type ToolResponse struct {
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
+	Score        *float64               `json:"score"`
 	Error        string                 `json:"error"`
 }
 
@@ -105,10 +106,15 @@ func identifyFileFormat(context *gin.Context) {
 	}
 	// one file is analyzed at a time -> only first result is relevant
 	features := extractFeatures(data[0])
+	var score *float64
+	if data[0].Result.Status == "ok" {
+		score = &(data[0].Result.Value.Score)
+	}
 	response := ToolResponse{
 		ToolOutput:   magikaOutputString,
 		OutputFormat: "json",
 		Features:     features,
+		Score:        score,
 	}
 	context.JSON(http.StatusOK, response)
 }

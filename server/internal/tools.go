@@ -25,6 +25,8 @@ type ToolResult struct {
 	OutputFormat string `json:"outputFormat"`
 	// Features is a list of features as extracted from the tool's output.
 	Features map[string]interface{} `json:"features"`
+	// Score is the from the tool supplied confidence of the result.
+	Score *float64 `json:"score"`
 	// Error is an error emitted from the tool in case of failure.
 	Error string `json:"error"`
 }
@@ -33,6 +35,7 @@ type toolResponse struct {
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
+	Score        *float64               `json:"score"`
 	Error        string                 `json:"error"`
 }
 
@@ -52,6 +55,7 @@ func RunIdentificationTools(filename string) []ToolResult {
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
 				Features:     response.Features,
+				Score:        response.Score,
 				Error:        response.Error,
 			}
 		}()
@@ -84,6 +88,7 @@ func RunValidationTools(filename string, identificationResults []ToolResult) []T
 						ToolOutput:   response.ToolOutput,
 						OutputFormat: response.OutputFormat,
 						Features:     response.Features,
+						Score:        response.Score,
 						Error:        response.Error,
 					}
 				}()

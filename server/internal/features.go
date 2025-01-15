@@ -58,8 +58,12 @@ func AccumulateFeatures(results []ToolResult) map[string][]FeatureValue {
 				})
 				index = len(features[featureKey]) - 1
 			}
-			// add tool to tools that extracted current value for feature
-			features[featureKey][index].SupportingTools[r.ToolName] = toolConfidences[r.ToolName][featureKey]
+			if r.Score != nil {
+				features[featureKey][index].SupportingTools[r.ToolName] = *r.Score
+			} else {
+				// add tool to tools that extracted current value for feature
+				features[featureKey][index].SupportingTools[r.ToolName] = toolConfidences[r.ToolName][featureKey]
+			}
 		}
 	}
 	calculateFeatureValueScore(features)
