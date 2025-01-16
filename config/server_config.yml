@@ -147,7 +147,11 @@ tools:
       - feature: "mimeType"
         regEx: "jpeg$"
       - feature: "puid"
-        regEx: "^fmt/43$" # JPEG
+        regEx: "^fmt/42$" # JPEG File Interchange Format 1.00
+      - feature: "puid"
+        regEx: "^fmt/43$" # JPEG File Interchange Format 1.01
+      - feature: "puid"
+        regEx: "^fmt/44$" # JPEG File Interchange Format 1.02
     features:
       - key: "wellFormed"
         confidence:
@@ -167,7 +171,7 @@ tools:
     endpoint: "http://jhove/validate/jpeg2000"
     trigger:
       - feature: "mimeType"
-        regEx: "^jp2$"
+        regEx: "jp2$"
       - feature: "puid"
         regEx: "^x-fmt/392$" # JP2 (JPEG 2000 part 1)
     features:
