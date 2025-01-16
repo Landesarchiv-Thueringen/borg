@@ -157,13 +157,14 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 
 #### Gewichtung der extrahierten Eigenschaften
 
-| Werkzeug                 | PUID | MIME-Type | Formatversion         | Validierung            |
-| ------------------------ | ---- | --------- | --------------------- | ---------------------- |
-| DROID                    | 90%  | 90%       | 90%                   |                        |
-| Tika                     |      | 90%       | 90%                   |                        |
-| JHOVE                    |      |           | 80%                   | 100%                   |
-| JHOVE (PDF-Modul)        |      |           | 80% bzw. 0% bei PDF/A | 100% bzw. 0% bei PDF/A |
-| veraPDF                  |      |           |                       | 100%                   |
-| veraPDF (PDF/UA-Profile) |      |           |                       | 30%                    |
-| ODF Validator            |      |           |                       | 100%                   |
-| OOXML Validator          |      |           |                       | 100%                   |
+| Werkzeug                 | PUID | MIME-Type    | Formatversion         | Validierung            |
+| ------------------------ | ---- | ------------ | --------------------- | ---------------------- |
+| DROID                    | 90%  | 90%          | 90%                   |                        |
+| Tika                     |      | 90%          | 90%                   |                        |
+| Magika                   |      | Magika-Score |                       |                        |
+| JHOVE                    |      |              | 80%                   | 100%                   |
+| JHOVE (PDF-Modul)        |      |              | 80% bzw. 0% bei PDF/A | 100% bzw. 0% bei PDF/A |
+| veraPDF                  |      |              |                       | 100%                   |
+| veraPDF (PDF/UA-Profile) |      |              |                       | 30%                    |
+| ODF Validator            |      |              |                       | 100%                   |
+| OOXML Validator          |      |              |                       | 100%                   |
