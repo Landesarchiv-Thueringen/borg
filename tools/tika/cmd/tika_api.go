@@ -102,6 +102,11 @@ func processTikaOutput(context *gin.Context, output string) {
 	if parsedTikaOutput.MimeType != nil {
 		// removes charset from MIME-Type if existing, example: text/x-yaml; charset=ISO-8859-1
 		mimeType := strings.Split(*parsedTikaOutput.MimeType, ";")[0]
+		// text/x-web-markdown is not the official Mime type
+		// https://www.iana.org/assignments/media-types/media-types.xhtml
+		if mimeType == "text/x-web-markdown" {
+			mimeType = "text/markdown"
+		}
 		extractedFeatures["mimeType"] = mimeType
 	}
 	if parsedTikaOutput.Encoding != nil {

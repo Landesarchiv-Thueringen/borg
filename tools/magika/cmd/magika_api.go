@@ -124,6 +124,11 @@ func extractFeatures(data Data) map[string]interface{} {
 	if data.Result.Status == "ok" {
 		if data.Result.Value.Output.MimeType != "" {
 			features["mimeType"] = data.Result.Value.Output.MimeType
+			// image/jpeg2000 is not the official Mime type
+			// https://www.iana.org/assignments/media-types/media-types.xhtml
+			if features["mimeType"] == "image/jpeg2000" {
+				features["mimeType"] = "image/jp2"
+			}
 		}
 		features["isText"] = data.Result.Value.Output.IsText
 	}
