@@ -2,6 +2,10 @@
 
 ## Next
 
+- 
+
+## 1.4.0
+
 - Feature: Integration Formaterkennungswerkzeug Magika v0.6.0
 - Fix: DROID-Fehler bei nicht erkannten Format
 - Fix: Filter-Chips können ausgewählt werden
