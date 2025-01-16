@@ -6,6 +6,7 @@
 - Fix: DROID-Fehler bei nicht erkannten Format
 - Fix: Filter-Chips können ausgewählt werden
 - Fix: HTML-Attribut `lang`
+- Fix: Darstellung boolescher Werte in Dateiübersicht
 - Intern: Konfliktauflösung Formatversion
 - Intern: Angular-Update auf Version 19
 - Intern: Unterstützung für verschiedene Typen extrahierter Werte
