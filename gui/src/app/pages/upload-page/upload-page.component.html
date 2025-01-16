@@ -11,13 +11,17 @@
         <!-- file name column -->
         <ng-container matColumnDef="filename">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Dateiname</mat-header-cell>
-          <mat-cell *matCellDef="let file">{{ file.filename }}</mat-cell>
+          <mat-cell *matCellDef="let file">
+            <span [innerHTML]="file.filename | breakOpportunities"></span>
+          </mat-cell>
         </ng-container>
 
         <!-- path column -->
         <ng-container matColumnDef="path">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Pfad</mat-header-cell>
-          <mat-cell *matCellDef="let file">{{ file.path }}</mat-cell>
+          <mat-cell *matCellDef="let file">
+            <span [innerHTML]="file.path | breakOpportunities"></span>
+          </mat-cell>
         </ng-container>
 
         <!-- file size column -->

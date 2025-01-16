@@ -7,6 +7,8 @@
 - Fix: Filter-Chips können ausgewählt werden
 - Fix: HTML-Attribut `lang`
 - Fix: Darstellung boolescher Werte in Dateiübersicht
+- Fix: Ersetzung falscher MIME-Types für Tika und Magika
+- Fix: Darstellungsfehler bei langen Dateinamen
 - Intern: Konfliktauflösung Formatversion
 - Intern: Angular-Update auf Version 19
 - Intern: Unterstützung für verschiedene Typen extrahierter Werte

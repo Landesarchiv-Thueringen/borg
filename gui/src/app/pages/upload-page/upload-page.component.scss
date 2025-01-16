@@ -1,5 +1,6 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding-top: 3em;
   padding-bottom: 3em;
   padding-left: 5em;
@@ -29,6 +30,10 @@
 
   .task-progress {
     width: 20em;
+  }
+
+  mat-cell {
+    overflow-wrap: break-word;
   }
 
   .progress-cell {

@@ -7,24 +7,26 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { BreakOpportunitiesPipe } from '../../features/file-analysis/pipes/break-opportunities.pipe';
 import { FileUpload } from '../../services/file-analysis.service';
 import { UploadService } from '../../services/upload.service';
 import { FileSizePipe } from '../../shared/file-size.pipe';
 
 @Component({
-    selector: 'app-upload-page',
-    templateUrl: './upload-page.component.html',
-    styleUrls: ['./upload-page.component.scss'],
-    imports: [
-        FileSizePipe,
-        MatButtonModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatSortModule,
-        MatTableModule,
-    ]
+  selector: 'app-upload-page',
+  templateUrl: './upload-page.component.html',
+  styleUrls: ['./upload-page.component.scss'],
+  imports: [
+    BreakOpportunitiesPipe,
+    FileSizePipe,
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatTableModule,
+  ],
 })
 export class UploadPageComponent implements AfterViewInit {
   private upload = inject(UploadService);
