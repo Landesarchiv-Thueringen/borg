@@ -140,6 +140,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 | ------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | DROID                     | wird immer ausgeführt                                                                                       |
 | Tika                      | wird immer ausgeführt                                                                                       |
+| Magika                    | wird immer ausgeführt                                                                                       |
 | JHOVE (PDF-Modul)         | PUID entspricht PDF Version 1.0 bis 1.7                                                                     |
 | JHOVE (HTML-Modul)        | PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) oder MIME-Type enthält html |
 | JHOVE (TIFF-Modul)        | PUID entspricht TIFF oder MIME-Type enthält tiff                                                            |
