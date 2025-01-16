@@ -31,7 +31,7 @@ tools:
           defaultValue: 0.9
 
   - toolName: "Magika"
-    toolVersion: "2.9.2"
+    toolVersion: "0.6.0"
     endpoint: "http://magika/identify-file-format"
     features:
       - key: "mimeType"

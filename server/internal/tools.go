@@ -11,9 +11,6 @@ import (
 
 type ToolResult struct {
 	ToolName string `json:"toolName"`
-	// ToolType is the kind of tool. Possible values are "identification" and
-	// "validation".
-	ToolType string `json:"toolType"`
 	// ToolVersion is the version number of the utilized tool as by the tool's
 	// own versioning scheme.
 	ToolVersion string `json:"toolVersion"`
@@ -41,7 +38,10 @@ type toolResponse struct {
 func RunIdentificationTools(filename string) []ToolResult {
 	var responseChannels []chan ToolResult
 	// for every identification tool
-	for _, tool := range serverConfig.FormatIdentificationTools {
+	for _, tool := range serverConfig.Tools {
+		if len(tool.ToolTrigger) > 0 {
+			continue
+		}
 		rc := make(chan ToolResult)
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
@@ -50,7 +50,6 @@ func RunIdentificationTools(filename string) []ToolResult {
 			rc <- ToolResult{
 				ToolName:     tool.ToolName,
 				ToolVersion:  tool.ToolVersion,
-				ToolType:     "identification",
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
 				Features:     response.Features,
@@ -71,7 +70,10 @@ func RunIdentificationTools(filename string) []ToolResult {
 func RunValidationTools(filename string, identificationResults []ToolResult) []ToolResult {
 	var responseChannels []chan ToolResult
 	// for every validation tool
-	for _, tool := range serverConfig.FormatValidationTools {
+	for _, tool := range serverConfig.Tools {
+		if len(tool.ToolTrigger) == 0 {
+			continue
+		}
 		// for every possible trigger of current validation tool
 		for _, trigger := range tool.ToolTrigger {
 			if checkToolTrigger(trigger, identificationResults) {
@@ -83,7 +85,6 @@ func RunValidationTools(filename string, identificationResults []ToolResult) []T
 					rc <- ToolResult{
 						ToolName:     tool.ToolName,
 						ToolVersion:  tool.ToolVersion,
-						ToolType:     "validation",
 						ToolOutput:   response.ToolOutput,
 						OutputFormat: response.OutputFormat,
 						Features:     response.Features,

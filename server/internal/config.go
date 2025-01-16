@@ -24,19 +24,12 @@ type FeatureConfig struct {
 	Confidence ConfidenceConfig `yaml:"confidence"`
 }
 
-type FormatIdentificationTool struct {
-	ToolName    string          `yaml:"toolName"`
-	ToolVersion string          `yaml:"toolVersion"`
-	Endpoint    string          `yaml:"endpoint"`
-	Features    []FeatureConfig `yaml:"features"`
-}
-
 type ToolTrigger struct {
 	Feature string `yaml:"feature"`
 	RegEx   string `yaml:"regEx"`
 }
 
-type FormatValidationTool struct {
+type ToolConfig struct {
 	ToolName    string          `yaml:"toolName"`
 	ToolVersion string          `yaml:"toolVersion"`
 	Endpoint    string          `yaml:"endpoint"`
@@ -45,8 +38,7 @@ type FormatValidationTool struct {
 }
 
 type ServerConfig struct {
-	FormatIdentificationTools []FormatIdentificationTool `yaml:"formatIdentificationTools"`
-	FormatValidationTools     []FormatValidationTool     `yaml:"formatValidationTools"`
+	Tools []ToolConfig `yaml:"tools"`
 }
 
 func ParseConfig() ServerConfig {

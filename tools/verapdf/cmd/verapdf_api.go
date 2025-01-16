@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -124,9 +123,8 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 		Features:     extractedFeatures,
 	}
 	if len(veraPDFOutput.Report.Jobs) > 0 {
-		extractedFeatures["valid"] = strconv.FormatBool(
-			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant,
-		)
+		extractedFeatures["valid"] =
+			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant
 	}
 	context.JSON(http.StatusOK, response)
 }

@@ -75,12 +75,7 @@ func AccumulateFeatures(results []ToolResult) map[string][]FeatureValue {
 }
 
 func getFeatureConfig(toolName string) []FeatureConfig {
-	for _, tool := range serverConfig.FormatIdentificationTools {
-		if tool.ToolName == toolName {
-			return tool.Features
-		}
-	}
-	for _, tool := range serverConfig.FormatValidationTools {
+	for _, tool := range serverConfig.Tools {
 		if tool.ToolName == toolName {
 			return tool.Features
 		}
