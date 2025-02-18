@@ -2,6 +2,7 @@
 
 ## Next
 
+- Feature: Version in Titelleiste und "Über Borg"-Dialog
 - Fix: Antwort auf `/api/version`
 
 ## 1.4.0

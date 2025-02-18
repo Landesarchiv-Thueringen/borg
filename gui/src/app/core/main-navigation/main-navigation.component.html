@@ -6,5 +6,8 @@
     </a>
     <a mat-button routerLink="auswahl" [routerLinkActive]="['active']"> Datei-Auswahl </a>
     <a mat-button routerLink="auswertung" [routerLinkActive]="['active']"> Auswertung </a>
+    @if (appVersion(); as version) {
+      <button mat-button class="right" (click)="openAboutDialog()">v{{ version }}</button>
+    }
   </mat-toolbar-row>
 </mat-toolbar>

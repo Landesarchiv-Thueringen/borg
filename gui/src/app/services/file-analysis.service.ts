@@ -18,7 +18,6 @@ export interface FileUpload {
 export class FileAnalysisService {
   private httpClient = inject(HttpClient);
 
-
   analyzeFile(file: File): Observable<HttpEvent<FileAnalysis>> {
     const formData = new FormData();
     formData.append('file', file);
