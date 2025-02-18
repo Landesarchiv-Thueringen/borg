@@ -2,7 +2,7 @@
 
 ## Next
 
-- 
+- Fix: Antwort auf `/api/version`
 
 ## 1.4.0
 
