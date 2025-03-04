@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"lath/borg/internal"
 	"net/http"
 	"os"
@@ -32,6 +33,7 @@ const defaultResponse = "borg server is running"
 const storePath = "/borg/file-store"
 
 func main() {
+	fmt.Println(defaultResponse)
 	router := gin.Default()
 	router.MaxMultipartMemory = 1000 << 20 // 1 GiB
 	router.ForwardedByClientIP = true
