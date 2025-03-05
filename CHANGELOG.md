@@ -4,6 +4,7 @@
 
 - Feature: Version in Titelleiste und "Über Borg"-Dialog
 - Fix: Antwort auf `/api/version`
+- Fix: Schreibfehler in angezeigten Nachrichten
 
 ## 1.4.0
 
