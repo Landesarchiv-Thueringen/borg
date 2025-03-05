@@ -27,3 +27,6 @@
 
 # allow server config
 !config/server_config.yml
+
+# allow scripts
+!/scripts/*.sh

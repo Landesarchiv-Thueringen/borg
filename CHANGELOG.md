@@ -5,6 +5,7 @@
 - Feature: Version in Titelleiste und "Über Borg"-Dialog
 - Fix: Antwort auf `/api/version`
 - Fix: Schreibfehler in angezeigten Nachrichten
+- Intern: Skript für das Veröffentlichen von Docker-Images
 
 ## 1.4.0
 
