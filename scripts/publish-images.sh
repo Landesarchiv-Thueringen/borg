@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# Builds and publishes Docker images.
+#
+# Usage:
+#   - Populate your .env file, especially IMAGE_PREFIX and IMAGE_VERSION, and
+#     make sure GUI_CONFIGURATION has the desired value.
+#   - Generally, IMAGE_VERSION should be equal the git tag of the exact commit
+#     that is currently checked out. Alternatively, it can be a custom tag like
+#     "dev".
+#   - Run this script.
+
 set -e
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
