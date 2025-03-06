@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 1.4.1
 
 - Feature: Version in Titelleiste und "Über Borg"-Dialog
 - Fix: Antwort auf `/api/version`
