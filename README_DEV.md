@@ -52,3 +52,4 @@ go work use ./tools/new-tool
 - Update the `version` constant in server/cmd/server.go.
 - Push any changes to `main`.
 - Draft a new [release](https://github.com/Landesarchiv-Thueringen/borg/releases) on GitHub.
+  - Include the release's section of `CHANGELOG.md` as description.
