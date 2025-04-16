@@ -67,14 +67,14 @@ tools:
         - key: "formatName"
         - key: "formatVersion"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "wellFormed"
-                  value: true
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "wellFormed"
+                value: true
+              - feature: "valid"
+                value: true
 
   - id: "jhove_html"
     title: "JHOVE (HTML-Modul)"
@@ -100,14 +100,14 @@ tools:
         - key: "formatName"
         - key: "formatVersion"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "wellFormed"
-                  value: true
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "wellFormed"
+                value: true
+              - feature: "valid"
+                value: true
 
   - id: "jhove_tiff"
     title: "JHOVE (TIFF-Modul)"
@@ -126,14 +126,14 @@ tools:
         - key: "formatName"
         - key: "formatVersion"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "wellFormed"
-                  value: true
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "wellFormed"
+                value: true
+              - feature: "valid"
+                value: true
 
   - id: "jhove_jpeg"
     title: "JHOVE (JPEG-Modul)"
@@ -158,14 +158,14 @@ tools:
         - key: "formatName"
         - key: "formatVersion"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "wellFormed"
-                  value: true
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "wellFormed"
+                value: true
+              - feature: "valid"
+                value: true
 
   - id: "jhove_jpeg2000"
     title: "JHOVE (JPEG2000-Modul)"
@@ -184,14 +184,14 @@ tools:
         - key: "formatName"
         - key: "formatVersion"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "wellFormed"
-                  value: true
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "wellFormed"
+                value: true
+              - feature: "valid"
+                value: true
 
   - id: "verapdf_1a"
     title: "veraPDF (PDF/A-1a-Profil)"
@@ -207,12 +207,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "verapdf_1b"
     title: "veraPDF (PDF/A-1b-Profil)"
@@ -228,12 +228,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "verapdf_2a"
     title: "veraPDF (PDF/A-2a-Profil)"
@@ -249,12 +249,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "verapdf_2b"
     title: "veraPDF (PDF/A-2b-Profil)"
@@ -270,12 +270,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "verapdf_2u"
     title: "veraPDF (PDF/A-2u-Profil)"
@@ -291,12 +291,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "verapdf_ua"
     title: "veraPDF (PDF/UA-Profil)"
@@ -311,12 +311,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "odf"
     title: "ODF Validator"
@@ -329,12 +329,12 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true
 
   - id: "ooxml"
     title: "OOXML-Validator"
@@ -348,9 +348,9 @@ tools:
       features:
         - key: "valid"
       weight:
-        - default: 0.0
-        - conditional:
-            - value: 1.0
-              conditions:
-                - feature: "valid"
-                  value: true
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "valid"
+                value: true

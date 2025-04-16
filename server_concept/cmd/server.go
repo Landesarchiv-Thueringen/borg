@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"lath/borg/internal"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,13 +15,21 @@ const (
 	FILE_STORE_PATH  = "/borg/file-store"
 )
 
+var serverConfig internal.ServerConfig
+
 func main() {
+	log.Printf(DEFAULT_RESPONSE, VERSION)
+	initServer()
 	router := gin.Default()
 	router.MaxMultipartMemory = 5000 << 20 // 5 GiB
 	router.SetTrustedProxies([]string{})
 	router.GET("api", getDefaultResponse)
 	router.GET("api/version", getVersion)
 	router.Run()
+}
+
+func initServer() {
+	serverConfig = internal.ParseConfig()
 }
 
 func getDefaultResponse(c *gin.Context) {
