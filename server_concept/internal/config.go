@@ -3,6 +3,7 @@ package internal
 import (
 	"log"
 	"os"
+	"regexp"
 
 	"gopkg.in/yaml.v3"
 )
@@ -12,15 +13,44 @@ type ServerConfig struct {
 }
 
 type Tool struct {
-	Id         string        `yaml:"id"`
-	Title      string        `yaml:"title"`
-	Endpoint   string        `yaml:"endpoint"`
-	Trigger    []TriggerItem `yaml:"trigger"`
-	FeatureSet FeatureSet    `yaml:"featureSet"`
+	Id         string     `yaml:"id"`
+	Title      string     `yaml:"title"`
+	Endpoint   string     `yaml:"endpoint"`
+	Triggers   []Trigger  `yaml:"triggers"`
+	FeatureSet FeatureSet `yaml:"featureSet"`
 }
 
-type TriggerItem struct {
+func (t *Tool) IsTriggered(toolResults []ToolResult) bool {
+	for _, t := range t.Triggers {
+		if t.IsTriggered(toolResults) {
+			return true
+		}
+	}
+	return false
+}
+
+type Trigger struct {
 	Conditions []Condition `yaml:"conditions"`
+}
+
+func (t *Trigger) IsTriggered(toolResults []ToolResult) bool {
+	for _, condition := range t.Conditions {
+		isFulFilled := false
+		for _, toolResult := range toolResults {
+			f, ok := toolResult.Features[condition.Feature]
+			if !ok {
+				continue
+			}
+			if condition.IsFulfilled(f) {
+				isFulFilled = true
+				break
+			}
+		}
+		if !isFulFilled {
+			return false
+		}
+	}
+	return true
 }
 
 type FeatureSet struct {
@@ -49,7 +79,23 @@ type Condition struct {
 	Value   interface{} `yaml:"value"`
 }
 
-func ParseConfig() ServerConfig {
+func (c *Condition) IsFulfilled(value interface{}) bool {
+	if c.RegEx != nil {
+		regEx := regexp.MustCompile(*c.RegEx)
+		v, ok := value.(string)
+		if !ok {
+			log.Fatal("regular expression condition requires a string-typed feature value")
+		}
+		return regEx.MatchString(v)
+	} else if c.Value != nil {
+		return value == c.Value
+	}
+	return false
+}
+
+var serverConfig ServerConfig
+
+func ParseConfig() {
 	bytes, err := os.ReadFile("config/server_config.yml")
 	if err != nil {
 		log.Fatal("server config not readable\n" + err.Error())
@@ -59,5 +105,5 @@ func ParseConfig() ServerConfig {
 	if err != nil {
 		log.Fatal("server config couldn't be parsed\n" + err.Error())
 	}
-	return config
+	serverConfig = config
 }

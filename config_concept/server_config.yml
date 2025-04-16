@@ -35,7 +35,7 @@ tools:
   - id: "jhove_pdf"
     title: "JHOVE (PDF-Modul)"
     endpoint: "http://jhove/validate/pdf"
-    trigger:
+    triggers:
       - conditions:
           - feature: "puid"
             regEx: "^fmt/14$" # PDF 1.0
@@ -79,7 +79,7 @@ tools:
   - id: "jhove_html"
     title: "JHOVE (HTML-Modul)"
     endpoint: "http://jhove/validate/html"
-    trigger:
+    triggers:
       - conditions:
           - feature: "mimeType"
             regEx: "html"
@@ -112,7 +112,7 @@ tools:
   - id: "jhove_tiff"
     title: "JHOVE (TIFF-Modul)"
     endpoint: "http://jhove/validate/tiff"
-    trigger:
+    triggers:
       - conditions:
           - feature: "mimeType"
             regEx: "tiff"
@@ -138,7 +138,7 @@ tools:
   - id: "jhove_jpeg"
     title: "JHOVE (JPEG-Modul)"
     endpoint: "http://jhove/validate/jpeg"
-    trigger:
+    triggers:
       - conditions:
           - feature: "mimeType"
             regEx: "jpeg$"
@@ -170,7 +170,7 @@ tools:
   - id: "jhove_jpeg2000"
     title: "JHOVE (JPEG2000-Modul)"
     endpoint: "http://jhove/validate/jpeg2000"
-    trigger:
+    triggers:
       - conditions:
           - feature: "mimeType"
             regEx: "jp2$"
@@ -196,7 +196,7 @@ tools:
   - id: "verapdf_1a"
     title: "veraPDF (PDF/A-1a-Profil)"
     endpoint: "http://verapdf/validate/1a"
-    trigger:
+    triggers:
       - conditions:
           - feature: "formatVersion"
             regEx: "PDF/A-1a"
@@ -217,7 +217,7 @@ tools:
   - id: "verapdf_1b"
     title: "veraPDF (PDF/A-1b-Profil)"
     endpoint: "http://verapdf/validate/1b"
-    trigger:
+    triggers:
       - conditions:
           - feature: "formatVersion"
             regEx: "PDF/A-1b"
@@ -238,7 +238,7 @@ tools:
   - id: "verapdf_2a"
     title: "veraPDF (PDF/A-2a-Profil)"
     endpoint: "http://verapdf/validate/2a"
-    trigger:
+    triggers:
       - conditions:
           - feature: "formatVersion"
             regEx: "PDF/A-2a"
@@ -259,7 +259,7 @@ tools:
   - id: "verapdf_2b"
     title: "veraPDF (PDF/A-2b-Profil)"
     endpoint: "http://verapdf/validate/2b"
-    trigger:
+    triggers:
       - conditions:
           - feature: "formatVersion"
             regEx: "PDF/A-2b"
@@ -280,7 +280,7 @@ tools:
   - id: "verapdf_2u"
     title: "veraPDF (PDF/A-2u-Profil)"
     endpoint: "http://verapdf/validate/2u"
-    trigger:
+    triggers:
       - conditions:
           - feature: "formatVersion"
             regEx: "PDF/A-2u"
@@ -302,7 +302,7 @@ tools:
     title: "veraPDF (PDF/UA-Profil)"
     toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/ua1"
-    trigger:
+    triggers:
       - conditions:
           - # PDF/UA has no entry in the PRONOM database
             feature: "mimeType"
@@ -321,7 +321,7 @@ tools:
   - id: "odf"
     title: "ODF Validator"
     endpoint: "http://odf-validator/validate"
-    trigger:
+    triggers:
       - conditions:
           - feature: "mimeType"
             regEx: "^application/vnd\\.oasis\\.opendocument\\."
@@ -340,7 +340,7 @@ tools:
     title: "OOXML-Validator"
     toolVersion: "2.1.5"
     endpoint: "http://ooxml-validator/validate"
-    trigger:
+    triggers:
       - conditions:
           - feature: "mimeType"
             regEx: "^application/vnd\\.openxmlformats-officedocument\\."
