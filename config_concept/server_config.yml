@@ -1,0 +1,356 @@
+tools:
+  - id: "droid"
+    title: "DROID"
+    endpoint: "http://droid/identify-file-format"
+    featureSet:
+      features:
+        - key: "puid"
+        - key: "mimeType"
+        - key: "formatName"
+        - key: "formatVersion"
+      weight:
+        default: 0.75
+
+  - id: "tika"
+    titles: "Tika"
+    endpoint: "http://tika/extract-metadata"
+    featureSet:
+      features:
+        - key: "mimeType"
+        - key: "encoding"
+        - key: "formatVersion"
+      weight:
+        default: 0.75
+
+  - id: "magika"
+    title: "Magika"
+    endpoint: "http://magika/identify-file-format"
+    featureSet:
+      features:
+        - key: "mimeType"
+        - key: "isText"
+      weight:
+        providedByTool: true
+
+  - id: "jhove_pdf"
+    title: "JHOVE (PDF-Modul)"
+    endpoint: "http://jhove/validate/pdf"
+    trigger:
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/14$" # PDF 1.0
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/15$" # PDF 1.1
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/16$" # PDF 1.2
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/17$" # PDF 1.3
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/18$" # PDF 1.4
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/19$" # PDF 1.5
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/20$" # PDF 1.6
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/276$" # PDF 1.7
+    featureSet:
+      features:
+        - key: "wellFormed"
+        - key: "valid"
+        - key: "formatName"
+        - key: "formatVersion"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "wellFormed"
+                  value: true
+                - feature: "valid"
+                  value: true
+
+  - id: "jhove_html"
+    title: "JHOVE (HTML-Modul)"
+    endpoint: "http://jhove/validate/html"
+    trigger:
+      - conditions:
+          - feature: "mimeType"
+            regEx: "html"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/98$" # HTML 3.2
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/99$" # HTML 4.0
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/100$" # HTML 4.01
+      # 06.11.2023: JHOVE HTML-Hul doesn't support HTML 5
+    featureSet:
+      features:
+        - key: "wellFormed"
+        - key: "valid"
+        - key: "formatName"
+        - key: "formatVersion"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "wellFormed"
+                  value: true
+                - feature: "valid"
+                  value: true
+
+  - id: "jhove_tiff"
+    title: "JHOVE (TIFF-Modul)"
+    endpoint: "http://jhove/validate/tiff"
+    trigger:
+      - conditions:
+          - feature: "mimeType"
+            regEx: "tiff"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/153$" # TIFF
+    featureSet:
+      features:
+        - key: "wellFormed"
+        - key: "valid"
+        - key: "formatName"
+        - key: "formatVersion"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "wellFormed"
+                  value: true
+                - feature: "valid"
+                  value: true
+
+  - id: "jhove_jpeg"
+    title: "JHOVE (JPEG-Modul)"
+    endpoint: "http://jhove/validate/jpeg"
+    trigger:
+      - conditions:
+          - feature: "mimeType"
+            regEx: "jpeg$"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/42$" # JPEG File Interchange Format 1.00
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/43$" # JPEG File Interchange Format 1.01
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/44$" # JPEG File Interchange Format 1.02
+    featureSet:
+      features:
+        - key: "wellFormed"
+        - key: "valid"
+        - key: "formatName"
+        - key: "formatVersion"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "wellFormed"
+                  value: true
+                - feature: "valid"
+                  value: true
+
+  - id: "jhove_jpeg2000"
+    title: "JHOVE (JPEG2000-Modul)"
+    endpoint: "http://jhove/validate/jpeg2000"
+    trigger:
+      - conditions:
+          - feature: "mimeType"
+            regEx: "jp2$"
+      - conditions:
+          - feature: "puid"
+            regEx: "^x-fmt/392$" # JP2 (JPEG 2000 part 1)
+    featureSet:
+      features:
+        - key: "wellFormed"
+        - key: "valid"
+        - key: "formatName"
+        - key: "formatVersion"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "wellFormed"
+                  value: true
+                - feature: "valid"
+                  value: true
+
+  - id: "verapdf_1a"
+    title: "veraPDF (PDF/A-1a-Profil)"
+    endpoint: "http://verapdf/validate/1a"
+    trigger:
+      - conditions:
+          - feature: "formatVersion"
+            regEx: "PDF/A-1a"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/95$" # PDF/A-1a
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "verapdf_1b"
+    title: "veraPDF (PDF/A-1b-Profil)"
+    endpoint: "http://verapdf/validate/1b"
+    trigger:
+      - conditions:
+          - feature: "formatVersion"
+            regEx: "PDF/A-1b"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/354$" # PDF/A-1b
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "verapdf_2a"
+    title: "veraPDF (PDF/A-2a-Profil)"
+    endpoint: "http://verapdf/validate/2a"
+    trigger:
+      - conditions:
+          - feature: "formatVersion"
+            regEx: "PDF/A-2a"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/476$" # PDF/A-2a
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "verapdf_2b"
+    title: "veraPDF (PDF/A-2b-Profil)"
+    endpoint: "http://verapdf/validate/2b"
+    trigger:
+      - conditions:
+          - feature: "formatVersion"
+            regEx: "PDF/A-2b"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/477$" # PDF/A-2b
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "verapdf_2u"
+    title: "veraPDF (PDF/A-2u-Profil)"
+    endpoint: "http://verapdf/validate/2u"
+    trigger:
+      - conditions:
+          - feature: "formatVersion"
+            regEx: "PDF/A-2u"
+      - conditions:
+          - feature: "puid"
+            regEx: "^fmt/478$" # PDF/A-2u
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "verapdf_ua"
+    title: "veraPDF (PDF/UA-Profil)"
+    toolVersion: "1.26.2"
+    endpoint: "http://verapdf/validate/ua1"
+    trigger:
+      - conditions:
+          - # PDF/UA has no entry in the PRONOM database
+            feature: "mimeType"
+            regEx: "pdf"
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "odf"
+    title: "ODF Validator"
+    endpoint: "http://odf-validator/validate"
+    trigger:
+      - conditions:
+          - feature: "mimeType"
+            regEx: "^application/vnd\\.oasis\\.opendocument\\."
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
+
+  - id: "ooxml"
+    title: "OOXML-Validator"
+    toolVersion: "2.1.5"
+    endpoint: "http://ooxml-validator/validate"
+    trigger:
+      - conditions:
+          - feature: "mimeType"
+            regEx: "^application/vnd\\.openxmlformats-officedocument\\."
+    featureSet:
+      features:
+        - key: "valid"
+      weight:
+        - default: 0.0
+        - conditional:
+            - value: 1.0
+              conditions:
+                - feature: "valid"
+                  value: true
