@@ -10,6 +10,11 @@ tools:
         - key: "formatVersion"
       weight:
         default: 0.75
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
 
   - id: "tika"
     titles: "Tika"
@@ -21,6 +26,10 @@ tools:
         - key: "formatVersion"
       weight:
         default: 0.75
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
 
   - id: "magika"
     title: "Magika"
@@ -31,6 +40,9 @@ tools:
         - key: "isText"
       weight:
         providedByTool: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "jhove_pdf"
     title: "JHOVE (PDF-Modul)"
@@ -66,6 +78,7 @@ tools:
         - key: "valid"
         - key: "formatName"
         - key: "formatVersion"
+        - key: "mimeType"
       weight:
         default: 0.0
         conditional:
@@ -75,6 +88,12 @@ tools:
                 value: true
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "wellFormed"
+        - feature: "valid"
 
   - id: "jhove_html"
     title: "JHOVE (HTML-Modul)"
@@ -99,6 +118,7 @@ tools:
         - key: "valid"
         - key: "formatName"
         - key: "formatVersion"
+        - key: "mimeType"
       weight:
         default: 0.0
         conditional:
@@ -108,6 +128,12 @@ tools:
                 value: true
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "wellFormed"
+        - feature: "valid"
 
   - id: "jhove_tiff"
     title: "JHOVE (TIFF-Modul)"
@@ -125,6 +151,7 @@ tools:
         - key: "valid"
         - key: "formatName"
         - key: "formatVersion"
+        - key: "mimeType"
       weight:
         default: 0.0
         conditional:
@@ -134,6 +161,12 @@ tools:
                 value: true
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "wellFormed"
+        - feature: "valid"
 
   - id: "jhove_jpeg"
     title: "JHOVE (JPEG-Modul)"
@@ -157,6 +190,7 @@ tools:
         - key: "valid"
         - key: "formatName"
         - key: "formatVersion"
+        - key: "mimeType"
       weight:
         default: 0.0
         conditional:
@@ -166,6 +200,12 @@ tools:
                 value: true
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "wellFormed"
+        - feature: "valid"
 
   - id: "jhove_jpeg2000"
     title: "JHOVE (JPEG2000-Modul)"
@@ -183,6 +223,7 @@ tools:
         - key: "valid"
         - key: "formatName"
         - key: "formatVersion"
+        - key: "mimeType"
       weight:
         default: 0.0
         conditional:
@@ -192,6 +233,12 @@ tools:
                 value: true
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "wellFormed"
+        - feature: "valid"
 
   - id: "verapdf_1a"
     title: "veraPDF (PDF/A-1a-Profil)"
@@ -206,6 +253,9 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "puid"
+        - key: "mimeType"
+        - feature: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -213,6 +263,12 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "valid"
 
   - id: "verapdf_1b"
     title: "veraPDF (PDF/A-1b-Profil)"
@@ -227,6 +283,9 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "puid"
+        - key: "mimeType"
+        - feature: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -234,6 +293,12 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "valid"
 
   - id: "verapdf_2a"
     title: "veraPDF (PDF/A-2a-Profil)"
@@ -248,6 +313,9 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "puid"
+        - key: "mimeType"
+        - feature: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -255,6 +323,12 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "valid"
 
   - id: "verapdf_2b"
     title: "veraPDF (PDF/A-2b-Profil)"
@@ -269,6 +343,9 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "puid"
+        - key: "mimeType"
+        - feature: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -276,6 +353,12 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "valid"
 
   - id: "verapdf_2u"
     title: "veraPDF (PDF/A-2u-Profil)"
@@ -290,6 +373,9 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "puid"
+        - key: "mimeType"
+        - feature: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -297,6 +383,12 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "valid"
 
   - id: "verapdf_ua"
     title: "veraPDF (PDF/UA-Profil)"
@@ -310,6 +402,9 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "puid"
+        - key: "mimeType"
+        - feature: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -317,6 +412,12 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "puid"
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "formatVersion"
+        - feature: "valid"
 
   - id: "odf"
     title: "ODF Validator"
