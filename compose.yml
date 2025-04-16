@@ -32,6 +32,23 @@ services:
       - PORT=80
       - GIN_MODE=${GIN_MODE}
 
+  server_concept:
+    restart: unless-stopped
+    image: ${IMAGE_PREFIX}/server_concept:${IMAGE_VERSION}
+    build:
+      context: ./server_concept
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "file-store:/borg/file-store"
+      - "./config_concept:/borg/config"
+    environment:
+      - PORT=80
+      - GIN_MODE=${GIN_MODE}
+    ports:
+      - 8081:80
+
   droid:
     restart: unless-stopped
     image: ${IMAGE_PREFIX}/droid:${IMAGE_VERSION}
