@@ -9,18 +9,18 @@ import (
 )
 
 type ServerConfig struct {
-	Tools []Tool `yaml:"tools"`
+	Tools []ToolConfig `yaml:"tools"`
 }
 
-type Tool struct {
-	Id         string     `yaml:"id"`
-	Title      string     `yaml:"title"`
-	Endpoint   string     `yaml:"endpoint"`
-	Triggers   []Trigger  `yaml:"triggers"`
-	FeatureSet FeatureSet `yaml:"featureSet"`
+type ToolConfig struct {
+	Id         string           `yaml:"id"`
+	Title      string           `yaml:"title"`
+	Endpoint   string           `yaml:"endpoint"`
+	Triggers   []Trigger        `yaml:"triggers"`
+	FeatureSet FeatureSetConfig `yaml:"featureSet"`
 }
 
-func (t *Tool) IsTriggered(toolResults map[string]ToolResult) bool {
+func (t *ToolConfig) IsTriggered(toolResults map[string]ToolResult) bool {
 	for _, t := range t.Triggers {
 		if t.IsTriggered(toolResults) {
 			return true
@@ -53,15 +53,15 @@ func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) bool {
 	return true
 }
 
-type FeatureSet struct {
+type FeatureSetConfig struct {
 	Features        []Feature        `yaml:"features"`
 	Weight          Weight           `yaml:"weight"`
 	MergeConditions []MergeCondition `yaml:"mergeConditions"`
 }
 
-func (s *FeatureSet) AreMergeable(tr1 ToolResult, tr2 ToolResult) bool {
+func (s *FeatureSetConfig) AreMergeable(fs1 map[string]interface{}, fs2 map[string]interface{}) bool {
 	for _, condition := range s.MergeConditions {
-		if !condition.IsFulfilled(tr1, tr2) {
+		if !condition.IsFulfilled(fs1, fs2) {
 			return false
 		}
 	}
@@ -108,9 +108,9 @@ type MergeCondition struct {
 	ValueRegEx *string `yaml:"valueRegEx"`
 }
 
-func (c *MergeCondition) IsFulfilled(tr1 ToolResult, tr2 ToolResult) bool {
-	fv1, ok1 := tr1.Features[c.Feature]
-	fv2, ok2 := tr2.Features[c.Feature]
+func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]interface{}) bool {
+	fv1, ok1 := fs1[c.Feature]
+	fv2, ok2 := fs2[c.Feature]
 	// if not both feature sets include the feature of the merge condition
 	if !ok1 || !ok2 {
 		// merge is possible

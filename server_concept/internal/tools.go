@@ -24,7 +24,7 @@ type ToolResult struct {
 	// Score is the from the tool supplied confidence of the result.
 	// Score *float64 `json:"score"`
 	// Error is an error emitted from the tool in case of failure.
-	Error string `json:"error"`
+	Error *string `json:"error"`
 }
 
 func RunIdentificationTools(filename string) map[string]ToolResult {
@@ -104,7 +104,8 @@ func getToolResult(
 	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		log.Println(err)
-		return ToolResult{Error: fmt.Sprintf("error creating request: %s", endpoint)}
+		errorMessage := fmt.Sprintf("error creating request: %s", endpoint)
+		return ToolResult{Error: &errorMessage}
 	}
 	// add file path URL parameter
 	query := req.URL.Query()
@@ -114,7 +115,8 @@ func getToolResult(
 	response, err := http.Get(req.URL.String())
 	if err != nil {
 		log.Println(err)
-		return ToolResult{Error: fmt.Sprintf("error requesting: %s", req.URL.String())}
+		errorMessage := fmt.Sprintf("error requesting: %s", req.URL.String())
+		return ToolResult{Error: &errorMessage}
 	}
 	// process request response
 	return processToolResponse(response)
@@ -122,8 +124,9 @@ func getToolResult(
 
 func processToolResponse(response *http.Response) ToolResult {
 	if response.StatusCode != http.StatusOK {
+		errorMessage := fmt.Sprintf("tool request error: %d", response.StatusCode)
 		toolResponse := ToolResult{
-			Error: fmt.Sprintf("tool request error: %d", response.StatusCode),
+			Error: &errorMessage,
 		}
 		bytes, err := httputil.DumpResponse(response, true)
 		if err == nil {
@@ -139,7 +142,7 @@ func processToolResponse(response *http.Response) ToolResult {
 		errorMessage := "error parsing tool response"
 		log.Println(errorMessage)
 		log.Println(err)
-		return ToolResult{Error: errorMessage}
+		return ToolResult{Error: &errorMessage}
 	}
 	return result
 }

@@ -71,6 +71,9 @@ func analyzeFile(c *gin.Context) {
 	for k, v := range triggeredResults {
 		toolResults[k] = v
 	}
-	internal.MergeFeatureSets(toolResults)
-	c.JSON(http.StatusOK, toolResults)
+	mergedSets := internal.MergeFeatureSets(toolResults)
+	for _, m := range mergedSets {
+		log.Println(m.GetMergedToolResults())
+	}
+	c.Status(http.StatusOK)
 }
