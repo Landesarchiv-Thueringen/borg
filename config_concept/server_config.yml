@@ -448,6 +448,8 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "mimetype"
+          providedByTrigger: true
       weight:
         default: 0.0
         conditional:

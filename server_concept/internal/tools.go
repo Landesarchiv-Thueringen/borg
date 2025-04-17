@@ -9,7 +9,8 @@ import (
 )
 
 type ToolResult struct {
-	ToolName string `json:"toolName"`
+	Id    string `json:"id"`
+	Title string `json:"title"`
 	// ToolVersion is the version number of the utilized tool as by the tool's
 	// own versioning scheme.
 	// ToolVersion string `json:"toolVersion"`
@@ -26,7 +27,7 @@ type ToolResult struct {
 	Error string `json:"error"`
 }
 
-func RunIdentificationTools(filename string) []ToolResult {
+func RunIdentificationTools(filename string) map[string]ToolResult {
 	var responseChannels []chan ToolResult
 	// for every identification tool
 	for _, tool := range serverConfig.Tools {
@@ -39,7 +40,8 @@ func RunIdentificationTools(filename string) []ToolResult {
 		go func() {
 			response := getToolResult(tool.Endpoint, filename)
 			rc <- ToolResult{
-				ToolName: tool.Title,
+				Id:    tool.Id,
+				Title: tool.Title,
 				// ToolVersion:  tool.ToolVersion,
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
@@ -50,19 +52,22 @@ func RunIdentificationTools(filename string) []ToolResult {
 		}()
 	}
 	// gather all tool responses
-	var results []ToolResult
+	results := make(map[string]ToolResult)
 	for _, rc := range responseChannels {
 		toolResponse := <-rc
-		results = append(results, toolResponse)
+		results[toolResponse.Id] = toolResponse
 	}
 	return results
 }
 
-func RunTriggeredTools(filename string, identResults []ToolResult) []ToolResult {
+func RunTriggeredTools(
+	filename string,
+	identificationResults map[string]ToolResult,
+) map[string]ToolResult {
 	var responseChannels []chan ToolResult
 	// for every identification tool
 	for _, tool := range serverConfig.Tools {
-		if len(tool.Triggers) == 0 || !tool.IsTriggered(identResults) {
+		if len(tool.Triggers) == 0 || !tool.IsTriggered(identificationResults) {
 			continue
 		}
 		rc := make(chan ToolResult)
@@ -71,7 +76,8 @@ func RunTriggeredTools(filename string, identResults []ToolResult) []ToolResult 
 		go func() {
 			response := getToolResult(tool.Endpoint, filename)
 			rc <- ToolResult{
-				ToolName: tool.Title,
+				Id:    tool.Id,
+				Title: tool.Title,
 				// ToolVersion:  tool.ToolVersion,
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
@@ -82,10 +88,10 @@ func RunTriggeredTools(filename string, identResults []ToolResult) []ToolResult 
 		}()
 	}
 	// gather all tool responses
-	var results []ToolResult
+	results := make(map[string]ToolResult)
 	for _, rc := range responseChannels {
 		toolResponse := <-rc
-		results = append(results, toolResponse)
+		results[toolResponse.Id] = toolResponse
 	}
 	return results
 }

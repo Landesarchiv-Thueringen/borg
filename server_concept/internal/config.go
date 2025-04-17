@@ -20,7 +20,7 @@ type Tool struct {
 	FeatureSet FeatureSet `yaml:"featureSet"`
 }
 
-func (t *Tool) IsTriggered(toolResults []ToolResult) bool {
+func (t *Tool) IsTriggered(toolResults map[string]ToolResult) bool {
 	for _, t := range t.Triggers {
 		if t.IsTriggered(toolResults) {
 			return true
@@ -30,10 +30,10 @@ func (t *Tool) IsTriggered(toolResults []ToolResult) bool {
 }
 
 type Trigger struct {
-	Conditions []Condition `yaml:"conditions"`
+	Conditions []FeatureCondition `yaml:"conditions"`
 }
 
-func (t *Trigger) IsTriggered(toolResults []ToolResult) bool {
+func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) bool {
 	for _, condition := range t.Conditions {
 		isFulFilled := false
 		for _, toolResult := range toolResults {
@@ -54,8 +54,18 @@ func (t *Trigger) IsTriggered(toolResults []ToolResult) bool {
 }
 
 type FeatureSet struct {
-	Features []Feature `yaml:"features"`
-	Weight   Weight    `yaml:"weight"`
+	Features        []Feature        `yaml:"features"`
+	Weight          Weight           `yaml:"weight"`
+	MergeConditions []MergeCondition `yaml:"mergeConditions"`
+}
+
+func (s *FeatureSet) AreMergeable(tr1 ToolResult, tr2 ToolResult) bool {
+	for _, condition := range s.MergeConditions {
+		if !condition.IsFulfilled(tr1, tr2) {
+			return false
+		}
+	}
+	return true
 }
 
 type Feature struct {
@@ -69,17 +79,17 @@ type Weight struct {
 }
 
 type ConditionalWeight struct {
-	Value      float64     `yaml:"value"`
-	Conditions []Condition `yaml:"conditions"`
+	Value      float64            `yaml:"value"`
+	Conditions []FeatureCondition `yaml:"conditions"`
 }
 
-type Condition struct {
+type FeatureCondition struct {
 	Feature string      `yaml:"feature"`
 	RegEx   *string     `yaml:"regEx"`
 	Value   interface{} `yaml:"value"`
 }
 
-func (c *Condition) IsFulfilled(value interface{}) bool {
+func (c *FeatureCondition) IsFulfilled(value interface{}) bool {
 	if c.RegEx != nil {
 		regEx := regexp.MustCompile(*c.RegEx)
 		v, ok := value.(string)
@@ -91,6 +101,35 @@ func (c *Condition) IsFulfilled(value interface{}) bool {
 		return value == c.Value
 	}
 	return false
+}
+
+type MergeCondition struct {
+	Feature    string  `yaml:"feature"`
+	ValueRegEx *string `yaml:"valueRegEx"`
+}
+
+func (c *MergeCondition) IsFulfilled(tr1 ToolResult, tr2 ToolResult) bool {
+	fv1, ok1 := tr1.Features[c.Feature]
+	fv2, ok2 := tr2.Features[c.Feature]
+	// if not both feature sets include the feature of the merge condition
+	if !ok1 || !ok2 {
+		// merge is possible
+		return true
+	}
+	// if value extraction regular expression is configured
+	if c.ValueRegEx != nil {
+		regEx := regexp.MustCompile(*c.ValueRegEx)
+		// extract comparable values from feature strings
+		s1, ok1 := fv1.(string)
+		s2, ok2 := fv2.(string)
+		if !ok1 || !ok2 {
+			log.Fatal("configuration faulty: used value extraction string on non string value")
+		}
+		// merge is possible if extracted values are equal
+		return regEx.FindString(s1) == regEx.FindString(s2)
+	}
+	// merge is possible if features are equal
+	return fv1 == fv2
 }
 
 var serverConfig ServerConfig

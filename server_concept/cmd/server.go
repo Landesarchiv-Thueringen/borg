@@ -62,8 +62,15 @@ func analyzeFile(c *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
-	identResults := internal.RunIdentificationTools(filename)
-	triggeredResults := internal.RunTriggeredTools(filename, identResults)
-	toolResults := append(identResults, triggeredResults...)
+	identificationResults := internal.RunIdentificationTools(filename)
+	triggeredResults := internal.RunTriggeredTools(filename, identificationResults)
+	toolResults := make(map[string]internal.ToolResult)
+	for k, v := range identificationResults {
+		toolResults[k] = v
+	}
+	for k, v := range triggeredResults {
+		toolResults[k] = v
+	}
+	internal.MergeFeatureSets(toolResults)
 	c.JSON(http.StatusOK, toolResults)
 }
