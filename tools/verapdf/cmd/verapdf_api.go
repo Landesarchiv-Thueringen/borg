@@ -98,10 +98,10 @@ func validateFile(context *gin.Context) {
 		return
 	}
 	veraPDFOutputString := string(veraPDFOutput)
-	processVeraPDFOutput(context, veraPDFOutputString)
+	processVeraPDFOutput(context, veraPDFOutputString, profile)
 }
 
-func processVeraPDFOutput(context *gin.Context, output string) {
+func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 	var veraPDFOutput VeraPDFOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&veraPDFOutput)
 	if err != nil {
@@ -125,6 +125,31 @@ func processVeraPDFOutput(context *gin.Context, output string) {
 	if len(veraPDFOutput.Report.Jobs) > 0 {
 		extractedFeatures["valid"] =
 			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant
+		switch profile {
+		case "1a":
+			extractedFeatures["puid"] = "fmt/95"
+			extractedFeatures["mimeType"] = "application/pdf"
+			extractedFeatures["formatVersion"] = "PDF/A-1a"
+		case "1b":
+			extractedFeatures["puid"] = "fmt/354"
+			extractedFeatures["mimeType"] = "application/pdf"
+			extractedFeatures["formatVersion"] = "PDF/A-1b"
+		case "2a":
+			extractedFeatures["puid"] = "fmt/476"
+			extractedFeatures["mimeType"] = "application/pdf"
+			extractedFeatures["formatVersion"] = "PDF/A-2a"
+		case "2b":
+			extractedFeatures["puid"] = "fmt/477"
+			extractedFeatures["mimeType"] = "application/pdf"
+			extractedFeatures["formatVersion"] = "PDF/A-2b"
+		case "2u":
+			extractedFeatures["puid"] = "fmt/478"
+			extractedFeatures["mimeType"] = "application/pdf"
+			extractedFeatures["formatVersion"] = "PDF/A-2u"
+		case "ua1":
+			extractedFeatures["mimeType"] = "application/pdf"
+			extractedFeatures["formatVersion"] = "PDF/UA"
+		}
 	}
 	context.JSON(http.StatusOK, response)
 }

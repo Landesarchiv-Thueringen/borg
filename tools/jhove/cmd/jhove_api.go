@@ -94,10 +94,10 @@ func validateFile(context *gin.Context) {
 		return
 	}
 	jhoveOutputString := string(jhoveOutput)
-	processJhoveOutput(context, jhoveOutputString)
+	processJhoveOutput(context, jhoveOutputString, module)
 }
 
-func processJhoveOutput(context *gin.Context, output string) {
+func processJhoveOutput(context *gin.Context, output string, module string) {
 	var parsedJhoveOutput JhoveOutput
 	err := json.NewDecoder(strings.NewReader(output)).Decode(&parsedJhoveOutput)
 	if err != nil {
@@ -129,6 +129,18 @@ func processJhoveOutput(context *gin.Context, output string) {
 		if repInfo.Validation != nil {
 			extractedFeatures["wellFormed"] = wellFormedRegEx.MatchString(*repInfo.Validation)
 			extractedFeatures["valid"] = validRegEx.MatchString(*repInfo.Validation)
+		}
+		switch module {
+		case "pdf":
+			extractedFeatures["mimeType"] = "application/pdf"
+		case "html":
+			extractedFeatures["mimeType"] = "text/html"
+		case "tiff":
+			extractedFeatures["mimeType"] = "image/tiff"
+		case "jpeg":
+			extractedFeatures["mimeType"] = "image/jpeg"
+		case "jpeg2000":
+			extractedFeatures["mimeType"] = "image/jp2"
 		}
 	}
 	context.JSON(http.StatusOK, response)
