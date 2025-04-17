@@ -81,9 +81,39 @@ type Weight struct {
 	ProvidedByTool     bool                `yaml:"providedByTool"`
 }
 
+func (w *Weight) GetWeight(tr ToolResult) float64 {
+	if w.ProvidedByTool {
+		if tr.Score == nil {
+			errorMessage := "configuration error: a tool provided weight was set "
+			errorMessage += "for a tool that does not support this option"
+			log.Fatal(errorMessage)
+		}
+		return *tr.Score
+	}
+	for _, cw := range w.ConditionalWeights {
+		if cw.IsFulfilled(tr) {
+			return cw.Value
+		}
+	}
+	return w.Default
+}
+
 type ConditionalWeight struct {
 	Value      float64            `yaml:"value"`
 	Conditions []FeatureCondition `yaml:"conditions"`
+}
+
+func (w *ConditionalWeight) IsFulfilled(tr ToolResult) bool {
+	for _, c := range w.Conditions {
+		v, ok := tr.Features[c.Feature]
+		if !ok {
+			return false
+		}
+		if !c.IsFulfilled(v) {
+			return false
+		}
+	}
+	return true
 }
 
 type FeatureCondition struct {

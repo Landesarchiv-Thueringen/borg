@@ -3,12 +3,20 @@ package internal
 import (
 	"fmt"
 	"slices"
+	"sort"
 )
 
 type FeatureSet struct {
 	Features        map[string]interface{} `json:"features"`
 	SupportingTools []string               `json:"supportingTools"`
+	Score           float64                `json:"score"`
 }
+
+type ByScore []FeatureSet
+
+func (a ByScore) Len() int           { return len(a) }
+func (a ByScore) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByScore) Less(i, j int) bool { return a[i].Score < a[j].Score }
 
 func (s1 *FeatureSet) IsEqual(s2 FeatureSet) bool {
 	if len(s1.SupportingTools) != len(s2.SupportingTools) {
@@ -41,6 +49,25 @@ func filterDuplicateSets(sets []FeatureSet) []FeatureSet {
 		}
 	}
 	return filteredSets
+}
+
+func normalizeSetScore(sets []FeatureSet) []FeatureSet {
+	var normalizedSets []FeatureSet
+	totalScore := 0.0
+	for _, s := range sets {
+		totalScore += s.Score
+	}
+	if totalScore == 0.0 {
+		return normalizedSets
+	}
+	for _, s := range sets {
+		normalizedScore := s.Score / totalScore
+		if normalizedScore < s.Score {
+			s.Score = normalizedScore
+		}
+		normalizedSets = append(normalizedSets, s)
+	}
+	return normalizedSets
 }
 
 type Merge struct {
@@ -81,12 +108,15 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 		}
 	}
 	supportingTools := make([]string, 0)
-	for _, tc := range m.toolConfigs {
+	score := 0.0
+	for index, tc := range m.toolConfigs {
 		supportingTools = append(supportingTools, tc.Id)
+		score += tc.FeatureSet.Weight.GetWeight(m.toolResults[index])
 	}
 	return FeatureSet{
 		Features:        features,
 		SupportingTools: supportingTools,
+		Score:           score,
 	}
 }
 
@@ -114,7 +144,9 @@ func MergeFeatureSets(toolResults map[string]ToolResult) []FeatureSet {
 		}
 		mergedSets = append(mergedSets, m.GetMergedToolResults())
 	}
-	return filterDuplicateSets(mergedSets)
+	revisedSets := normalizeSetScore(filterDuplicateSets(mergedSets))
+	sort.Sort(sort.Reverse(ByScore(revisedSets)))
+	return revisedSets
 }
 
 func getToolConfig(id string) ToolConfig {
