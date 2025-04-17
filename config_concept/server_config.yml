@@ -7,6 +7,7 @@ tools:
         - key: "puid"
         - key: "mimeType"
         - key: "formatName"
+          mergeOrder: 1
         - key: "formatVersion"
       weight:
         default: 0.75

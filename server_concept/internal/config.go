@@ -59,11 +59,11 @@ type FeatureSetConfig struct {
 	MergeConditions []MergeCondition `yaml:"mergeConditions"`
 }
 
-func (s *FeatureSetConfig) AreMergeable(
+func (c *FeatureSetConfig) AreMergeable(
 	fs1 map[string]interface{},
 	fs2 map[string]interface{},
 ) bool {
-	for _, condition := range s.MergeConditions {
+	for _, condition := range c.MergeConditions {
 		if !condition.IsFulfilled(fs1, fs2) {
 			return false
 		}
@@ -71,9 +71,30 @@ func (s *FeatureSetConfig) AreMergeable(
 	return true
 }
 
-type Feature struct {
-	Key string `yaml:"key"`
+func (c *FeatureSetConfig) GetFeatureConfig(key string) (Feature, bool) {
+	for _, featureConfig := range c.Features {
+		if featureConfig.Key == key {
+			return featureConfig, true
+		}
+	}
+	return Feature{}, false
 }
+
+type Feature struct {
+	Key        string `yaml:"key"`
+	MergeOrder uint   `yaml:"mergeOrder"`
+}
+
+type FeatureValue struct {
+	Value      interface{}
+	MergeOrder uint
+}
+
+type ByOrder []FeatureValue
+
+func (a ByOrder) Len() int           { return len(a) }
+func (a ByOrder) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByOrder) Less(i, j int) bool { return a[i].MergeOrder < a[j].MergeOrder }
 
 type Weight struct {
 	Default            float64             `yaml:"default"`

@@ -102,10 +102,26 @@ func (m *Merge) IsMergeable(tc2 ToolConfig, tr2 ToolResult) bool {
 
 func (m *Merge) GetMergedToolResults() FeatureSet {
 	features := make(map[string]interface{})
+	featureValues := make(map[string][]FeatureValue)
 	for _, tr := range m.toolResults {
+		tc := getToolConfig(tr.Id)
 		for k, v := range tr.Features {
-			features[k] = v
+			featureValue := FeatureValue{
+				Value: v,
+			}
+			featureConfig, ok := tc.FeatureSet.GetFeatureConfig(k)
+			if ok {
+				featureValue.MergeOrder = featureConfig.MergeOrder
+			}
+			featureValues[k] = append(
+				featureValues[k],
+				featureValue,
+			)
 		}
+	}
+	for key, featureValues := range featureValues {
+		sort.Sort(sort.Reverse(ByOrder(featureValues)))
+		features[key] = featureValues[0].Value
 	}
 	supportingTools := make([]string, 0)
 	score := 0.0
