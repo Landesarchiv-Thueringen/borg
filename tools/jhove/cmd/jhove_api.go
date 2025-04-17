@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +18,7 @@ type ToolResponse struct {
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
-	Error        string                 `json:"error"`
+	Error        *string                `json:"error"`
 }
 
 type JhoveOutput struct {
@@ -57,7 +58,7 @@ func validateFile(context *gin.Context) {
 		errorMessage := "no JHOVE module declared"
 		log.Println(errorMessage)
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -65,11 +66,11 @@ func validateFile(context *gin.Context) {
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
-		errorMessage := "error processing file: " + fileStorePath
+		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -82,13 +83,13 @@ func validateFile(context *gin.Context) {
 		"json",
 		fileStorePath,
 	)
-	jhoveOutput, err := cmd.Output()
+	jhoveOutput, err := cmd.CombinedOutput()
 	if err != nil {
-		errorMessage := "error executing JHOVE command"
+		errorMessage := fmt.Sprintf("error executing JHOVE command: %s", string(jhoveOutput))
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -107,7 +108,7 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 		response := ToolResponse{
 			ToolOutput:   output,
 			OutputFormat: "text",
-			Error:        errorMessage,
+			Error:        &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return

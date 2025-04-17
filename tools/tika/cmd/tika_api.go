@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,7 +17,7 @@ type ToolResponse struct {
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
-	Error        string                 `json:"error"`
+	Error        *string                `json:"error"`
 }
 
 type TikaOutput struct {
@@ -46,11 +47,11 @@ func extractMetadata(context *gin.Context) {
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
-		errorMessage := "error processing file: " + fileStorePath
+		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -63,13 +64,13 @@ func extractMetadata(context *gin.Context) {
 		"--json",
 		fileStorePath,
 	)
-	tikaOutput, err := cmd.Output()
+	tikaOutput, err := cmd.CombinedOutput()
 	if err != nil {
-		errorMessage := "error executing Tika command"
+		errorMessage := fmt.Sprintf("error executing Tika command: %s", string(tikaOutput))
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -88,7 +89,7 @@ func processTikaOutput(context *gin.Context, output string) {
 		response := ToolResponse{
 			ToolOutput:   output,
 			OutputFormat: "text",
-			Error:        errorMessage,
+			Error:        &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return

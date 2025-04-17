@@ -18,7 +18,7 @@ type ToolResponse struct {
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
-	Error        string                 `json:"error"`
+	Error        *string                `json:"error"`
 }
 
 func main() {
@@ -39,8 +39,9 @@ func validate(context *gin.Context) {
 	path := filepath.Join(storeDir, context.Query("path"))
 	valid, output, err := validateFile(path)
 	if err != nil {
+		errorMessage := err.Error()
 		response := ToolResponse{
-			Error: err.Error(),
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return

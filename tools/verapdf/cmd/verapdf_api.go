@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +18,7 @@ type ToolResponse struct {
 	ToolOutput   string
 	OutputFormat string
 	Features     map[string]interface{}
-	Error        string
+	Error        *string
 }
 
 type VeraPDFOutput struct {
@@ -59,7 +60,7 @@ func validateFile(context *gin.Context) {
 		errorMessage := "no veraPDF profile declared"
 		log.Println(errorMessage)
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -67,11 +68,11 @@ func validateFile(context *gin.Context) {
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
-		errorMessage := "error processing file: " + fileStorePath
+		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		log.Println(errorMessage)
 		log.Println(err.Error())
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -90,9 +91,9 @@ func validateFile(context *gin.Context) {
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println(err.Error())
 		log.Println(stderr.String())
-		errorMessage := "error executing verPDF\n" + stderr.String()
+		errorMessage := fmt.Sprintf("error executing verPDF: %s", stderr.String())
 		response := ToolResponse{
-			Error: errorMessage,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -111,7 +112,7 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 		response := ToolResponse{
 			ToolOutput:   output,
 			OutputFormat: "text",
-			Error:        errorMessage,
+			Error:        &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return

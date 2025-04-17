@@ -59,7 +59,10 @@ type FeatureSetConfig struct {
 	MergeConditions []MergeCondition `yaml:"mergeConditions"`
 }
 
-func (s *FeatureSetConfig) AreMergeable(fs1 map[string]interface{}, fs2 map[string]interface{}) bool {
+func (s *FeatureSetConfig) AreMergeable(
+	fs1 map[string]interface{},
+	fs2 map[string]interface{},
+) bool {
 	for _, condition := range s.MergeConditions {
 		if !condition.IsFulfilled(fs1, fs2) {
 			return false

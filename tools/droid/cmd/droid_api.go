@@ -19,7 +19,7 @@ type ToolResponse struct {
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
-	Error        string                 `json:"error"`
+	Error        *string                `json:"error"`
 }
 
 const defaultResponse = "DROID API is running"
@@ -47,8 +47,9 @@ func identifyFileFormat(context *gin.Context) {
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
+		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		response := ToolResponse{
-			Error: "error processing file: " + fileStorePath,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -62,11 +63,12 @@ func identifyFileFormat(context *gin.Context) {
 		containerSignatureFilePath,
 		fileStorePath,
 	)
-	droidOutput, err := cmd.Output()
+	droidOutput, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Println(err)
+		errorMessage := fmt.Sprintf("error executing DROID command: %s", string(droidOutput))
 		response := ToolResponse{
-			Error: "error executing DROID command",
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -81,10 +83,11 @@ func identifyFileFormat(context *gin.Context) {
 		if err != nil {
 			log.Println(err.Error())
 		}
+		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
 			ToolOutput:   droidOutputString,
 			OutputFormat: "csv",
-			Error:        "unable to parse DROID csv output",
+			Error:        &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -92,10 +95,11 @@ func identifyFileFormat(context *gin.Context) {
 	features, err := extractFeatures(formatTable)
 	if err != nil {
 		log.Println(err.Error())
+		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
 			ToolOutput:   droidOutputString,
 			OutputFormat: "csv",
-			Error:        "unable to parse DROID csv output",
+			Error:        &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return

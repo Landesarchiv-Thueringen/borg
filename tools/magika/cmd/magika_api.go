@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -16,7 +17,7 @@ type ToolResponse struct {
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
 	Score        *float64               `json:"score"`
-	Error        string                 `json:"error"`
+	Error        *string                `json:"error"`
 }
 
 type Output struct {
@@ -70,8 +71,9 @@ func identifyFileFormat(context *gin.Context) {
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
+		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		response := ToolResponse{
-			Error: "error processing file: " + fileStorePath,
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -86,8 +88,9 @@ func identifyFileFormat(context *gin.Context) {
 	if err != nil {
 		log.Println(magikaOutputString)
 		log.Println(err)
+		errorMessage := fmt.Sprintf("error executing Magika command: %s", magikaOutputString)
 		response := ToolResponse{
-			Error: "error executing Magika command",
+			Error: &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -96,10 +99,11 @@ func identifyFileFormat(context *gin.Context) {
 	err = json.Unmarshal(magikaOutput, &data)
 	if err != nil {
 		log.Println(err)
+		errorMessage := "unable to parse Magika JSON output"
 		response := ToolResponse{
 			ToolOutput:   magikaOutputString,
 			OutputFormat: "json",
-			Error:        "unable to parse Magika JSON output",
+			Error:        &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
