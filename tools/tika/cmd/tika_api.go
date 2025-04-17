@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -64,9 +65,11 @@ func extractMetadata(context *gin.Context) {
 		"--json",
 		fileStorePath,
 	)
-	tikaOutput, err := cmd.CombinedOutput()
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	tikaOutput, err := cmd.Output()
 	if err != nil {
-		errorMessage := fmt.Sprintf("error executing Tika command: %s", string(tikaOutput))
+		errorMessage := fmt.Sprintf("error executing Tika command: %s", stderr.String())
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{

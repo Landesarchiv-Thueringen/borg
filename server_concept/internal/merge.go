@@ -59,10 +59,13 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 func MergeFeatureSets(toolResults map[string]ToolResult) []Merge {
 	var mergedSets []Merge
 	for toolId, tr1 := range toolResults {
+		// don't merge results with errors
+		if tr1.Error != nil {
+			continue
+		}
 		var m Merge
 		tc1 := getToolConfig(toolId)
-		m.toolConfigs = append(m.toolConfigs, tc1)
-		m.toolResults = append(m.toolResults, tr1)
+		m.MergeIfPossible(tc1, tr1)
 		for _, tc2 := range serverConfig.Tools {
 			// don't merge feature set with itself
 			if toolId == tc2.Id {
