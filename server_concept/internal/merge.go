@@ -2,11 +2,45 @@ package internal
 
 import (
 	"fmt"
+	"slices"
 )
 
 type FeatureSet struct {
 	Features        map[string]interface{} `json:"features"`
 	SupportingTools []string               `json:"supportingTools"`
+}
+
+func (s1 *FeatureSet) IsEqual(s2 FeatureSet) bool {
+	if len(s1.SupportingTools) != len(s2.SupportingTools) {
+		return false
+	}
+	t1 := s1.SupportingTools
+	t2 := s2.SupportingTools
+	slices.Sort(t1)
+	slices.Sort(t2)
+	for index, toolId := range t1 {
+		if toolId != t2[index] {
+			return false
+		}
+	}
+	return true
+}
+
+func filterDuplicateSets(sets []FeatureSet) []FeatureSet {
+	var filteredSets []FeatureSet
+	for _, s := range sets {
+		setExistsAlready := false
+		for _, fs := range filteredSets {
+			if s.IsEqual(fs) {
+				setExistsAlready = true
+				break
+			}
+		}
+		if !setExistsAlready {
+			filteredSets = append(filteredSets, s)
+		}
+	}
+	return filteredSets
 }
 
 type Merge struct {
@@ -56,8 +90,8 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 	}
 }
 
-func MergeFeatureSets(toolResults map[string]ToolResult) []Merge {
-	var mergedSets []Merge
+func MergeFeatureSets(toolResults map[string]ToolResult) []FeatureSet {
+	var mergedSets []FeatureSet
 	for toolId, tr1 := range toolResults {
 		// don't merge results with errors
 		if tr1.Error != nil {
@@ -78,9 +112,9 @@ func MergeFeatureSets(toolResults map[string]ToolResult) []Merge {
 			}
 			m.MergeIfPossible(tc2, tr2)
 		}
-		mergedSets = append(mergedSets, m)
+		mergedSets = append(mergedSets, m.GetMergedToolResults())
 	}
-	return mergedSets
+	return filterDuplicateSets(mergedSets)
 }
 
 func getToolConfig(id string) ToolConfig {
