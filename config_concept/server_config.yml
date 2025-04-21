@@ -18,7 +18,7 @@ tools:
         - feature: "formatVersion"
 
   - id: "tika"
-    titles: "Tika"
+    title: "Tika"
     endpoint: "http://tika/extract-metadata"
     featureSet:
       features:

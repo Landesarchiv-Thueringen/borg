@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Dateiidentitäten</h1>
+
+<mat-dialog-content>
+  @for (m of ms; track m) {
+    <ul>
+      <li><b>Extrahierte Eigenschaften:</b> {{ m.values | prettyPrintJson }}</li>
+      <li><b>Unterstützend Werkzeuge:</b> {{ m.tools }}</li>
+      <li><b>Score:</b> {{ m.score }}</li>
+    </ul>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Schließen</button>
+</mat-dialog-actions>

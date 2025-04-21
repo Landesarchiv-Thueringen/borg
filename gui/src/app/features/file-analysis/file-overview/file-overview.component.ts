@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/d
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { FilePropertyDefinition } from '../file-analysis-table/file-analysis-table.component';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
 import { FeatureValue, FileAnalysis, RowValue } from '../results';
@@ -75,60 +76,92 @@ export class FileOverviewComponent {
   }
 
   initTableData(): void {
-    const features = this.analysis.features;
+    if (this.analysis.featureSets.length === 0) {
+      return;
+    }
+    const features = this.analysis.featureSets[0].features;
     if (!features) {
       return;
     }
     let featureNames: OverviewFeature[] = [];
-    const toolNames = this.analysis.toolResults.map((r) => r.toolName);
     for (const featureKey in features) {
       if (isOverviewFeature(featureKey)) {
         featureNames.push(featureKey);
       }
     }
-    this.dataSource.data = this.getTableRows(toolNames, featureNames, this.analysis.features);
-  }
-
-  getTableRows(
-    toolNames: string[],
-    featureNames: string[],
-    featureValues: { [key: string]: FeatureValue[] },
-  ): FileFeatures[] {
-    const rows: FileFeatures[] = [this.getCumulativeResult(featureNames, featureValues)];
     const sortedFeatures: string[] = sortFeatures([...ALWAYS_VISIBLE_COLUMNS, ...featureNames]);
     this.tableColumnList = ['tool', ...sortedFeatures];
     if (this.analysis.summary.error) {
       this.tableColumnList.push('error');
     }
-    for (let toolName of toolNames) {
-      const fileFeatures: FileFeatures = {};
-      fileFeatures['tool'] = {
-        value: toolName,
-      };
-      for (let featureName of featureNames) {
-        for (let featureValue of featureValues[featureName]) {
-          if (this.featureOfTool(featureValue, toolName)) {
-            const toolConfidence = featureValue.supportingTools[toolName];
-            fileFeatures[featureName] = {
-              value: featureValue.value,
-              confidence: toolConfidence,
-            };
-          }
-        }
-      }
-      if (this.analysis.toolResults.find((r) => r.toolName === toolName)?.error) {
-        fileFeatures['error'] = {
-          icon: 'error',
+    const rows: FileFeatures[] = [];
+    const row: FileFeatures = {};
+    row['tool'] = {
+      value: 'Gesamtergebnis',
+    };
+    for (let featureName of featureNames) {
+      if (this.analysis.featureSets[0].features[featureName] !== undefined) {
+        row[featureName] = {
+          value: this.analysis.featureSets[0].features[featureName],
         };
       }
-      rows.push(fileFeatures);
     }
-    return rows;
+    rows.push(row);
+    for (let toolResult of this.analysis.toolResults) {
+      const row: FileFeatures = {};
+      row['tool'] = { value: toolResult.title };
+      for (let featureName of featureNames) {
+        if (toolResult.features[featureName] !== undefined) {
+          row[featureName] = {
+            value: toolResult.features[featureName],
+          };
+        }
+      }
+      rows.push(row);
+    }
+    this.dataSource.data = rows;
   }
+
+  // getTableRows(
+  //   toolNames: string[],
+  //   featureNames: string[],
+  //   featureValues: { [key: string]: string | boolean | number },
+  // ): FileFeatures[] {
+  //   const rows: FileFeatures[] = [this.getCumulativeResult(featureNames, featureValues)];
+  //   const sortedFeatures: string[] = sortFeatures([...ALWAYS_VISIBLE_COLUMNS, ...featureNames]);
+  //   this.tableColumnList = ['tool', ...sortedFeatures];
+  //   if (this.analysis.summary.error) {
+  //     this.tableColumnList.push('error');
+  //   }
+  //   for (let toolName of toolNames) {
+  //     const fileFeatures: FileFeatures = {};
+  //     fileFeatures['tool'] = {
+  //       value: toolName,
+  //     };
+  //     for (let featureName of featureNames) {
+  //       for (let featureValue of featureValues[featureName]) {
+  //         if (this.featureOfTool(featureValue, toolName)) {
+  //           const toolConfidence = featureValue.supportingTools[toolName];
+  //           fileFeatures[featureName] = {
+  //             value: featureValue.value,
+  //             confidence: toolConfidence,
+  //           };
+  //         }
+  //       }
+  //     }
+  //     if (this.analysis.toolResults.find((r) => r.toolName === toolName)?.error) {
+  //       fileFeatures['error'] = {
+  //         icon: 'error',
+  //       };
+  //     }
+  //     rows.push(fileFeatures);
+  //   }
+  //   return rows;
+  // }
 
   getCumulativeResult(
     featureNames: string[],
-    featureValues: { [key: string]: FeatureValue[] },
+    featureValues: { [key: string]: string | boolean | number },
   ): FileFeatures {
     const features: FileFeatures = {};
     features['tool'] = {
@@ -136,10 +169,9 @@ export class FileOverviewComponent {
     };
     for (let featureName of featureNames) {
       // result with highest confidence
-      const featureValue = featureValues[featureName][0];
+      const featureValue = featureValues[featureName];
       features[featureName] = {
-        value: featureValue.value,
-        confidence: featureValue.score,
+        value: featureValue,
       };
     }
     return features;
@@ -150,7 +182,7 @@ export class FileOverviewComponent {
   }
 
   showToolOutput(toolName: string): void {
-    const toolResult = this.analysis.toolResults.find((r) => r.toolName === toolName);
+    const toolResult = this.analysis.toolResults.find((r) => r.title === toolName);
     if (toolResult) {
       this.dialog.open(ToolOutputComponent, {
         data: {
@@ -161,6 +193,17 @@ export class FileOverviewComponent {
         maxWidth: '80vw',
       });
     }
+  }
+
+  showFeatureSets(): void {
+    console.log(this.analysis.featureSets);
+    this.dialog.open(FeatureSetsTableComponent, {
+      data: {
+        faetureSets: this.analysis.featureSets,
+      },
+      autoFocus: false,
+      maxWidth: '80vw',
+    });
   }
 
   exportResult(): void {

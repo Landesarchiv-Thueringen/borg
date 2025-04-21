@@ -117,6 +117,13 @@
           (click)="showToolOutput(fileInfo.tool.value)"
           aria-label="Details anzeigen"
         ></button>
+        <button
+          *ngIf="first && fileInfo.tool.value === 'Gesamtergebnis'"
+          mat-button
+          class="open-details-button"
+          (click)="showFeatureSets()"
+          aria-label="Details anzeigen"
+        ></button>
       </mat-cell>
     </ng-container>
 
