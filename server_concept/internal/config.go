@@ -179,8 +179,13 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]
 		if !ok1 || !ok2 {
 			log.Fatal("configuration faulty: used value extraction string on non string value")
 		}
+		m1 := regEx.FindStringSubmatch(s1)
+		m2 := regEx.FindStringSubmatch(s2)
+		if len(m1) != 2 || len(m2) != 2 {
+			return false
+		}
 		// merge is possible if extracted values are equal
-		return regEx.FindString(s1) == regEx.FindString(s2)
+		return m1[1] == m2[1]
 	}
 	// merge is possible if features are equal
 	return fv1 == fv2
