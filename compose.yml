@@ -17,9 +17,9 @@ services:
     ports:
       - ${PORT}:80
 
-  server:
+  server_old:
     restart: unless-stopped
-    image: ${IMAGE_PREFIX}/server:${IMAGE_VERSION}
+    image: ${IMAGE_PREFIX}/server_old:${IMAGE_VERSION}
     build:
       context: ./server
       args:
@@ -32,9 +32,9 @@ services:
       - PORT=80
       - GIN_MODE=${GIN_MODE}
 
-  server_concept:
+  server:
     restart: unless-stopped
-    image: ${IMAGE_PREFIX}/server_concept:${IMAGE_VERSION}
+    image: ${IMAGE_PREFIX}/server:${IMAGE_VERSION}
     build:
       context: ./server_concept
       args:
@@ -46,8 +46,6 @@ services:
     environment:
       - PORT=80
       - GIN_MODE=${GIN_MODE}
-    ports:
-      - 8081:80
 
   droid:
     restart: unless-stopped

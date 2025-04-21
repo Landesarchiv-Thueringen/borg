@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"lath/borg/internal"
 	"log"
+	"maps"
 	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -17,6 +19,16 @@ const (
 	DEFAULT_RESPONSE = "Borg server version %s is running"
 	FILE_STORE_PATH  = "/borg/file-store"
 )
+
+type fileAnalysis struct {
+	// Summary describes the overall verification result.
+	Summary internal.Summary `json:"summary"`
+	// Merged feature sets ...
+	FeatureSets []internal.FeatureSet `json:"featureSets"`
+	// ToolResults is a list of complete responses from all tools, mapped by
+	// tool name.
+	ToolResults []internal.ToolResult `json:"toolResults"`
+}
 
 func main() {
 	log.Printf(DEFAULT_RESPONSE, VERSION)
@@ -75,5 +87,11 @@ func analyzeFile(c *gin.Context) {
 	for _, s := range mergedSets {
 		log.Println(s)
 	}
-	c.Status(http.StatusOK)
+	tr := slices.Collect(maps.Values(toolResults))
+	fileAnalysis := fileAnalysis{
+		Summary:     internal.GetSummary(mergedSets, tr),
+		FeatureSets: mergedSets,
+		ToolResults: tr,
+	}
+	c.JSON(http.StatusOK, fileAnalysis)
 }
