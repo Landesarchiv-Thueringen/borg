@@ -8,11 +8,13 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ToolResponse struct {
+	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
@@ -49,11 +51,16 @@ type Data struct {
 	Result Result `json:"result"`
 }
 
-const defaultResponse = "Magika API is running"
-const workDir = "/borg/tools/magika"
-const storeDir = "/borg/file-store"
+const (
+	defaultResponse = "Magika API is running"
+	workDir         = "/borg/tools/magika"
+	storeDir        = "/borg/file-store"
+)
+
+var toolVersion string
 
 func main() {
+	toolVersion = getToolVersion()
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
@@ -73,7 +80,8 @@ func identifyFileFormat(context *gin.Context) {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -90,7 +98,9 @@ func identifyFileFormat(context *gin.Context) {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error executing Magika command: %s", magikaOutputString)
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			ToolOutput:  magikaOutputString,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -101,6 +111,7 @@ func identifyFileFormat(context *gin.Context) {
 		log.Println(err)
 		errorMessage := "unable to parse Magika JSON output"
 		response := ToolResponse{
+			ToolVersion:  toolVersion,
 			ToolOutput:   magikaOutputString,
 			OutputFormat: "json",
 			Error:        &errorMessage,
@@ -115,12 +126,31 @@ func identifyFileFormat(context *gin.Context) {
 		score = &(data[0].Result.Value.Score)
 	}
 	response := ToolResponse{
+		ToolVersion:  toolVersion,
 		ToolOutput:   magikaOutputString,
 		OutputFormat: "json",
 		Features:     features,
 		Score:        score,
 	}
 	context.JSON(http.StatusOK, response)
+}
+
+func getToolVersion() string {
+	cmd := exec.Command(
+		"magika",
+		"--json",
+		"--version",
+	)
+	magikaOutput, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := regexp.MustCompile(`magika ([0-9]+\.[0-9]+\.[0-9]+) ([a-zA-Z0-9_]+)`)
+	matches := r.FindStringSubmatch(string(magikaOutput))
+	if len(matches) != 3 {
+		log.Fatal("couldn't extract magika version from tool output")
+	}
+	return fmt.Sprintf("cli: %s, model: %s", matches[1], matches[2])
 }
 
 func extractFeatures(data Data) map[string]interface{} {

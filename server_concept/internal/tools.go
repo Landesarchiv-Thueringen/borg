@@ -13,7 +13,7 @@ type ToolResult struct {
 	Title string `json:"title"`
 	// ToolVersion is the version number of the utilized tool as by the tool's
 	// own versioning scheme.
-	// ToolVersion string `json:"toolVersion"`
+	ToolVersion string `json:"toolVersion"`
 	// ToolOutput is the tool's raw output string.
 	ToolOutput string `json:"toolOutput"`
 	// OutputFormat is the format expected for ToolOutput. Possible values are
@@ -39,13 +39,17 @@ func RunIdentificationTools(filename string) map[string]ToolResult {
 		// request tool results concurrent
 		go func() {
 			response := getToolResult(tool.Endpoint, filename)
+			features := make(map[string]interface{})
+			if len(response.Features) > 0 {
+				features = response.Features
+			}
 			rc <- ToolResult{
-				Id:    tool.Id,
-				Title: tool.Title,
-				// ToolVersion:  tool.ToolVersion,
+				Id:           tool.Id,
+				Title:        tool.Title,
+				ToolVersion:  response.ToolVersion,
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
-				Features:     response.Features,
+				Features:     features,
 				Score:        response.Score,
 				Error:        response.Error,
 			}
@@ -75,13 +79,17 @@ func RunTriggeredTools(
 		// request tool results concurrent
 		go func() {
 			response := getToolResult(tool.Endpoint, filename)
+			features := make(map[string]interface{})
+			if len(response.Features) > 0 {
+				features = response.Features
+			}
 			rc <- ToolResult{
-				Id:    tool.Id,
-				Title: tool.Title,
-				// ToolVersion:  tool.ToolVersion,
+				Id:           tool.Id,
+				Title:        tool.Title,
+				ToolVersion:  response.ToolVersion,
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
-				Features:     response.Features,
+				Features:     features,
 				Score:        response.Score,
 				Error:        response.Error,
 			}

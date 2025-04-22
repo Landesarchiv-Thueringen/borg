@@ -15,7 +15,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const TOOL_VERSION = "6.8.0"
+
 type ToolResponse struct {
+	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
@@ -49,7 +52,8 @@ func identifyFileFormat(context *gin.Context) {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: TOOL_VERSION,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -68,7 +72,8 @@ func identifyFileFormat(context *gin.Context) {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error executing DROID command: %s", string(droidOutput))
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: TOOL_VERSION,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -85,6 +90,7 @@ func identifyFileFormat(context *gin.Context) {
 		}
 		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
+			ToolVersion:  TOOL_VERSION,
 			ToolOutput:   droidOutputString,
 			OutputFormat: "csv",
 			Error:        &errorMessage,
@@ -97,6 +103,7 @@ func identifyFileFormat(context *gin.Context) {
 		log.Println(err.Error())
 		errorMessage := "unable to parse DROID csv output"
 		response := ToolResponse{
+			ToolVersion:  TOOL_VERSION,
 			ToolOutput:   droidOutputString,
 			OutputFormat: "csv",
 			Error:        &errorMessage,
@@ -105,6 +112,7 @@ func identifyFileFormat(context *gin.Context) {
 		return
 	}
 	response := ToolResponse{
+		ToolVersion:  TOOL_VERSION,
 		ToolOutput:   droidOutputString,
 		OutputFormat: "csv",
 		Features:     features,

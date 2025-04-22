@@ -15,6 +15,7 @@ import (
 )
 
 type ToolResponse struct {
+	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
@@ -26,7 +27,8 @@ type JhoveOutput struct {
 }
 
 type JhoveRoot struct {
-	RepInfo []JhoveRepInfo `json:"repInfo"`
+	ToolVersion string         `json:"release"`
+	RepInfo     []JhoveRepInfo `json:"repInfo"`
 }
 
 type JhoveRepInfo struct {
@@ -106,6 +108,7 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
+			ToolVersion:  parsedJhoveOutput.Root.ToolVersion,
 			ToolOutput:   output,
 			OutputFormat: "text",
 			Error:        &errorMessage,
@@ -115,6 +118,7 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 	}
 	extractedFeatures := make(map[string]interface{})
 	response := ToolResponse{
+		ToolVersion:  parsedJhoveOutput.Root.ToolVersion,
 		ToolOutput:   output,
 		OutputFormat: "json",
 		Features:     extractedFeatures,
