@@ -11,15 +11,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const storeDir = "/borg/file-store"
-const defaultResponse = "OOXML-Validator API is running"
-
 type ToolResponse struct {
+	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
 	Error        *string                `json:"error"`
 }
+
+const (
+	TOOL_VERSION     = "2.1.5"
+	STORE_DIR        = "/borg/file-store"
+	DEFAULT_RESPONSE = "OOXML-Validator API is running"
+)
 
 func main() {
 	router := gin.Default()
@@ -31,17 +35,18 @@ func main() {
 
 // getDefaultResponse is the test endpoint for checking if the service is running.
 func getDefaultResponse(context *gin.Context) {
-	context.String(http.StatusOK, defaultResponse)
+	context.String(http.StatusOK, DEFAULT_RESPONSE)
 }
 
 // validate is the API endpoint for validating a file with OOXML-Validator.
 func validate(context *gin.Context) {
-	path := filepath.Join(storeDir, context.Query("path"))
+	path := filepath.Join(STORE_DIR, context.Query("path"))
 	valid, output, err := validateFile(path)
 	if err != nil {
 		errorMessage := err.Error()
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: TOOL_VERSION,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -49,6 +54,7 @@ func validate(context *gin.Context) {
 	extractedFeatures := make(map[string]interface{})
 	extractedFeatures["valid"] = valid
 	response := ToolResponse{
+		ToolVersion:  TOOL_VERSION,
 		ToolOutput:   output,
 		OutputFormat: "text",
 		Features:     extractedFeatures,

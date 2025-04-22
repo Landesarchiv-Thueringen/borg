@@ -15,8 +15,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const TOOL_VERSION = "6.8.0"
-
 type ToolResponse struct {
 	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
@@ -25,12 +23,15 @@ type ToolResponse struct {
 	Error        *string                `json:"error"`
 }
 
-const defaultResponse = "DROID API is running"
-const workDir = "/borg/tools/droid"
-const storeDir = "/borg/file-store"
+const (
+	TOOL_VERSION     = "6.8.0"
+	DEFAULT_RESPONSE = "DROID API is running"
+	WORK_DIR         = "/borg/tools/droid"
+	STORE_DIR        = "/borg/file-store"
+)
 
-var signatureFilePath = filepath.Join(workDir, "third_party/DROID_SignatureFile_V114.xml")
-var containerSignatureFilePath = filepath.Join(workDir, "third_party/container-signature-20230822.xml")
+var signatureFilePath = filepath.Join(WORK_DIR, "third_party/DROID_SignatureFile_V114.xml")
+var containerSignatureFilePath = filepath.Join(WORK_DIR, "third_party/container-signature-20230822.xml")
 
 func main() {
 	router := gin.Default()
@@ -41,12 +42,12 @@ func main() {
 }
 
 func getDefaultResponse(context *gin.Context) {
-	context.String(http.StatusOK, defaultResponse)
+	context.String(http.StatusOK, DEFAULT_RESPONSE)
 }
 
 // identifyFileFormat executes DROID and parses the output of the command.
 func identifyFileFormat(context *gin.Context) {
-	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)

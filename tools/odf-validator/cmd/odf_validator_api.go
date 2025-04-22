@@ -7,21 +7,28 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 )
 
-const storeDir = "/borg/file-store"
-const defaultResponse = "ODF Validator API is running"
+const (
+	STORE_DIR        = "/borg/file-store"
+	DEFAULT_RESPONSE = "ODF Validator API is running"
+)
 
 type ToolResponse struct {
+	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
 	Error        *string                `json:"error"`
 }
 
+var toolVersion string
+
 func main() {
+	toolVersion = getToolVersion()
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
@@ -29,19 +36,39 @@ func main() {
 	router.Run()
 }
 
+func getToolVersion() string {
+	cmd := exec.Command(
+		"java",
+		"-jar",
+		"third_party/odfvalidator-0.12.0-jar-with-dependencies.jar",
+		"-V",
+	)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := regexp.MustCompile(`odfvalidator v([0-9]+\.[0-9]+\.[0-9]+)`)
+	matches := r.FindStringSubmatch(string(output))
+	if len(matches) != 2 {
+		log.Fatal("couldn't extract ODF Validator version from tool output")
+	}
+	return matches[1]
+}
+
 // getDefaultResponse is the test endpoint for checking if the service is running.
 func getDefaultResponse(context *gin.Context) {
-	context.String(http.StatusOK, defaultResponse)
+	context.String(http.StatusOK, DEFAULT_RESPONSE)
 }
 
 // validate is the API endpoint for validating a file with ODF Validator.
 func validate(context *gin.Context) {
-	path := filepath.Join(storeDir, context.Query("path"))
+	path := filepath.Join(STORE_DIR, context.Query("path"))
 	valid, output, err := validateFile(path)
 	if err != nil {
 		errorMessage := err.Error()
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -49,6 +76,7 @@ func validate(context *gin.Context) {
 	extractedFeatures := make(map[string]interface{})
 	extractedFeatures["valid"] = valid
 	response := ToolResponse{
+		ToolVersion:  toolVersion,
 		ToolOutput:   output,
 		OutputFormat: "text",
 		Features:     extractedFeatures,
