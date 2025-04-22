@@ -163,6 +163,12 @@ type MergeCondition struct {
 }
 
 func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]interface{}) bool {
+	// if the second feature sets doesn't contain any values
+	// the first feature set can be empty if merging against an empty set
+	if len(fs2) == 0 {
+		// merge is not possible because it doesn't add any features but improves the score
+		return false
+	}
 	fv1, ok1 := fs1[c.Feature]
 	fv2, ok2 := fs2[c.Feature]
 	// if not both feature sets include the feature of the merge condition

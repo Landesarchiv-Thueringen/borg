@@ -139,6 +139,10 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 func MergeFeatureSets(toolResults map[string]ToolResult) []FeatureSet {
 	var mergedSets []FeatureSet
 	for toolId, tr1 := range toolResults {
+		// don't merge tool results without any extracted features
+		if len(tr1.Features) == 0 {
+			continue
+		}
 		// don't merge results with errors
 		if tr1.Error != nil {
 			continue
