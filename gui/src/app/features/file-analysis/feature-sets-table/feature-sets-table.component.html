@@ -1,9 +1,19 @@
 <h1 mat-dialog-title>Dateiidentitäten</h1>
 
 <mat-dialog-content>
-  @for (m of ms; track m) {
+  @for (m of ms; track m; let i = $index) {
+    <h1>Dateiidentität {{ i }}</h1>
     <ul>
-      <li><b>Extrahierte Eigenschaften:</b> {{ m.values | prettyPrintJson }}</li>
+      <li>
+        <b>Extrahierte Eigenschaften:</b>
+        <ul>
+          @for (v of m.values; track v) {
+            <li>
+              <em>{{ v.key | fileFeature }}:</em> {{ v.value }}
+            </li>
+          }
+        </ul>
+      </li>
       <li><b>Unterstützend Werkzeuge:</b> {{ m.tools }}</li>
       <li><b>Score:</b> {{ m.score }}</li>
     </ul>
