@@ -199,7 +199,7 @@ export class FileOverviewComponent {
     console.log(this.analysis.featureSets);
     this.dialog.open(FeatureSetsTableComponent, {
       data: {
-        faetureSets: this.analysis.featureSets,
+        featureSets: this.analysis.featureSets,
       },
       autoFocus: false,
       maxWidth: '80vw',
