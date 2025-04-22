@@ -126,7 +126,7 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 	supportingTools := make([]string, 0)
 	score := 0.0
 	for index, tc := range m.toolConfigs {
-		supportingTools = append(supportingTools, tc.Id)
+		supportingTools = append(supportingTools, tc.Title)
 		score += tc.FeatureSet.Weight.GetWeight(m.toolResults[index])
 	}
 	return FeatureSet{
