@@ -75,6 +75,11 @@ func validate(context *gin.Context) {
 	}
 	extractedFeatures := make(map[string]interface{})
 	extractedFeatures["valid"] = valid
+	r := regexp.MustCompile(`Media Type:\s*([a-zA-Z0-9.+/-]+)`)
+	matches := r.FindStringSubmatch(output)
+	if len(matches) == 2 {
+		extractedFeatures["mimeType"] = matches[1]
+	}
 	response := ToolResponse{
 		ToolVersion:  toolVersion,
 		ToolOutput:   output,
@@ -98,15 +103,18 @@ func validateFile(path string) (bool, string, error) {
 		log.Println(err)
 		return false, "", errors.New(errorMessage)
 	}
+	// -v for verbose output to extract the MIME type
 	cmd := exec.Command(
 		"java",
 		"-jar",
 		"third_party/odfvalidator-0.12.0-jar-with-dependencies.jar",
+		"-v",
 		"-c",
 		"-e",
 		path,
 	)
 	output, err := cmd.CombinedOutput()
+	log.Println(string(output))
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			// Determined the given file to be invalid.
