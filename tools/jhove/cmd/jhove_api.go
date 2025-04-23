@@ -148,6 +148,30 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 		switch module {
 		case "pdf":
 			extractedFeatures["mimeType"] = "application/pdf"
+			version, ok := extractedFeatures["formatVersion"]
+			if ok {
+				versionString, ok := version.(string)
+				if ok {
+					switch versionString {
+					case "1.0":
+						extractedFeatures["puid"] = "fmt/14"
+					case "1.1":
+						extractedFeatures["puid"] = "fmt/15"
+					case "1.2":
+						extractedFeatures["puid"] = "fmt/16"
+					case "1.3":
+						extractedFeatures["puid"] = "fmt/17"
+					case "1.4":
+						extractedFeatures["puid"] = "fmt/18"
+					case "1.5":
+						extractedFeatures["puid"] = "fmt/19"
+					case "1.6":
+						extractedFeatures["puid"] = "fmt/20"
+					case "1.7":
+						extractedFeatures["puid"] = "fmt/276"
+					}
+				}
+			}
 		case "html":
 			extractedFeatures["mimeType"] = "text/html"
 			version, ok := extractedFeatures["formatVersion"]
@@ -166,10 +190,24 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 			}
 		case "tiff":
 			extractedFeatures["mimeType"] = "image/tiff"
+			extractedFeatures["puid"] = "fmt/353"
 		case "jpeg":
 			extractedFeatures["mimeType"] = "image/jpeg"
+			version, ok := extractedFeatures["formatVersion"]
+			if ok {
+				versionString, ok := version.(string)
+				if ok {
+					switch versionString {
+					case "1.00":
+						extractedFeatures["puid"] = "fmt/42"
+					case "1.01":
+						extractedFeatures["puid"] = "fmt/43"
+					}
+				}
+			}
 		case "jpeg2000":
 			extractedFeatures["mimeType"] = "image/jp2"
+			extractedFeatures["puid"] = "x-fmt/392"
 		}
 	}
 	context.JSON(http.StatusOK, response)
