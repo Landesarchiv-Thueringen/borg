@@ -9,16 +9,18 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ToolResponse struct {
-	ToolOutput   string
-	OutputFormat string
-	Features     map[string]interface{}
-	Error        *string
+	ToolVersion  string                 `json:"toolVersion"`
+	ToolOutput   string                 `json:"toolOutput"`
+	OutputFormat string                 `json:"outputFormat"`
+	Features     map[string]interface{} `json:"features"`
+	Error        *string                `json:"error"`
 }
 
 type VeraPDFOutput struct {
@@ -38,11 +40,16 @@ type ValidationResult struct {
 	Compliant   bool   `json:"compliant"`
 }
 
-var defaultResponse = "veraPDF API is running"
-var workDir = "/borg/tools/verapdf"
-var storeDir = "/borg/file-store"
+const (
+	DEFAULT_RESPONSE = "veraPDF API is running"
+	WORK_DIR         = "/borg/tools/verapdf"
+	STORE_DIR        = "/borg/file-store"
+)
+
+var toolVersion string
 
 func main() {
+	toolVersion = getToolVersion()
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
@@ -51,7 +58,25 @@ func main() {
 }
 
 func getDefaultResponse(context *gin.Context) {
-	context.String(http.StatusOK, defaultResponse)
+	context.String(http.StatusOK, DEFAULT_RESPONSE)
+}
+
+func getToolVersion() string {
+	cmd := exec.Command(
+		"/bin/ash",
+		filepath.Join(WORK_DIR, "third_party/verapdf"),
+		"--version",
+	)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := regexp.MustCompile(`veraPDF ([0-9]+\.[0-9]+\.[0-9]+)`)
+	matches := r.FindStringSubmatch(string(output))
+	if len(matches) != 2 {
+		log.Fatal("couldn't extract veraPDF version from tool output")
+	}
+	return matches[1]
 }
 
 func validateFile(context *gin.Context) {
@@ -60,26 +85,28 @@ func validateFile(context *gin.Context) {
 		errorMessage := "no veraPDF profile declared"
 		log.Println(errorMessage)
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
 		log.Println(errorMessage)
 		log.Println(err.Error())
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
 	cmd := exec.Command(
 		"/bin/ash",
-		filepath.Join(workDir, "third_party/verapdf"),
+		filepath.Join(WORK_DIR, "third_party/verapdf"),
 		"-f", profile,
 		"--format", "json",
 		"-v", fileStorePath,
@@ -93,7 +120,8 @@ func validateFile(context *gin.Context) {
 		log.Println(stderr.String())
 		errorMessage := fmt.Sprintf("error executing verPDF: %s", stderr.String())
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
@@ -110,6 +138,7 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 		log.Println(errorMessage)
 		log.Println(err.Error())
 		response := ToolResponse{
+			ToolVersion:  toolVersion,
 			ToolOutput:   output,
 			OutputFormat: "text",
 			Error:        &errorMessage,
@@ -119,6 +148,7 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 	}
 	extractedFeatures := make(map[string]interface{})
 	response := ToolResponse{
+		ToolVersion:  toolVersion,
 		ToolOutput:   output,
 		OutputFormat: "json",
 		Features:     extractedFeatures,

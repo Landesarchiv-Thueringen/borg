@@ -72,6 +72,24 @@ func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, defaultResponse)
 }
 
+func getToolVersion() string {
+	cmd := exec.Command(
+		"magika",
+		"--json",
+		"--version",
+	)
+	magikaOutput, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := regexp.MustCompile(`magika ([0-9]+\.[0-9]+\.[0-9]+) ([a-zA-Z0-9_]+)`)
+	matches := r.FindStringSubmatch(string(magikaOutput))
+	if len(matches) != 3 {
+		log.Fatal("couldn't extract magika version from tool output")
+	}
+	return fmt.Sprintf("cli: %s, model: %s", matches[1], matches[2])
+}
+
 // identifyFileFormat executes Magika and parses the output of the command.
 func identifyFileFormat(context *gin.Context) {
 	fileStorePath := filepath.Join(storeDir, context.Query("path"))
@@ -133,24 +151,6 @@ func identifyFileFormat(context *gin.Context) {
 		Score:        score,
 	}
 	context.JSON(http.StatusOK, response)
-}
-
-func getToolVersion() string {
-	cmd := exec.Command(
-		"magika",
-		"--json",
-		"--version",
-	)
-	magikaOutput, err := cmd.CombinedOutput()
-	if err != nil {
-		log.Fatal(err)
-	}
-	r := regexp.MustCompile(`magika ([0-9]+\.[0-9]+\.[0-9]+) ([a-zA-Z0-9_]+)`)
-	matches := r.FindStringSubmatch(string(magikaOutput))
-	if len(matches) != 3 {
-		log.Fatal("couldn't extract magika version from tool output")
-	}
-	return fmt.Sprintf("cli: %s, model: %s", matches[1], matches[2])
 }
 
 func extractFeatures(data Data) map[string]interface{} {

@@ -9,12 +9,14 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ToolResponse struct {
+	ToolVersion  string                 `json:"toolVersion"`
 	ToolOutput   string                 `json:"toolOutput"`
 	OutputFormat string                 `json:"outputFormat"`
 	Features     map[string]interface{} `json:"features"`
@@ -28,11 +30,16 @@ type TikaOutput struct {
 	PDFAVersion *string `json:"pdfa:PDFVersion"`
 }
 
-var defaultResponse = "Tika API is running"
-var workDir = "/borg/tools/tika"
-var storeDir = "/borg/file-store"
+const (
+	DEFAULT_RESPONSE = "Tika API is running"
+	WORK_DIR         = "/borg/tools/tika"
+	STORE_DIR        = "/borg/file-store"
+)
+
+var toolVersion string
 
 func main() {
+	toolVersion = getToolVersion()
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
@@ -41,11 +48,30 @@ func main() {
 }
 
 func getDefaultResponse(context *gin.Context) {
-	context.String(http.StatusOK, defaultResponse)
+	context.String(http.StatusOK, DEFAULT_RESPONSE)
+}
+
+func getToolVersion() string {
+	cmd := exec.Command(
+		"java",
+		"-jar",
+		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
+		"--version",
+	)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := regexp.MustCompile(`Apache Tika ([0-9]+\.[0-9]+\.[0-9]+)`)
+	matches := r.FindStringSubmatch(string(output))
+	if len(matches) != 2 {
+		log.Fatal("couldn't extract tika version from tool output")
+	}
+	return matches[1]
 }
 
 func extractMetadata(context *gin.Context) {
-	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
@@ -60,7 +86,7 @@ func extractMetadata(context *gin.Context) {
 	cmd := exec.Command(
 		"java",
 		"-jar",
-		filepath.Join(workDir, "third_party/tika-app-2.9.2.jar"),
+		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
 		"--metadata",
 		"--json",
 		fileStorePath,
@@ -73,12 +99,14 @@ func extractMetadata(context *gin.Context) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			Error: &errorMessage,
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
 		}
 		context.JSON(http.StatusOK, response)
 		return
 	}
 	tikaOutputString := string(tikaOutput)
+	log.Println(tikaOutputString)
 	processTikaOutput(context, tikaOutputString)
 }
 
@@ -90,6 +118,7 @@ func processTikaOutput(context *gin.Context, output string) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
+			ToolVersion:  toolVersion,
 			ToolOutput:   output,
 			OutputFormat: "text",
 			Error:        &errorMessage,
@@ -99,6 +128,7 @@ func processTikaOutput(context *gin.Context, output string) {
 	}
 	extractedFeatures := make(map[string]interface{})
 	response := ToolResponse{
+		ToolVersion:  toolVersion,
 		ToolOutput:   output,
 		OutputFormat: "json",
 		Features:     extractedFeatures,
