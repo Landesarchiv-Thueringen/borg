@@ -23,7 +23,7 @@ COPY --from=extract /third_party ./third_party
 # all its files and will be save to call when the container starts.
 RUN /bin/ash \
     third_party/droid.sh \
-    -Ns third_party/DROID_SignatureFile_V114.xml \
-    -Nc third_party/container-signature-20230822.xml \
+    -Ns third_party/DROID_SignatureFile_V120.xml \
+    -Nc third_party/container-signature-20240715.xml \
     third_party/LICENSE
 CMD ["./droidapi"]
