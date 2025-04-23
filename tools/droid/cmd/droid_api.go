@@ -24,14 +24,16 @@ type ToolResponse struct {
 }
 
 const (
-	TOOL_VERSION     = "6.8.0"
-	DEFAULT_RESPONSE = "DROID API is running"
-	WORK_DIR         = "/borg/tools/droid"
-	STORE_DIR        = "/borg/file-store"
+	TOOL_VERSION                  = "6.8.0"
+	DEFAULT_RESPONSE              = "DROID API is running"
+	WORK_DIR                      = "/borg/tools/droid"
+	STORE_DIR                     = "/borg/file-store"
+	SIGNATURE_FILE_NAME           = "DROID_SignatureFile_V120.xml"
+	CONTAINER_SIGNATURE_FILE_NAME = "container-signature-20240715.xml"
 )
 
-var signatureFilePath = filepath.Join(WORK_DIR, "third_party/DROID_SignatureFile_V114.xml")
-var containerSignatureFilePath = filepath.Join(WORK_DIR, "third_party/container-signature-20230822.xml")
+var signatureFilePath = filepath.Join(WORK_DIR, "third_party", SIGNATURE_FILE_NAME)
+var containerSignatureFilePath = filepath.Join(WORK_DIR, "third_party", CONTAINER_SIGNATURE_FILE_NAME)
 
 func main() {
 	router := gin.Default()

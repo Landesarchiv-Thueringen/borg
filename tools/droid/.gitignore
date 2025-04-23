@@ -12,6 +12,6 @@
 !Dockerfile
 
 # allow droid zip and signature files
-!/third_party/DROID_SignatureFile_V114.xml
-!/third_party/container-signature-20230822.xml
+!/third_party/DROID_SignatureFile_V120.xml
+!/third_party/container-signature-20240715.xml
 !/third_party/droid-binary-6.8.0-bin.zip
