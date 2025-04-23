@@ -114,7 +114,6 @@ func validateFile(path string) (bool, string, error) {
 		path,
 	)
 	output, err := cmd.CombinedOutput()
-	log.Println(string(output))
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			// Determined the given file to be invalid.

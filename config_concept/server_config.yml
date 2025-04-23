@@ -449,7 +449,7 @@ tools:
     featureSet:
       features:
         - key: "valid"
-        - key: "mimetype"
+        - key: "mimeType"
           providedByTrigger: true
       weight:
         default: 0.0

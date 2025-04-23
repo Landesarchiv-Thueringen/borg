@@ -20,37 +20,40 @@ type ToolConfig struct {
 	FeatureSet FeatureSetConfig `yaml:"featureSet"`
 }
 
-func (t *ToolConfig) IsTriggered(toolResults map[string]ToolResult) bool {
+func (t *ToolConfig) IsTriggered(toolResults map[string]ToolResult) (bool, map[string]interface{}) {
 	for _, t := range t.Triggers {
-		if t.IsTriggered(toolResults) {
-			return true
+		isTriggered, matches := t.IsTriggered(toolResults)
+		if isTriggered {
+			return true, matches
 		}
 	}
-	return false
+	return false, nil
 }
 
 type Trigger struct {
 	Conditions []FeatureCondition `yaml:"conditions"`
 }
 
-func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) bool {
+func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) (bool, map[string]interface{}) {
+	matches := make(map[string]interface{})
 	for _, condition := range t.Conditions {
 		isFulFilled := false
 		for _, toolResult := range toolResults {
-			f, ok := toolResult.Features[condition.Feature]
+			v, ok := toolResult.Features[condition.Feature]
 			if !ok {
 				continue
 			}
-			if condition.IsFulfilled(f) {
+			if condition.IsFulfilled(v) {
+				matches[condition.Feature] = v
 				isFulFilled = true
 				break
 			}
 		}
 		if !isFulFilled {
-			return false
+			return false, matches
 		}
 	}
-	return true
+	return true, matches
 }
 
 type FeatureSetConfig struct {
@@ -81,8 +84,9 @@ func (c *FeatureSetConfig) GetFeatureConfig(key string) (Feature, bool) {
 }
 
 type Feature struct {
-	Key        string `yaml:"key"`
-	MergeOrder uint   `yaml:"mergeOrder"`
+	Key               string `yaml:"key"`
+	MergeOrder        uint   `yaml:"mergeOrder"`
+	ProvidedByTrigger bool   `yaml:"providedByTrigger"`
 }
 
 type FeatureValue struct {

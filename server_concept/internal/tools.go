@@ -70,22 +70,32 @@ func RunTriggeredTools(
 ) map[string]ToolResult {
 	var responseChannels []chan ToolResult
 	// for every identification tool
-	for _, tool := range serverConfig.Tools {
-		if len(tool.Triggers) == 0 || !tool.IsTriggered(identificationResults) {
+	for _, toolConfig := range serverConfig.Tools {
+		isTriggered, matches := toolConfig.IsTriggered(identificationResults)
+		if len(toolConfig.Triggers) == 0 || !isTriggered {
 			continue
 		}
 		rc := make(chan ToolResult)
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
 		go func() {
-			response := getToolResult(tool.Endpoint, filename)
+			response := getToolResult(toolConfig.Endpoint, filename)
 			features := make(map[string]interface{})
 			if len(response.Features) > 0 {
 				features = response.Features
 			}
+			// get feature values from tool trigger
+			for _, featureConfig := range toolConfig.FeatureSet.Features {
+				if featureConfig.ProvidedByTrigger {
+					v, ok := matches[featureConfig.Key]
+					if ok {
+						features[featureConfig.Key] = v
+					}
+				}
+			}
 			rc <- ToolResult{
-				Id:           tool.Id,
-				Title:        tool.Title,
+				Id:           toolConfig.Id,
+				Title:        toolConfig.Title,
 				ToolVersion:  response.ToolVersion,
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
