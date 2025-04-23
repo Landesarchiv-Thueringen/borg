@@ -129,7 +129,17 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 			extractedFeatures["formatName"] = *repInfo.FormatName
 		}
 		if repInfo.FormatVersion != nil {
-			extractedFeatures["formatVersion"] = *repInfo.FormatVersion
+			if module == "html" {
+				// The html module of JHOVE adds the prefix HTML to format version.
+				// This behavior makes it harder to compare to other tool results.
+				r := regexp.MustCompile(`HTML ([0-9]+\.[0-9]+)`)
+				matches := r.FindStringSubmatch(*repInfo.FormatVersion)
+				if len(matches) == 2 {
+					extractedFeatures["formatVersion"] = matches[1]
+				}
+			} else {
+				extractedFeatures["formatVersion"] = *repInfo.FormatVersion
+			}
 		}
 		if repInfo.Validation != nil {
 			extractedFeatures["wellFormed"] = wellFormedRegEx.MatchString(*repInfo.Validation)
@@ -140,6 +150,20 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 			extractedFeatures["mimeType"] = "application/pdf"
 		case "html":
 			extractedFeatures["mimeType"] = "text/html"
+			version, ok := extractedFeatures["formatVersion"]
+			if ok {
+				versionString, ok := version.(string)
+				if ok {
+					switch versionString {
+					case "3.2":
+						extractedFeatures["puid"] = "fmt/98"
+					case "4.0":
+						extractedFeatures["puid"] = "fmt/99"
+					case "4.01":
+						extractedFeatures["puid"] = "fmt/100"
+					}
+				}
+			}
 		case "tiff":
 			extractedFeatures["mimeType"] = "image/tiff"
 		case "jpeg":
