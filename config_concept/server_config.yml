@@ -256,7 +256,7 @@ tools:
         - key: "valid"
         - key: "puid"
         - key: "mimeType"
-        - feature: "formatVersion"
+        - key: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -286,7 +286,7 @@ tools:
         - key: "valid"
         - key: "puid"
         - key: "mimeType"
-        - feature: "formatVersion"
+        - key: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -316,7 +316,7 @@ tools:
         - key: "valid"
         - key: "puid"
         - key: "mimeType"
-        - feature: "formatVersion"
+        - key: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -346,7 +346,7 @@ tools:
         - key: "valid"
         - key: "puid"
         - key: "mimeType"
-        - feature: "formatVersion"
+        - key: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -376,7 +376,7 @@ tools:
         - key: "valid"
         - key: "puid"
         - key: "mimeType"
-        - feature: "formatVersion"
+        - key: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -405,7 +405,7 @@ tools:
         - key: "valid"
         - key: "puid"
         - key: "mimeType"
-        - feature: "formatVersion"
+        - key: "formatVersion"
       weight:
         default: 0.0
         conditional:
@@ -430,6 +430,7 @@ tools:
     featureSet:
       features:
         - key: "valid"
+        - key: "mimeType"
       weight:
         default: 0.0
         conditional:
@@ -437,6 +438,9 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "ooxml"
     title: "OOXML-Validator"
@@ -458,3 +462,6 @@ tools:
             conditions:
               - feature: "valid"
                 value: true
+      mergeConditions:
+        - feature: "mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
