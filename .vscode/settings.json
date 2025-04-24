@@ -14,7 +14,7 @@
     "source.organizeImports": "explicit"
   },
   "typescript.preferences.importModuleSpecifier": "relative",
-
+  "cSpell.language": "en,de-de",
   "cSpell.words": [
     "Formatverifikation",
     "Formatversion",
