@@ -108,7 +108,6 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
-			ToolVersion:  parsedJhoveOutput.Root.ToolVersion,
 			ToolOutput:   output,
 			OutputFormat: "text",
 			Error:        &errorMessage,
