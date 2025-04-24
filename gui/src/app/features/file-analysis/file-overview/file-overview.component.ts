@@ -41,8 +41,6 @@ interface FileFeatures {
   [key: string]: FileFeature;
 }
 
-const ALWAYS_VISIBLE_COLUMNS = ['puid', 'mimeType'];
-
 @Component({
   selector: 'app-file-overview',
   templateUrl: './file-overview.component.html',
@@ -79,17 +77,7 @@ export class FileOverviewComponent {
     if (this.analysis.featureSets.length === 0) {
       return;
     }
-    const features = this.analysis.featureSets[0].features;
-    if (!features) {
-      return;
-    }
-    let featureNames: OverviewFeature[] = [];
-    for (const featureKey in features) {
-      if (isOverviewFeature(featureKey)) {
-        featureNames.push(featureKey);
-      }
-    }
-    const sortedFeatures: string[] = sortFeatures([...ALWAYS_VISIBLE_COLUMNS, ...featureNames]);
+    const sortedFeatures: string[] = sortFeatures([...OVERVIEW_FEATURES]);
     this.tableColumnList = ['tool', ...sortedFeatures];
     if (this.analysis.summary.error) {
       this.tableColumnList.push('error');
@@ -99,7 +87,7 @@ export class FileOverviewComponent {
     row['tool'] = {
       value: 'Gesamtergebnis',
     };
-    for (let featureName of featureNames) {
+    for (let featureName of OVERVIEW_FEATURES) {
       if (this.analysis.featureSets[0].features[featureName] !== undefined) {
         row[featureName] = {
           value: this.analysis.featureSets[0].features[featureName],
@@ -110,12 +98,17 @@ export class FileOverviewComponent {
     for (let toolResult of this.analysis.toolResults) {
       const row: FileFeatures = {};
       row['tool'] = { value: toolResult.title };
-      for (let featureName of featureNames) {
+      for (let featureName of OVERVIEW_FEATURES) {
         if (toolResult.features[featureName] !== undefined) {
           row[featureName] = {
             value: toolResult.features[featureName],
           };
         }
+      }
+      if (toolResult.error) {
+        row['error'] = {
+          icon: 'error',
+        };
       }
       rows.push(row);
     }
@@ -215,10 +208,6 @@ export class FileOverviewComponent {
     a.click();
     document.body.removeChild(a);
   }
-}
-
-function isOverviewFeature(feature: string): feature is OverviewFeature {
-  return (OVERVIEW_FEATURES as readonly string[]).includes(feature);
 }
 
 /** Sorts feature keys and removes duplicates. */
