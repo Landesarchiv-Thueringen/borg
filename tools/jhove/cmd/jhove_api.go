@@ -190,7 +190,6 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 			}
 		case "tiff":
 			extractedFeatures["mimeType"] = "image/tiff"
-			extractedFeatures["puid"] = "fmt/353"
 		case "jpeg":
 			extractedFeatures["mimeType"] = "image/jpeg"
 			version, ok := extractedFeatures["formatVersion"]
