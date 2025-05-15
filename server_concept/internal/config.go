@@ -66,6 +66,11 @@ func (c *FeatureSetConfig) AreMergeable(
 	fs1 map[string]interface{},
 	fs2 map[string]interface{},
 ) (isFulfilled bool, mergeModifier float64) {
+	// The merge is always possible if the origin set is empty.
+	if len(fs1) == 0 {
+		isFulfilled = true
+		return
+	}
 	for _, condition := range c.MergeConditions {
 		ok, strongLink := condition.IsFulfilled(fs1, fs2)
 		if !ok {
@@ -76,7 +81,11 @@ func (c *FeatureSetConfig) AreMergeable(
 			mergeModifier += 0.25
 		}
 	}
-	isFulfilled = true
+	// The merge is possible, if at least on condition is truly fulfilled.
+	// That means that both feature sets have values for the condition feature.
+	if mergeModifier > 0.0 {
+		isFulfilled = true
+	}
 	return
 }
 
