@@ -65,13 +65,19 @@ type FeatureSetConfig struct {
 func (c *FeatureSetConfig) AreMergeable(
 	fs1 map[string]interface{},
 	fs2 map[string]interface{},
-) bool {
+) (isFulfilled bool, mergeModifier float64) {
 	for _, condition := range c.MergeConditions {
-		if !condition.IsFulfilled(fs1, fs2) {
-			return false
+		ok, strongLink := condition.IsFulfilled(fs1, fs2)
+		if !ok {
+			isFulfilled = false
+			return
+		}
+		if strongLink {
+			mergeModifier += 0.25
 		}
 	}
-	return true
+	isFulfilled = true
+	return
 }
 
 func (c *FeatureSetConfig) GetFeatureConfig(key string) (Feature, bool) {
@@ -166,19 +172,20 @@ type MergeCondition struct {
 	ValueRegEx *string `yaml:"valueRegEx"`
 }
 
-func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]interface{}) bool {
+func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]interface{}) (isFulfilled bool, strongLink bool) {
 	// if the second feature sets doesn't contain any values
 	// the first feature set can be empty if merging against an empty set
 	if len(fs2) == 0 {
 		// merge is not possible because it doesn't add any features but improves the score
-		return false
+		return
 	}
 	fv1, ok1 := fs1[c.Feature]
 	fv2, ok2 := fs2[c.Feature]
 	// if not both feature sets include the feature of the merge condition
 	if !ok1 || !ok2 {
-		// merge is possible
-		return true
+		// merge is possible but not a strong link
+		isFulfilled = true
+		return
 	}
 	// if value extraction regular expression is configured
 	if c.ValueRegEx != nil {
@@ -192,13 +199,22 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]
 		m1 := regEx.FindStringSubmatch(s1)
 		m2 := regEx.FindStringSubmatch(s2)
 		if len(m1) != 2 || len(m2) != 2 {
-			return false
+			isFulfilled = false
+			return
 		}
 		// merge is possible if extracted values are equal
-		return m1[1] == m2[1]
+		isFulfilled = m1[1] == m2[1]
+		if isFulfilled {
+			strongLink = true
+		}
+		return
 	}
 	// merge is possible if features are equal
-	return fv1 == fv2
+	isFulfilled = fv1 == fv2
+	if isFulfilled {
+		strongLink = true
+	}
+	return
 }
 
 var serverConfig ServerConfig

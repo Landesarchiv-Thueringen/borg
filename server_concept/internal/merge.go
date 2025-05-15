@@ -71,33 +71,42 @@ func normalizeSetScore(sets []FeatureSet) []FeatureSet {
 }
 
 type Merge struct {
-	toolConfigs []ToolConfig
-	toolResults []ToolResult
+	toolConfigs      []ToolConfig
+	toolResults      []ToolResult
+	AccumulatedScore float64
 }
 
 func (m *Merge) MergeIfPossible(tc2 ToolConfig, tr2 ToolResult) {
-	if m.IsMergeable(tc2, tr2) {
+	isMergeable, mergeModifier := m.IsMergeable(tc2, tr2)
+	if isMergeable {
+		if len(m.toolConfigs) == 0 {
+			m.AccumulatedScore = tc2.FeatureSet.Weight.GetWeight(tr2)
+		} else {
+			m.AccumulatedScore += mergeModifier * tc2.FeatureSet.Weight.GetWeight(tr2)
+		}
 		m.toolConfigs = append(m.toolConfigs, tc2)
 		m.toolResults = append(m.toolResults, tr2)
 	}
 }
 
-func (m *Merge) IsMergeable(tc2 ToolConfig, tr2 ToolResult) bool {
+func (m *Merge) IsMergeable(tc2 ToolConfig, tr2 ToolResult) (isMergeable bool, mergeModifier float64) {
 	if tr2.Error != nil {
-		return false
+		return
 	}
 	mergedResults := m.GetMergedToolResults()
 	// check if all conditions of the new set are met
-	if !tc2.FeatureSet.AreMergeable(mergedResults.Features, tr2.Features) {
-		return false
+	isMergeable, mergeModifier = tc2.FeatureSet.AreMergeable(mergedResults.Features, tr2.Features)
+	if !isMergeable {
+		return
 	}
 	// check if all conditions of already merged sets are met
 	for _, tc := range m.toolConfigs {
-		if !tc.FeatureSet.AreMergeable(mergedResults.Features, tr2.Features) {
-			return false
+		subsetMergeable, _ := tc.FeatureSet.AreMergeable(mergedResults.Features, tr2.Features)
+		if !subsetMergeable {
+			return
 		}
 	}
-	return true
+	return
 }
 
 func (m *Merge) GetMergedToolResults() FeatureSet {
@@ -124,15 +133,13 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 		features[key] = featureValues[0].Value
 	}
 	supportingTools := make([]string, 0)
-	score := 0.0
-	for index, tc := range m.toolConfigs {
+	for _, tc := range m.toolConfigs {
 		supportingTools = append(supportingTools, tc.Title)
-		score += tc.FeatureSet.Weight.GetWeight(m.toolResults[index])
 	}
 	return FeatureSet{
 		Features:        features,
 		SupportingTools: supportingTools,
-		Score:           score,
+		Score:           m.AccumulatedScore,
 	}
 }
 

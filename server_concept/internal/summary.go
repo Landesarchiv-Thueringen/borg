@@ -2,7 +2,7 @@ package internal
 
 import "log"
 
-const UNCERTAIN_TRESHOLD = 0.75
+const UNCERTAIN_THRESHOLD = 0.75
 
 // Summary accumulates validation results on the highest level.
 //
@@ -35,7 +35,7 @@ type Summary struct {
 
 func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	var summary Summary
-	if sets[0].Score < UNCERTAIN_TRESHOLD {
+	if sets[0].Score < UNCERTAIN_THRESHOLD {
 		summary.FormatUncertain = true
 	}
 	validFeature, ok := sets[0].Features["valid"]
