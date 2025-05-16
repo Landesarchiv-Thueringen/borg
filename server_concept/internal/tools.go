@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"maps"
 	"net/http"
 	"net/http/httputil"
+	"slices"
+	"sort"
 )
 
 type ToolResult struct {
@@ -26,6 +29,12 @@ type ToolResult struct {
 	// Error is an error emitted from the tool in case of failure.
 	Error *string `json:"error"`
 }
+
+type ByTitle []ToolResult
+
+func (a ByTitle) Len() int           { return len(a) }
+func (a ByTitle) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByTitle) Less(i, j int) bool { return a[i].Title < a[j].Title }
 
 func RunIdentificationTools(filename string) map[string]ToolResult {
 	var responseChannels []chan ToolResult
@@ -163,4 +172,29 @@ func processToolResponse(response *http.Response) ToolResult {
 		return ToolResult{Error: &errorMessage}
 	}
 	return result
+}
+
+func CombineToolResults(
+	identResults map[string]ToolResult,
+	triggeredResults map[string]ToolResult,
+) map[string]ToolResult {
+	toolResults := make(map[string]ToolResult)
+	for k, v := range identResults {
+		toolResults[k] = v
+	}
+	for k, v := range triggeredResults {
+		toolResults[k] = v
+	}
+	return toolResults
+}
+
+func GetSortedToolResults(
+	identResults map[string]ToolResult,
+	triggeredResults map[string]ToolResult,
+) []ToolResult {
+	r1 := slices.Collect(maps.Values(identResults))
+	r2 := slices.Collect(maps.Values(triggeredResults))
+	sort.Sort(ByTitle(r1))
+	sort.Sort(ByTitle(r2))
+	return append(r1, r2...)
 }

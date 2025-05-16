@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"lath/borg/internal"
 	"log"
-	"maps"
 	"net/http"
 	"os"
 	"path/filepath"
-	"slices"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -74,20 +72,14 @@ func analyzeFile(c *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
-	identificationResults := internal.RunIdentificationTools(filename)
-	triggeredResults := internal.RunTriggeredTools(filename, identificationResults)
-	toolResults := make(map[string]internal.ToolResult)
-	for k, v := range identificationResults {
-		toolResults[k] = v
-	}
-	for k, v := range triggeredResults {
-		toolResults[k] = v
-	}
+	identResults := internal.RunIdentificationTools(filename)
+	triggeredResults := internal.RunTriggeredTools(filename, identResults)
+	toolResults := internal.CombineToolResults(identResults, triggeredResults)
 	mergedSets := internal.MergeFeatureSets(toolResults)
 	if len(mergedSets) == 0 {
 		mergedSets = make([]internal.FeatureSet, 0)
 	}
-	tr := slices.Collect(maps.Values(toolResults))
+	tr := internal.GetSortedToolResults(identResults, triggeredResults)
 	fileAnalysis := fileAnalysis{
 		Summary:     internal.GetSummary(mergedSets, tr),
 		FeatureSets: mergedSets,
