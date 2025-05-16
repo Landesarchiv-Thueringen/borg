@@ -18,18 +18,22 @@
   "cSpell.words": [
     "Formatverifikation",
     "Formatversion",
+    "github",
     "gonic",
     "jhove",
+    "magika",
     "odfvalidator",
     "officedocument",
+    "ooxml",
     "OOXML",
     "opendocument",
     "openxmlformats",
     "PDFA",
     "PRONOM",
     "puid",
+    "tika",
     "Tika",
-    "verapdf",
-    "magika"
+    "uuid",
+    "verapdf"
   ]
 }
