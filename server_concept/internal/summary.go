@@ -35,6 +35,10 @@ type Summary struct {
 
 func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	var summary Summary
+	if len(sets) == 0 {
+		summary.FormatUncertain = true
+		return summary
+	}
 	if sets[0].Score < UNCERTAIN_THRESHOLD {
 		summary.FormatUncertain = true
 	}

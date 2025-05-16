@@ -84,6 +84,9 @@ func analyzeFile(c *gin.Context) {
 		toolResults[k] = v
 	}
 	mergedSets := internal.MergeFeatureSets(toolResults)
+	if len(mergedSets) == 0 {
+		mergedSets = make([]internal.FeatureSet, 0)
+	}
 	tr := slices.Collect(maps.Values(toolResults))
 	fileAnalysis := fileAnalysis{
 		Summary:     internal.GetSummary(mergedSets, tr),
