@@ -9,8 +9,8 @@ import (
 )
 
 type ServerConfig struct {
-	FileIdentityRules []FileIdentityRule `yaml:"fileIdentity"`
 	Tools             []ToolConfig       `yaml:"tools"`
+	FileIdentityRules []FileIdentityRule `yaml:"fileIdentity"`
 }
 
 type FileIdentityRule struct {

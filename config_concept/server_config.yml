@@ -1,15 +1,3 @@
-fileIdentity:
-  - conditions:
-      - feature: "formatVersion"
-        value: "PDF/A-2b"
-      - feature: "valid"
-        value: true
-  - conditions:
-      - feature: "formatVersion"
-        value: "PDF/UA"
-      - feature: "valid"
-        value: true
-
 tools:
   - id: "droid"
     title: "DROID"
@@ -482,3 +470,15 @@ tools:
       mergeConditions:
         - feature: "mimeType"
           valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+
+fileIdentity:
+  - conditions:
+      - feature: "formatVersion"
+        value: "PDF/A-2b"
+      - feature: "valid"
+        value: true
+  - conditions:
+      - feature: "formatVersion"
+        value: "PDF/UA"
+      - feature: "valid"
+        value: true
