@@ -12,6 +12,25 @@ type FeatureSet struct {
 	Score           float64                `json:"score"`
 }
 
+func (s *FeatureSet) FulFillesAny(fileIdentityRules []FileIdentityRule) bool {
+	for _, rule := range fileIdentityRules {
+		if s.FulFilles(rule) {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *FeatureSet) FulFilles(fileIdentityRule FileIdentityRule) bool {
+	for _, condition := range fileIdentityRule.Conditions {
+		v, ok := s.Features[condition.Feature]
+		if !ok || !condition.IsFulfilled(v) {
+			return false
+		}
+	}
+	return true
+}
+
 type ByScore []FeatureSet
 
 func (a ByScore) Len() int           { return len(a) }
@@ -68,6 +87,28 @@ func normalizeSetScore(sets []FeatureSet) []FeatureSet {
 		normalizedSets = append(normalizedSets, s)
 	}
 	return normalizedSets
+}
+
+func applyFileIdentityRules(sets []FeatureSet) []FeatureSet {
+	for i, s := range sets {
+		if s.FulFillesAny(serverConfig.FileIdentityRules) {
+			return setFileIdentity(sets, i)
+		}
+	}
+	return sets
+}
+
+func setFileIdentity(sets []FeatureSet, setIndex int) []FeatureSet {
+	var adjustedSets []FeatureSet
+	for i, s := range sets {
+		if i == setIndex {
+			s.Score = 1.0
+		} else {
+			s.Score = 0.0
+		}
+		adjustedSets = append(adjustedSets, s)
+	}
+	return adjustedSets
 }
 
 type Merge struct {
@@ -171,7 +212,9 @@ func MergeFeatureSets(toolResults map[string]ToolResult) []FeatureSet {
 		}
 		mergedSets = append(mergedSets, m.GetMergedToolResults())
 	}
-	revisedSets := normalizeSetScore(filterDuplicateSets(mergedSets))
+	revisedSets := filterDuplicateSets(mergedSets)
+	revisedSets = normalizeSetScore(revisedSets)
+	revisedSets = applyFileIdentityRules(revisedSets)
 	sort.Sort(sort.Reverse(ByScore(revisedSets)))
 	return revisedSets
 }

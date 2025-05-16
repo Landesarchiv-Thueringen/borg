@@ -9,7 +9,12 @@ import (
 )
 
 type ServerConfig struct {
-	Tools []ToolConfig `yaml:"tools"`
+	FileIdentityRules []FileIdentityRule `yaml:"fileIdentity"`
+	Tools             []ToolConfig       `yaml:"tools"`
+}
+
+type FileIdentityRule struct {
+	Conditions []FeatureCondition `yaml:"conditions"`
 }
 
 type ToolConfig struct {
@@ -121,7 +126,16 @@ type Weight struct {
 	ProvidedByTool     bool                `yaml:"providedByTool"`
 }
 
+// priority of different providers:
+//   - 1. conditional weight
+//   - 2. tool provided weight
+//   - 3. default weight
 func (w *Weight) GetWeight(tr ToolResult) float64 {
+	for _, cw := range w.ConditionalWeights {
+		if cw.IsFulfilled(tr) {
+			return cw.Value
+		}
+	}
 	if w.ProvidedByTool {
 		if tr.Score == nil {
 			errorMessage := "configuration error: a tool provided weight was set "
@@ -129,11 +143,6 @@ func (w *Weight) GetWeight(tr ToolResult) float64 {
 			log.Fatal(errorMessage)
 		}
 		return *tr.Score
-	}
-	for _, cw := range w.ConditionalWeights {
-		if cw.IsFulfilled(tr) {
-			return cw.Value
-		}
 	}
 	return w.Default
 }
