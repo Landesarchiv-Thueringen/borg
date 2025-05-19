@@ -74,11 +74,11 @@ func validate(context *gin.Context) {
 		return
 	}
 	extractedFeatures := make(map[string]interface{})
-	extractedFeatures["valid"] = valid
+	extractedFeatures["format:valid"] = valid
 	r := regexp.MustCompile(`Media Type:\s*([a-zA-Z0-9.+/-]+)`)
 	matches := r.FindStringSubmatch(output)
 	if len(matches) == 2 {
-		extractedFeatures["mimeType"] = matches[1]
+		extractedFeatures["format:mimeType"] = matches[1]
 	}
 	response := ToolResponse{
 		ToolVersion:  toolVersion,

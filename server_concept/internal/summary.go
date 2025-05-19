@@ -42,7 +42,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	if sets[0].Score < UNCERTAIN_THRESHOLD {
 		summary.FormatUncertain = true
 	}
-	validFeature, ok := sets[0].Features["valid"]
+	validFeature, ok := sets[0].Features["format:valid"]
 	if ok {
 		valid, ok := validFeature.(bool)
 		if !ok {
@@ -53,7 +53,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 			summary.Invalid = true
 		}
 	}
-	puidFeature, ok := sets[0].Features["puid"]
+	puidFeature, ok := sets[0].Features["format:puid"]
 	if ok {
 		puid, ok := puidFeature.(string)
 		if !ok {
@@ -62,7 +62,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 			summary.PUID = puid
 		}
 	}
-	mimeTypeFeature, ok := sets[0].Features["mimeType"]
+	mimeTypeFeature, ok := sets[0].Features["format:mimeType"]
 	if ok {
 		mimeType, ok := mimeTypeFeature.(string)
 		if !ok {
@@ -71,7 +71,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 			summary.MimeType = mimeType
 		}
 	}
-	formatVersionFeature, ok := sets[0].Features["formatVersion"]
+	formatVersionFeature, ok := sets[0].Features["format:version"]
 	if ok {
 		formatVersion, ok := formatVersionFeature.(string)
 		if !ok {

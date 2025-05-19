@@ -141,17 +141,17 @@ func processTikaOutput(context *gin.Context, output string) {
 		if mimeType == "text/x-web-markdown" {
 			mimeType = "text/markdown"
 		}
-		extractedFeatures["mimeType"] = mimeType
+		extractedFeatures["format:mimeType"] = mimeType
 	}
 	if parsedTikaOutput.Encoding != nil {
-		extractedFeatures["encoding"] = *parsedTikaOutput.Encoding
+		extractedFeatures["text:encoding"] = *parsedTikaOutput.Encoding
 	}
 	// use PDF/A version if existing
 	if parsedTikaOutput.PDFAVersion != nil {
-		extractedFeatures["formatVersion"] = "PDF/" + *parsedTikaOutput.PDFAVersion
+		extractedFeatures["format:version"] = "PDF/" + *parsedTikaOutput.PDFAVersion
 	} else if parsedTikaOutput.PDFVersion != nil {
 		// no PDF/A version --> use normal version info
-		extractedFeatures["formatVersion"] = *parsedTikaOutput.PDFVersion
+		extractedFeatures["format:version"] = *parsedTikaOutput.PDFVersion
 	}
 	context.JSON(http.StatusOK, response)
 }

@@ -154,32 +154,32 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 		Features:     extractedFeatures,
 	}
 	if len(veraPDFOutput.Report.Jobs) > 0 {
-		extractedFeatures["valid"] =
+		extractedFeatures["format:valid"] =
 			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant
 		switch profile {
 		case "1a":
-			extractedFeatures["puid"] = "fmt/95"
-			extractedFeatures["mimeType"] = "application/pdf"
-			extractedFeatures["formatVersion"] = "PDF/A-1a"
+			extractedFeatures["format:puid"] = "fmt/95"
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:version"] = "PDF/A-1a"
 		case "1b":
-			extractedFeatures["puid"] = "fmt/354"
-			extractedFeatures["mimeType"] = "application/pdf"
-			extractedFeatures["formatVersion"] = "PDF/A-1b"
+			extractedFeatures["format:puid"] = "fmt/354"
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:version"] = "PDF/A-1b"
 		case "2a":
-			extractedFeatures["puid"] = "fmt/476"
-			extractedFeatures["mimeType"] = "application/pdf"
-			extractedFeatures["formatVersion"] = "PDF/A-2a"
+			extractedFeatures["format:puid"] = "fmt/476"
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:version"] = "PDF/A-2a"
 		case "2b":
-			extractedFeatures["puid"] = "fmt/477"
-			extractedFeatures["mimeType"] = "application/pdf"
-			extractedFeatures["formatVersion"] = "PDF/A-2b"
+			extractedFeatures["format:puid"] = "fmt/477"
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:version"] = "PDF/A-2b"
 		case "2u":
-			extractedFeatures["puid"] = "fmt/478"
-			extractedFeatures["mimeType"] = "application/pdf"
-			extractedFeatures["formatVersion"] = "PDF/A-2u"
+			extractedFeatures["format:puid"] = "fmt/478"
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:version"] = "PDF/A-2u"
 		case "ua1":
-			extractedFeatures["mimeType"] = "application/pdf"
-			extractedFeatures["formatVersion"] = "PDF/UA"
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:version"] = "PDF/UA"
 		}
 	}
 	context.JSON(http.StatusOK, response)

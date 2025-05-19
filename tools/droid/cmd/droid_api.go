@@ -149,7 +149,7 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 	puid, err := extractFeature("PUID", formatTable[1], keyMap)
 	if err == nil {
 		if puid != "" {
-			features["puid"] = puid
+			features["format:puid"] = puid
 		}
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
@@ -158,7 +158,7 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 	mimeType, err := extractFeature("MIME_TYPE", formatTable[1], keyMap)
 	if err == nil {
 		if mimeType != "" {
-			features["mimeType"] = mimeType
+			features["format:mimeType"] = mimeType
 		}
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
@@ -167,7 +167,7 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 	formatName, err := extractFeature("FORMAT_NAME", formatTable[1], keyMap)
 	if err == nil {
 		if formatName != "" {
-			features["formatName"] = formatName
+			features["format:name"] = formatName
 		}
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
@@ -180,7 +180,7 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 			if strings.Contains(formatName, "PDF/A") {
 				formatVersion = "PDF/A-" + formatVersion
 			}
-			features["formatVersion"] = formatVersion
+			features["format:version"] = formatVersion
 		}
 
 	} else if errors.As(err, &keyError) {

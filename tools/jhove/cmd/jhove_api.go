@@ -125,7 +125,7 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
 		repInfo := parsedJhoveOutput.Root.RepInfo[0]
 		if repInfo.FormatName != nil {
-			extractedFeatures["formatName"] = *repInfo.FormatName
+			extractedFeatures["format:name"] = *repInfo.FormatName
 		}
 		if repInfo.FormatVersion != nil {
 			if module == "html" {
@@ -134,78 +134,78 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 				r := regexp.MustCompile(`HTML ([0-9]+\.[0-9]+)`)
 				matches := r.FindStringSubmatch(*repInfo.FormatVersion)
 				if len(matches) == 2 {
-					extractedFeatures["formatVersion"] = matches[1]
+					extractedFeatures["format:version"] = matches[1]
 				}
 			} else {
-				extractedFeatures["formatVersion"] = *repInfo.FormatVersion
+				extractedFeatures["format:version"] = *repInfo.FormatVersion
 			}
 		}
 		if repInfo.Validation != nil {
-			extractedFeatures["wellFormed"] = wellFormedRegEx.MatchString(*repInfo.Validation)
-			extractedFeatures["valid"] = validRegEx.MatchString(*repInfo.Validation)
+			extractedFeatures["format:wellFormed"] = wellFormedRegEx.MatchString(*repInfo.Validation)
+			extractedFeatures["format:valid"] = validRegEx.MatchString(*repInfo.Validation)
 		}
 		switch module {
 		case "pdf":
-			extractedFeatures["mimeType"] = "application/pdf"
-			version, ok := extractedFeatures["formatVersion"]
+			extractedFeatures["format:mimeType"] = "application/pdf"
+			version, ok := extractedFeatures["format:version"]
 			if ok {
 				versionString, ok := version.(string)
 				if ok {
 					switch versionString {
 					case "1.0":
-						extractedFeatures["puid"] = "fmt/14"
+						extractedFeatures["format:puid"] = "fmt/14"
 					case "1.1":
-						extractedFeatures["puid"] = "fmt/15"
+						extractedFeatures["format:puid"] = "fmt/15"
 					case "1.2":
-						extractedFeatures["puid"] = "fmt/16"
+						extractedFeatures["format:puid"] = "fmt/16"
 					case "1.3":
-						extractedFeatures["puid"] = "fmt/17"
+						extractedFeatures["format:puid"] = "fmt/17"
 					case "1.4":
-						extractedFeatures["puid"] = "fmt/18"
+						extractedFeatures["format:puid"] = "fmt/18"
 					case "1.5":
-						extractedFeatures["puid"] = "fmt/19"
+						extractedFeatures["format:puid"] = "fmt/19"
 					case "1.6":
-						extractedFeatures["puid"] = "fmt/20"
+						extractedFeatures["format:puid"] = "fmt/20"
 					case "1.7":
-						extractedFeatures["puid"] = "fmt/276"
+						extractedFeatures["format:puid"] = "fmt/276"
 					}
 				}
 			}
 		case "html":
-			extractedFeatures["mimeType"] = "text/html"
-			version, ok := extractedFeatures["formatVersion"]
+			extractedFeatures["format:mimeType"] = "text/html"
+			version, ok := extractedFeatures["format:version"]
 			if ok {
 				versionString, ok := version.(string)
 				if ok {
 					switch versionString {
 					case "3.2":
-						extractedFeatures["puid"] = "fmt/98"
+						extractedFeatures["format:puid"] = "fmt/98"
 					case "4.0":
-						extractedFeatures["puid"] = "fmt/99"
+						extractedFeatures["format:puid"] = "fmt/99"
 					case "4.01":
-						extractedFeatures["puid"] = "fmt/100"
+						extractedFeatures["format:puid"] = "fmt/100"
 					}
 				}
 			}
 		case "tiff":
-			extractedFeatures["mimeType"] = "image/tiff"
+			extractedFeatures["format:mimeType"] = "image/tiff"
 		case "jpeg":
-			extractedFeatures["mimeType"] = "image/jpeg"
-			version, ok := extractedFeatures["formatVersion"]
+			extractedFeatures["format:mimeType"] = "image/jpeg"
+			version, ok := extractedFeatures["format:version"]
 			if ok {
 				versionString, ok := version.(string)
 				if ok {
 					switch versionString {
 					case "1.00":
-						extractedFeatures["puid"] = "fmt/42"
+						extractedFeatures["format:puid"] = "fmt/42"
 					case "1.01":
-						extractedFeatures["puid"] = "fmt/43"
+						extractedFeatures["format:puid"] = "fmt/43"
 					}
 				}
 			}
 		case "jpeg2000":
-			extractedFeatures["mimeType"] = "image/jp2"
-			extractedFeatures["puid"] = "x-fmt/392"
+			extractedFeatures["format:mimeType"] = "image/jp2"
+			extractedFeatures["format:puid"] = "x-fmt/392"
 		}
 	}
 	context.JSON(http.StatusOK, response)

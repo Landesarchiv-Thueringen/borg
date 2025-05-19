@@ -52,7 +52,7 @@ func validate(context *gin.Context) {
 		return
 	}
 	extractedFeatures := make(map[string]interface{})
-	extractedFeatures["valid"] = valid
+	extractedFeatures["format:valid"] = valid
 	response := ToolResponse{
 		ToolVersion:  TOOL_VERSION,
 		ToolOutput:   output,

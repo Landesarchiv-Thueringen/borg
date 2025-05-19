@@ -11,8 +11,12 @@ import { FileFeaturePipe } from '../pipes/file-feature.pipe';
 import { FeatureValue, FileAnalysis, RowValue } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
-const OVERVIEW_FEATURES = ['puid', 'mimeType', 'formatVersion', 'valid'] as const;
-type OverviewFeature = (typeof OVERVIEW_FEATURES)[number];
+const OVERVIEW_FEATURES = [
+  'format:puid',
+  'format:mimeType',
+  'format:version',
+  'format:valid',
+] as const;
 
 const featureOrder = new Map<string, number>([
   ['puid', 4],
@@ -114,43 +118,6 @@ export class FileOverviewComponent {
     }
     this.dataSource.data = rows;
   }
-
-  // getTableRows(
-  //   toolNames: string[],
-  //   featureNames: string[],
-  //   featureValues: { [key: string]: string | boolean | number },
-  // ): FileFeatures[] {
-  //   const rows: FileFeatures[] = [this.getCumulativeResult(featureNames, featureValues)];
-  //   const sortedFeatures: string[] = sortFeatures([...ALWAYS_VISIBLE_COLUMNS, ...featureNames]);
-  //   this.tableColumnList = ['tool', ...sortedFeatures];
-  //   if (this.analysis.summary.error) {
-  //     this.tableColumnList.push('error');
-  //   }
-  //   for (let toolName of toolNames) {
-  //     const fileFeatures: FileFeatures = {};
-  //     fileFeatures['tool'] = {
-  //       value: toolName,
-  //     };
-  //     for (let featureName of featureNames) {
-  //       for (let featureValue of featureValues[featureName]) {
-  //         if (this.featureOfTool(featureValue, toolName)) {
-  //           const toolConfidence = featureValue.supportingTools[toolName];
-  //           fileFeatures[featureName] = {
-  //             value: featureValue.value,
-  //             confidence: toolConfidence,
-  //           };
-  //         }
-  //       }
-  //     }
-  //     if (this.analysis.toolResults.find((r) => r.toolName === toolName)?.error) {
-  //       fileFeatures['error'] = {
-  //         icon: 'error',
-  //       };
-  //     }
-  //     rows.push(fileFeatures);
-  //   }
-  //   return rows;
-  // }
 
   getCumulativeResult(
     featureNames: string[],
