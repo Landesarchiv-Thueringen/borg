@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { FilePropertyDefinition } from '../file-analysis-table/file-analysis-table.component';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
-import { FeatureValue, FileAnalysis, RowValue } from '../results';
+import { FileAnalysis, RowValue } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
 const OVERVIEW_FEATURES = [
@@ -117,28 +117,6 @@ export class FileOverviewComponent {
       rows.push(row);
     }
     this.dataSource.data = rows;
-  }
-
-  getCumulativeResult(
-    featureNames: string[],
-    featureValues: { [key: string]: string | boolean | number },
-  ): FileFeatures {
-    const features: FileFeatures = {};
-    features['tool'] = {
-      value: 'Gesamtergebnis',
-    };
-    for (let featureName of featureNames) {
-      // result with highest confidence
-      const featureValue = featureValues[featureName];
-      features[featureName] = {
-        value: featureValue,
-      };
-    }
-    return features;
-  }
-
-  featureOfTool(featureValue: FeatureValue, toolName: string): boolean {
-    return featureValue.supportingTools[toolName] != null;
   }
 
   showToolOutput(toolName: string): void {

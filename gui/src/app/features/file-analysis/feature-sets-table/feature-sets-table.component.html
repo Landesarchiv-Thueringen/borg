@@ -1,23 +1,54 @@
-<h1 mat-dialog-title>Dateiidentitäten</h1>
+<h1 mat-dialog-title>Gesamtergebnis</h1>
 
 <mat-dialog-content>
-  @for (m of ms; track m; let i = $index) {
-    <h1>Dateiidentität {{ i }}</h1>
-    <ul>
-      <li>
-        <b>Extrahierte Eigenschaften:</b>
-        <ul>
-          @for (v of m.values; track v) {
-            <li>
-              <em>{{ v.key | fileFeature }}:</em> {{ v.value }}
-            </li>
-          }
-        </ul>
-      </li>
-      <li><b>Unterstützend Werkzeuge:</b> {{ m.tools }}</li>
-      <li><b>Score:</b> {{ m.score }}</li>
-    </ul>
-  }
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- tools column -->
+    <ng-container matColumnDef="tools">
+      <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.tools }} </mat-cell>
+    </ng-container>
+
+    <!-- PUID column -->
+    <ng-container matColumnDef="puid">
+      <mat-header-cell *matHeaderCellDef> {{ "format:puid" | fileFeature }} </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.puid }} </mat-cell>
+    </ng-container>
+
+    <!-- MIME type column -->
+    <ng-container matColumnDef="mimeType">
+      <mat-header-cell *matHeaderCellDef> MIME-Type </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <span [innerHTML]="element.mimeType | breakOpportunities"></span>
+      </mat-cell>
+    </ng-container>
+
+    <!-- format version column -->
+    <ng-container matColumnDef="version">
+      <mat-header-cell *matHeaderCellDef> Formatversion </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.version }} </mat-cell>
+    </ng-container>
+
+    <!-- valid column -->
+    <ng-container matColumnDef="valid">
+      <mat-header-cell *matHeaderCellDef> Valide </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        @if (element.valid === true) {
+          <mat-icon>check</mat-icon>
+        } @else if (element.valid === false) {
+          <mat-icon>close</mat-icon>
+        }
+      </mat-cell>
+    </ng-container>
+
+    <!-- score column -->
+    <ng-container matColumnDef="score">
+      <mat-header-cell *matHeaderCellDef> Bewertung </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.score | percent }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
 </mat-dialog-content>
 
 <mat-dialog-actions>

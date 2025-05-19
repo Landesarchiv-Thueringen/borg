@@ -259,7 +259,7 @@ tools:
     featureSet:
       features:
         - key: "format:valid"
-        - key: "puid"
+        - key: "format:puid"
         - key: "format:mimeType"
         - key: "format:version"
       weight:
@@ -289,7 +289,7 @@ tools:
     featureSet:
       features:
         - key: "format:valid"
-        - key: "puid"
+        - key: "format:puid"
         - key: "format:mimeType"
         - key: "format:version"
       weight:
@@ -319,7 +319,7 @@ tools:
     featureSet:
       features:
         - key: "format:valid"
-        - key: "puid"
+        - key: "format:puid"
         - key: "format:mimeType"
         - key: "format:version"
       weight:
@@ -349,7 +349,7 @@ tools:
     featureSet:
       features:
         - key: "format:valid"
-        - key: "puid"
+        - key: "format:puid"
         - key: "format:mimeType"
         - key: "format:version"
       weight:
@@ -379,7 +379,7 @@ tools:
     featureSet:
       features:
         - key: "format:valid"
-        - key: "puid"
+        - key: "format:puid"
         - key: "format:mimeType"
         - key: "format:version"
       weight:
@@ -402,13 +402,12 @@ tools:
     endpoint: "http://verapdf/validate/ua1"
     triggers:
       - conditions:
-          - # PDF/UA has no entry in the PRONOM database
-            feature: "mimeType"
+          - feature: "format:mimeType" # PDF/UA has no entry in the PRONOM database
             regEx: "pdf"
     featureSet:
       features:
         - key: "format:valid"
-        - key: "puid"
+        - key: "format:puid"
         - key: "format:mimeType"
         - key: "format:version"
       weight:
