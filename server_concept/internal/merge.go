@@ -194,7 +194,7 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 	}
 	supportingTools := make([]string, 0)
 	for _, tc := range m.toolConfigs {
-		supportingTools = append(supportingTools, tc.Title)
+		supportingTools = append(supportingTools, tc.Id)
 	}
 	return FeatureSet{
 		Features:        features,

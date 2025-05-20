@@ -138,6 +138,7 @@ export class FileOverviewComponent {
     this.dialog.open(FeatureSetsTableComponent, {
       data: {
         featureSets: this.analysis.featureSets,
+        toolResults: this.analysis.toolResults,
       },
       autoFocus: false,
       maxWidth: '80vw',

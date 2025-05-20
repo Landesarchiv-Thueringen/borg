@@ -43,10 +43,11 @@ export interface FeatureSet {
 
 export interface FeatureValue {
   value: string | boolean | number;
-  supportingTools: { [key: string]: number };
+  supportingTools: string[];
 }
 
 export interface ToolResult {
+  id: string;
   title: string;
   toolVersion: string;
   toolOutput: string;

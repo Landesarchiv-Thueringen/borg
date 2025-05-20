@@ -4,7 +4,34 @@ ul {
 mat-table {
   min-width: 60em;
 }
+.mat-column-mimeType {
+  flex: 0 0 15em;
+}
 mat-cell {
   word-wrap: break-word;
   white-space: pre-line;
+}
+.tool-legend {
+  display: flex;
+  margin-top: 2em;
+  gap: 0.5em;
+}
+.feature-with-marks {
+  display: flex;
+  gap: 0.7em;
+}
+.tool-mark1 {
+  color: #264653;
+}
+.tool-mark2 {
+  color: #2a9d8f;
+}
+.tool-mark3 {
+  color: #e9c46a;
+}
+.tool-mark4 {
+  color: #f4a261;
+}
+.tool-mark5 {
+  color: #e76f51;
 }
