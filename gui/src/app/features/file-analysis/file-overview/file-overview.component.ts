@@ -94,7 +94,7 @@ export class FileOverviewComponent {
     for (let featureName of OVERVIEW_FEATURES) {
       if (this.analysis.featureSets[0].features[featureName] !== undefined) {
         row[featureName] = {
-          value: this.analysis.featureSets[0].features[featureName],
+          value: this.analysis.featureSets[0].features[featureName].value,
         };
       }
     }

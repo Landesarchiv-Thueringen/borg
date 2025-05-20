@@ -7,9 +7,9 @@ import (
 )
 
 type FeatureSet struct {
-	Features        map[string]interface{} `json:"features"`
-	SupportingTools []string               `json:"supportingTools"`
-	Score           float64                `json:"score"`
+	Features        map[string]FeatureValue `json:"features"`
+	SupportingTools []string                `json:"supportingTools"`
+	Score           float64                 `json:"score"`
 }
 
 func (s *FeatureSet) FulFillesAny(fileIdentityRules []FileIdentityRule) bool {
@@ -24,7 +24,7 @@ func (s *FeatureSet) FulFillesAny(fileIdentityRules []FileIdentityRule) bool {
 func (s *FeatureSet) FulFilles(fileIdentityRule FileIdentityRule) bool {
 	for _, condition := range fileIdentityRule.Conditions {
 		v, ok := s.Features[condition.Feature]
-		if !ok || !condition.IsFulfilled(v) {
+		if !ok || !condition.IsFulfilled(v.Value) {
 			return false
 		}
 	}
@@ -151,13 +151,14 @@ func (m *Merge) IsMergeable(tc2 ToolConfig, tr2 ToolResult) (isMergeable bool, m
 }
 
 func (m *Merge) GetMergedToolResults() FeatureSet {
-	features := make(map[string]interface{})
+	features := make(map[string]FeatureValue)
 	featureValues := make(map[string][]FeatureValue)
 	for _, tr := range m.toolResults {
 		tc := getToolConfig(tr.Id)
 		for k, v := range tr.Features {
 			featureValue := FeatureValue{
-				Value: v,
+				Value:           v,
+				SupportingTools: []string{tc.Id},
 			}
 			featureConfig, ok := tc.FeatureSet.GetFeatureConfig(k)
 			if ok {
@@ -169,9 +170,27 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 			)
 		}
 	}
-	for key, featureValues := range featureValues {
-		sort.Sort(sort.Reverse(ByOrder(featureValues)))
-		features[key] = featureValues[0].Value
+	for key, values := range featureValues {
+		for i, v := range values {
+			if i == 0 {
+				features[key] = v
+			} else {
+				if features[key].Value == v.Value {
+					tools := append(features[key].SupportingTools, v.SupportingTools...)
+					mergeOrder := features[key].MergeOrder
+					if v.MergeOrder > mergeOrder {
+						mergeOrder = v.MergeOrder
+					}
+					features[key] = FeatureValue{
+						Value:           v.Value,
+						SupportingTools: tools,
+						MergeOrder:      mergeOrder,
+					}
+				} else if v.MergeOrder > features[key].MergeOrder {
+					features[key] = v
+				}
+			}
+		}
 	}
 	supportingTools := make([]string, 0)
 	for _, tc := range m.toolConfigs {

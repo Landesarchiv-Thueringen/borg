@@ -56,16 +56,16 @@ export class FeatureSetsTableComponent {
   constructor() {
     this.dataSource = this.data.featureSets.map((fs) => {
       return {
-        puid: fs.features['format:puid'] ? (fs.features['format:puid'] as string) : undefined,
+        puid: fs.features['format:puid'] ? (fs.features['format:puid'].value as string) : undefined,
         mimeType: fs.features['format:mimeType']
-          ? (fs.features['format:mimeType'] as string)
+          ? (fs.features['format:mimeType'].value as string)
           : undefined,
         version: fs.features['format:version']
-          ? (fs.features['format:version'] as string)
+          ? (fs.features['format:version'].value as string)
           : undefined,
         valid:
           fs.features['format:valid'] !== undefined
-            ? (fs.features['format:valid'] as boolean)
+            ? (fs.features['format:valid'].value as boolean)
             : undefined,
         tools: fs.supportingTools.join('\n'),
         score: fs.score,

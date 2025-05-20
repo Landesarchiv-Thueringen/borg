@@ -44,7 +44,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	}
 	validFeature, ok := sets[0].Features["format:valid"]
 	if ok {
-		valid, ok := validFeature.(bool)
+		valid, ok := validFeature.Value.(bool)
 		if !ok {
 			log.Fatal("valid feature has non boolean value")
 		} else if valid {
@@ -55,7 +55,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	}
 	puidFeature, ok := sets[0].Features["format:puid"]
 	if ok {
-		puid, ok := puidFeature.(string)
+		puid, ok := puidFeature.Value.(string)
 		if !ok {
 			log.Fatal("PUID feature has non string value")
 		} else {
@@ -64,7 +64,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	}
 	mimeTypeFeature, ok := sets[0].Features["format:mimeType"]
 	if ok {
-		mimeType, ok := mimeTypeFeature.(string)
+		mimeType, ok := mimeTypeFeature.Value.(string)
 		if !ok {
 			log.Fatal("MIME type feature has non string value")
 		} else {
@@ -73,7 +73,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 	}
 	formatVersionFeature, ok := sets[0].Features["format:version"]
 	if ok {
-		formatVersion, ok := formatVersionFeature.(string)
+		formatVersion, ok := formatVersionFeature.Value.(string)
 		if !ok {
 			log.Fatal("format version feature has non string value")
 		} else {

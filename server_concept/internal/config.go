@@ -68,7 +68,7 @@ type FeatureSetConfig struct {
 }
 
 func (c *FeatureSetConfig) AreMergeable(
-	fs1 map[string]interface{},
+	fs1 map[string]FeatureValue,
 	fs2 map[string]interface{},
 ) (isFulfilled bool, mergeModifier float64) {
 	// The merge is always possible if the origin set is empty.
@@ -110,15 +110,10 @@ type Feature struct {
 }
 
 type FeatureValue struct {
-	Value      interface{}
-	MergeOrder uint
+	Value           interface{} `json:"value"`
+	MergeOrder      uint        `json:"-"`
+	SupportingTools []string    `json:"supportingTools"`
 }
-
-type ByOrder []FeatureValue
-
-func (a ByOrder) Len() int           { return len(a) }
-func (a ByOrder) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByOrder) Less(i, j int) bool { return a[i].MergeOrder < a[j].MergeOrder }
 
 type Weight struct {
 	Default            float64             `yaml:"default"`
@@ -190,7 +185,7 @@ type MergeCondition struct {
 	ValueRegEx *string `yaml:"valueRegEx"`
 }
 
-func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]interface{}) (isFulfilled bool, strongLink bool) {
+func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string]interface{}) (isFulfilled bool, strongLink bool) {
 	// if the second feature sets doesn't contain any values
 	// the first feature set can be empty if merging against an empty set
 	if len(fs2) == 0 {
@@ -209,7 +204,7 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]
 	if c.ValueRegEx != nil {
 		regEx := regexp.MustCompile(*c.ValueRegEx)
 		// extract comparable values from feature strings
-		s1, ok1 := fv1.(string)
+		s1, ok1 := fv1.Value.(string)
 		s2, ok2 := fv2.(string)
 		if !ok1 || !ok2 {
 			log.Fatal("configuration faulty: used value extraction string on non string value")
@@ -228,7 +223,7 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]interface{}, fs2 map[string]
 		return
 	}
 	// merge is possible if features are equal
-	isFulfilled = fv1 == fv2
+	isFulfilled = fv1.Value == fv2
 	if isFulfilled {
 		strongLink = true
 	}

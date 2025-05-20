@@ -38,12 +38,11 @@ export interface Summary {
 export interface FeatureSet {
   score: number;
   supportingTools: string[];
-  features: { [key: string]: string | boolean | number };
+  features: { [key: string]: FeatureValue };
 }
 
 export interface FeatureValue {
   value: string | boolean | number;
-  score: number;
   supportingTools: { [key: string]: number };
 }
 
