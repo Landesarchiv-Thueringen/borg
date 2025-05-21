@@ -134,7 +134,6 @@ export class FileOverviewComponent {
   }
 
   showFeatureSets(): void {
-    console.log(this.analysis.featureSets);
     this.dialog.open(FeatureSetsTableComponent, {
       data: {
         featureSets: this.analysis.featureSets,
