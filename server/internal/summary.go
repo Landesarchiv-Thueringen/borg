@@ -1,14 +1,13 @@
 package internal
 
-const formatUncertainThreshold = 0.75
-const validThreshold = 0.75
+import "log"
 
-var requiredFormatFeatures = []string{"mimeType", "puid"}
+const UNCERTAIN_THRESHOLD = 0.75
 
 // Summary accumulates validation results on the highest level.
 //
 // All values are calculated with simple rules from the extracted and scored
-// feature values. The aim is to put different values in perspective to allow
+// feature sets. The aim is to put different values in perspective to allow
 // easy reasoning on the results. I.e., flags concerning validity are only set
 // if we are reasonably sure about the determined file format.
 type Summary struct {
@@ -34,89 +33,58 @@ type Summary struct {
 	FormatVersion string `json:"formatVersion"`
 }
 
-func GetSummary(features map[string][]FeatureValue, toolResults []ToolResult) Summary {
-	return Summary{
-		Valid:            isValid(features),
-		Invalid:          isInvalid(features),
-		FormatUncertain:  isFormatUncertain(features),
-		ValidityConflict: hasValidityConflict(features),
-		Error:            hasError(toolResults),
-		PUID:             getStringValue(features, "puid"),
-		MimeType:         getStringValue(features, "mimeType"),
-		FormatVersion:    getStringValue(features, "formatVersion"),
+func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
+	var summary Summary
+	if len(sets) == 0 {
+		summary.FormatUncertain = true
+		return summary
 	}
-}
-
-func isValid(features map[string][]FeatureValue) bool {
-	values, ok := features["valid"]
+	if sets[0].Score < UNCERTAIN_THRESHOLD {
+		summary.FormatUncertain = true
+	}
+	validFeature, ok := sets[0].Features["format:valid"]
 	if ok {
-		b, ok := values[0].Value.(bool)
-		return ok &&
-			b &&
-			values[0].Score >= validThreshold &&
-			!isFormatUncertain(features)
+		valid, ok := validFeature.Value.(bool)
+		if !ok {
+			log.Fatal("valid feature has non boolean value")
+		} else if valid {
+			summary.Valid = true
+		} else {
+			summary.Invalid = true
+		}
 	}
-	return false
-}
-
-func isInvalid(features map[string][]FeatureValue) bool {
-	values, ok := features["valid"]
+	puidFeature, ok := sets[0].Features["format:puid"]
 	if ok {
-		b, ok := values[0].Value.(bool)
-		return ok &&
-			!b &&
-			values[0].Score >= validThreshold &&
-			!isFormatUncertain(features)
-	}
-	return false
-}
-
-func isFormatUncertain(features map[string][]FeatureValue) bool {
-	for _, key := range requiredFormatFeatures {
-		values, ok := features[key]
-		if !ok || values[0].Score < formatUncertainThreshold {
-			return true
+		puid, ok := puidFeature.Value.(string)
+		if !ok {
+			log.Fatal("PUID feature has non string value")
+		} else {
+			summary.PUID = puid
 		}
 	}
-	return false
-}
-
-func hasValidityConflict(features map[string][]FeatureValue) bool {
-	values, ok := features["valid"]
-	if !ok ||
-		values[0].Score >= validThreshold ||
-		isFormatUncertain(features) {
-		return false
-	}
-	// We have some results for validity, but not with a sufficiently high
-	// score...
-	for _, confidence := range values[0].SupportingTools {
-		if confidence >= validThreshold {
-			// ...however, there is at least one tool, that would have produced
-			// a sufficiently high score, that was challenged by another tool.
-			return true
+	mimeTypeFeature, ok := sets[0].Features["format:mimeType"]
+	if ok {
+		mimeType, ok := mimeTypeFeature.Value.(string)
+		if !ok {
+			log.Fatal("MIME type feature has non string value")
+		} else {
+			summary.MimeType = mimeType
 		}
 	}
-	return false
-}
-
-func hasError(toolResults []ToolResult) bool {
-	for _, r := range toolResults {
-		if r.Error != "" {
-			return true
+	formatVersionFeature, ok := sets[0].Features["format:version"]
+	if ok {
+		formatVersion, ok := formatVersionFeature.Value.(string)
+		if !ok {
+			log.Fatal("format version feature has non string value")
+		} else {
+			summary.FormatVersion = formatVersion
 		}
 	}
-	return false
-}
-
-func getStringValue(features map[string][]FeatureValue, key string) string {
-	values, ok := features[key]
-	if !ok {
-		return ""
+	for _, result := range toolResults {
+		if result.Error != nil {
+			summary.Error = true
+			break
+		}
 	}
-	stringValue, ok := values[0].Value.(string)
-	if !ok {
-		return ""
-	}
-	return stringValue
+	return summary
 }

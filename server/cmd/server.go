@@ -3,59 +3,53 @@ package main
 import (
 	"fmt"
 	"lath/borg/internal"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+)
+
+const (
+	VERSION          = "2.0.0"
+	DEFAULT_RESPONSE = "Borg server version %s is running"
+	FILE_STORE_PATH  = "/borg/file-store"
 )
 
 type fileAnalysis struct {
 	// Summary describes the overall verification result.
 	Summary internal.Summary `json:"summary"`
-	// Features is an accumulated and weighted list of feature values that has
-	// been extracted from different tools.
-	//
-	// Each feature is mapped by a key (e.g. "mimeType") and has an array of
-	// values (e.g. "application/pdf") associated with a score value between 0
-	// and 1 and a list of tools supporting this value. The list of values is
-	// sorted by score in descending order, i.e., highest score first.
-	Features map[string][]internal.FeatureValue `json:"features"`
+	// Merged feature sets ...
+	FeatureSets []internal.FeatureSet `json:"featureSets"`
 	// ToolResults is a list of complete responses from all tools, mapped by
 	// tool name.
 	ToolResults []internal.ToolResult `json:"toolResults"`
 }
 
-const version = "1.4.1"
-const defaultResponse = "borg server is running"
-const storePath = "/borg/file-store"
-
 func main() {
-	fmt.Println(defaultResponse)
+	log.Printf(DEFAULT_RESPONSE, VERSION)
+	initServer()
 	router := gin.Default()
-	router.MaxMultipartMemory = 1000 << 20 // 1 GiB
-	router.ForwardedByClientIP = true
-	router.SetTrustedProxies([]string{"*"})
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"*"}
-	corsConfig.AllowHeaders = []string{"Origin", "Content-Type"}
-	corsConfig.AllowMethods = []string{"GET", "POST"}
-	// It's important that the cors configuration is used before declaring the routes.
-	router.Use(cors.New(corsConfig))
-	router.GET("", getDefaultResponse)
+	router.MaxMultipartMemory = 5000 << 20 // 5 GiB
+	router.SetTrustedProxies([]string{})
+	router.GET("api", getDefaultResponse)
 	router.GET("api/version", getVersion)
 	router.POST("api/analyze-file", analyzeFile)
 	router.Run()
 }
 
+func initServer() {
+	internal.ParseConfig()
+}
+
 func getDefaultResponse(c *gin.Context) {
-	c.String(http.StatusOK, defaultResponse)
+	c.String(http.StatusOK, fmt.Sprintf(DEFAULT_RESPONSE, VERSION))
 }
 
 func getVersion(c *gin.Context) {
-	c.String(http.StatusOK, version)
+	c.String(http.StatusOK, VERSION)
 }
 
 func analyzeFile(c *gin.Context) {
@@ -69,7 +63,7 @@ func analyzeFile(c *gin.Context) {
 	}
 	// generate unique file name for storing
 	filename := uuid.New().String() + "_" + file.Filename
-	fileStorePath := filepath.Join(storePath, filename)
+	fileStorePath := filepath.Join(FILE_STORE_PATH, filename)
 	err = c.SaveUploadedFile(file, fileStorePath)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -78,13 +72,18 @@ func analyzeFile(c *gin.Context) {
 		return
 	}
 	defer os.Remove(fileStorePath)
-	results := internal.RunIdentificationTools(filename)
-	results = internal.RunValidationTools(filename, results)
-	features := internal.AccumulateFeatures(results)
+	identResults := internal.RunIdentificationTools(filename)
+	triggeredResults := internal.RunTriggeredTools(filename, identResults)
+	toolResults := internal.CombineToolResults(identResults, triggeredResults)
+	mergedSets := internal.MergeFeatureSets(toolResults)
+	if len(mergedSets) == 0 {
+		mergedSets = make([]internal.FeatureSet, 0)
+	}
+	tr := internal.GetSortedToolResults(identResults, triggeredResults)
 	fileAnalysis := fileAnalysis{
-		Summary:     internal.GetSummary(features, results),
-		Features:    features,
-		ToolResults: results,
+		Summary:     internal.GetSummary(mergedSets, tr),
+		FeatureSets: mergedSets,
+		ToolResults: tr,
 	}
 	c.JSON(http.StatusOK, fileAnalysis)
 }

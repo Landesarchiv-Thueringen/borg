@@ -4,13 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"maps"
 	"net/http"
 	"net/http/httputil"
-	"regexp"
+	"slices"
+	"sort"
 )
 
 type ToolResult struct {
-	ToolName string `json:"toolName"`
+	Id    string `json:"id"`
+	Title string `json:"title"`
 	// ToolVersion is the version number of the utilized tool as by the tool's
 	// own versioning scheme.
 	ToolVersion string `json:"toolVersion"`
@@ -24,117 +27,112 @@ type ToolResult struct {
 	// Score is the from the tool supplied confidence of the result.
 	Score *float64 `json:"score"`
 	// Error is an error emitted from the tool in case of failure.
-	Error string `json:"error"`
+	Error *string `json:"error"`
 }
 
-type toolResponse struct {
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Score        *float64               `json:"score"`
-	Error        string                 `json:"error"`
-}
+type ByTitle []ToolResult
 
-func RunIdentificationTools(filename string) []ToolResult {
+func (a ByTitle) Len() int           { return len(a) }
+func (a ByTitle) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByTitle) Less(i, j int) bool { return a[i].Title < a[j].Title }
+
+func RunIdentificationTools(filename string) map[string]ToolResult {
 	var responseChannels []chan ToolResult
 	// for every identification tool
 	for _, tool := range serverConfig.Tools {
-		if len(tool.ToolTrigger) > 0 {
+		if len(tool.Triggers) > 0 {
 			continue
 		}
 		rc := make(chan ToolResult)
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
 		go func() {
-			response := getToolResponse(tool.Endpoint, filename)
+			response := getToolResult(tool.Endpoint, filename)
+			features := make(map[string]interface{})
+			if len(response.Features) > 0 {
+				features = response.Features
+			}
 			rc <- ToolResult{
-				ToolName:     tool.ToolName,
-				ToolVersion:  tool.ToolVersion,
+				Id:           tool.Id,
+				Title:        tool.Title,
+				ToolVersion:  response.ToolVersion,
 				ToolOutput:   response.ToolOutput,
 				OutputFormat: response.OutputFormat,
-				Features:     response.Features,
+				Features:     features,
 				Score:        response.Score,
 				Error:        response.Error,
 			}
 		}()
 	}
 	// gather all tool responses
-	var results []ToolResult
+	results := make(map[string]ToolResult)
 	for _, rc := range responseChannels {
 		toolResponse := <-rc
-		results = append(results, toolResponse)
+		results[toolResponse.Id] = toolResponse
 	}
 	return results
 }
 
-func RunValidationTools(filename string, identificationResults []ToolResult) []ToolResult {
+func RunTriggeredTools(
+	filename string,
+	identificationResults map[string]ToolResult,
+) map[string]ToolResult {
 	var responseChannels []chan ToolResult
-	// for every validation tool
-	for _, tool := range serverConfig.Tools {
-		if len(tool.ToolTrigger) == 0 {
+	// for every identification tool
+	for _, toolConfig := range serverConfig.Tools {
+		isTriggered, matches := toolConfig.IsTriggered(identificationResults)
+		if len(toolConfig.Triggers) == 0 || !isTriggered {
 			continue
 		}
-		// for every possible trigger of current validation tool
-		for _, trigger := range tool.ToolTrigger {
-			if checkToolTrigger(trigger, identificationResults) {
-				rc := make(chan ToolResult)
-				responseChannels = append(responseChannels, rc)
-				// request tool results concurrent
-				go func() {
-					response := getToolResponse(tool.Endpoint, filename)
-					rc <- ToolResult{
-						ToolName:     tool.ToolName,
-						ToolVersion:  tool.ToolVersion,
-						ToolOutput:   response.ToolOutput,
-						OutputFormat: response.OutputFormat,
-						Features:     response.Features,
-						Score:        response.Score,
-						Error:        response.Error,
-					}
-				}()
-				// don't check other triggers, tool response already requested
-				break
+		rc := make(chan ToolResult)
+		responseChannels = append(responseChannels, rc)
+		// request tool results concurrent
+		go func() {
+			response := getToolResult(toolConfig.Endpoint, filename)
+			features := make(map[string]interface{})
+			if len(response.Features) > 0 {
+				features = response.Features
 			}
-		}
+			// get feature values from tool trigger
+			for _, featureConfig := range toolConfig.FeatureSet.Features {
+				if featureConfig.ProvidedByTrigger {
+					v, ok := matches[featureConfig.Key]
+					if ok {
+						features[featureConfig.Key] = v
+					}
+				}
+			}
+			rc <- ToolResult{
+				Id:           toolConfig.Id,
+				Title:        toolConfig.Title,
+				ToolVersion:  response.ToolVersion,
+				ToolOutput:   response.ToolOutput,
+				OutputFormat: response.OutputFormat,
+				Features:     features,
+				Score:        response.Score,
+				Error:        response.Error,
+			}
+		}()
 	}
 	// gather all tool responses
-	results := identificationResults
+	results := make(map[string]ToolResult)
 	for _, rc := range responseChannels {
 		toolResponse := <-rc
-		results = append(results, toolResponse)
+		results[toolResponse.Id] = toolResponse
 	}
 	return results
 }
 
-// returns true if the trigger fires
-func checkToolTrigger(trigger ToolTrigger, identificationResults []ToolResult) bool {
-	// j, _ = json.MarshalIndent(identificationResults, "", "\t")
-	// fmt.Printf("identificationResults%s \n", j)
-	regex := regexp.MustCompile(trigger.RegEx)
-	for _, toolResponse := range identificationResults {
-		if toolResponse.Features != nil {
-			features := toolResponse.Features
-			featureValue, ok := features[trigger.Feature]
-			if ok {
-				v, ok := featureValue.(string)
-				if ok && regex.MatchString(v) {
-					return true
-				}
-			}
-		}
-	}
-	return false
-}
-
-func getToolResponse(
+func getToolResult(
 	endpoint string,
 	filename string,
-) toolResponse {
+) ToolResult {
 	// create http get request
 	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		log.Println(err)
-		return toolResponse{Error: "error creating request: " + endpoint}
+		errorMessage := fmt.Sprintf("error creating request: %s", endpoint)
+		return ToolResult{Error: &errorMessage}
 	}
 	// add file path URL parameter
 	query := req.URL.Query()
@@ -144,16 +142,18 @@ func getToolResponse(
 	response, err := http.Get(req.URL.String())
 	if err != nil {
 		log.Println(err)
-		return toolResponse{Error: "error requesting: " + req.URL.String()}
+		errorMessage := fmt.Sprintf("error requesting: %s", req.URL.String())
+		return ToolResult{Error: &errorMessage}
 	}
 	// process request response
 	return processToolResponse(response)
 }
 
-func processToolResponse(response *http.Response) toolResponse {
+func processToolResponse(response *http.Response) ToolResult {
 	if response.StatusCode != http.StatusOK {
-		toolResponse := toolResponse{
-			Error: fmt.Sprintf("tool request error: %d", response.StatusCode),
+		errorMessage := fmt.Sprintf("tool request error: %d", response.StatusCode)
+		toolResponse := ToolResult{
+			Error: &errorMessage,
 		}
 		bytes, err := httputil.DumpResponse(response, true)
 		if err == nil {
@@ -163,13 +163,38 @@ func processToolResponse(response *http.Response) toolResponse {
 		}
 		return toolResponse
 	}
-	var parsedResponse toolResponse
-	err := json.NewDecoder(response.Body).Decode(&parsedResponse)
+	var result ToolResult
+	err := json.NewDecoder(response.Body).Decode(&result)
 	if err != nil {
 		errorMessage := "error parsing tool response"
 		log.Println(errorMessage)
 		log.Println(err)
-		return toolResponse{Error: errorMessage}
+		return ToolResult{Error: &errorMessage}
 	}
-	return parsedResponse
+	return result
+}
+
+func CombineToolResults(
+	identResults map[string]ToolResult,
+	triggeredResults map[string]ToolResult,
+) map[string]ToolResult {
+	toolResults := make(map[string]ToolResult)
+	for k, v := range identResults {
+		toolResults[k] = v
+	}
+	for k, v := range triggeredResults {
+		toolResults[k] = v
+	}
+	return toolResults
+}
+
+func GetSortedToolResults(
+	identResults map[string]ToolResult,
+	triggeredResults map[string]ToolResult,
+) []ToolResult {
+	r1 := slices.Collect(maps.Values(identResults))
+	r2 := slices.Collect(maps.Values(triggeredResults))
+	sort.Sort(ByTitle(r1))
+	sort.Sort(ByTitle(r2))
+	return append(r1, r2...)
 }
