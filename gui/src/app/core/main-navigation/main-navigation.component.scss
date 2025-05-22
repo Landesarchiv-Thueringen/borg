@@ -7,8 +7,13 @@
 mat-toolbar {
   z-index: 2;
   flex-shrink: 0;
-  color-scheme: dark;
-  background-color: var(--mat-sys-inverse-primary);
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+
+  a,
+  button {
+    color: var(--mat-sys-on-primary);
+  }
 }
 
 mat-icon.title-icon {
