@@ -1,0 +1,12 @@
+FROM golang:alpine3.21 AS build
+WORKDIR /build
+COPY go.mod go.sum ./
+RUN go mod download
+COPY cmd cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -o mediainfo_api cmd/mediainfo_api.go
+
+FROM alpine:3.21 AS prod
+WORKDIR /borg/tools/mediainfo
+COPY --from=build /build/mediainfo_api .
+RUN apk add --no-cache mediainfo
+ENTRYPOINT ["./mediainfo_api"]

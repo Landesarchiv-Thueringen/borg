@@ -50,6 +50,26 @@ tools:
         - feature: "format:mimeType"
           valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
+  - id: "mediainfo"
+    title: "MediaInfo"
+    endpoint: "http://mediainfo/extract-metadata"
+    triggers:
+      - conditions:
+          - feature: "format:mimeType"
+            regEx: "^audio"
+      - conditions:
+          - feature: "format:mimeType"
+            regEx: "^video"
+    featureSet:
+      features:
+        - key: "format:mimeType"
+          providedByTrigger: true
+      weight:
+        default: 0.5
+      mergeConditions:
+        - feature: "format:mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+
   - id: "jhove_pdf"
     title: "JHOVE (PDF-Modul)"
     endpoint: "http://jhove/validate/pdf"

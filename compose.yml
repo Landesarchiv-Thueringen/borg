@@ -74,6 +74,20 @@ services:
       - PORT=80
       - GIN_MODE=${GIN_MODE}
 
+  mediainfo:
+    restart: unless-stopped
+    image: ${IMAGE_PREFIX}/mediainfo:${IMAGE_VERSION}
+    build:
+      context: ./tools/mediainfo
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "file-store:/borg/file-store"
+    environment:
+      - PORT=80
+      - GIN_MODE=${GIN_MODE}
+
   jhove:
     restart: unless-stopped
     image: ${IMAGE_PREFIX}/jhove:${IMAGE_VERSION}

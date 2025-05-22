@@ -51,7 +51,7 @@ export interface ToolResult {
   title: string;
   toolVersion: string;
   toolOutput: string;
-  outputFormat: 'text' | 'json' | 'csv';
+  outputFormat: 'text' | 'json' | 'csv' | 'xml';
   features: { [key: string]: string };
   error: string | null;
 }
