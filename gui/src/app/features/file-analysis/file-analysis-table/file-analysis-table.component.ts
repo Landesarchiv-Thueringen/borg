@@ -95,9 +95,9 @@ export class FileAnalysisTableComponent implements AfterViewInit {
     { key: 'path', label: 'Pfad' },
     { key: 'filename' },
     { key: 'fileSize', label: 'Dateigröße' },
-    { key: 'puid' },
-    { key: 'mimeType' },
-    { key: 'formatVersion' },
+    { key: 'format:puid' },
+    { key: 'format:mimeType' },
+    { key: 'format:version' },
     { key: 'status' },
   ]);
 
