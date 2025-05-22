@@ -1,8 +1,8 @@
 <div class="heading-row">
   <h1>
     Geprüfte Dateien
-    @if (dataSource.connect() | async; as data) {
-      ({{ data.length }})
+    @if (dataSource.connect() | async) {
+      ({{ dataSource.data.length }})
     }
   </h1>
   <button
