@@ -63,9 +63,8 @@ tools:
     featureSet:
       features:
         - key: "format:mimeType"
-          providedByTrigger: true
       weight:
-        default: 0.5
+        default: 1.0
       mergeConditions:
         - feature: "format:mimeType"
           valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
