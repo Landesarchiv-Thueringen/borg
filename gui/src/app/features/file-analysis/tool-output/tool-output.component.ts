@@ -4,9 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
-import { FileFeaturePipe } from '../pipes/file-feature.pipe';
 import { PrettyPrintCsvPipe } from '../pipes/pretty-print-csv.pipe';
 import { PrettyPrintJsonPipe } from '../pipes/pretty-print-json.pipe';
+import { PrettyPrintXmlPipe } from '../pipes/pretty-print-xml.pipe';
 import { ToolResult } from '../results';
 
 interface DialogData {
@@ -20,13 +20,13 @@ interface DialogData {
   styleUrls: ['./tool-output.component.scss'],
   imports: [
     CommonModule,
-    FileFeaturePipe,
     MatButtonModule,
     MatDialogModule,
     MatExpansionModule,
     MatTableModule,
     PrettyPrintCsvPipe,
     PrettyPrintJsonPipe,
+    PrettyPrintXmlPipe,
   ],
 })
 export class ToolOutputComponent {

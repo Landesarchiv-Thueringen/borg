@@ -33,10 +33,10 @@
           @case ("json") {
             <pre>{{ toolResult.toolOutput | prettyPrintJson }}</pre>
           }
-          @case ("text") {
-            <pre>{{ toolResult.toolOutput }}</pre>
-          }
           @case ("xml") {
+            <pre>{{ toolResult.toolOutput | prettyPrintXml }}</pre>
+          }
+          @case ("text") {
             <pre>{{ toolResult.toolOutput }}</pre>
           }
         }
