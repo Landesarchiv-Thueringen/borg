@@ -147,7 +147,9 @@
         ></mat-row>
       </mat-table>
     </mat-tab>
-    <mat-tab label="Metadaten"> </mat-tab>
+    <mat-tab label="Metadaten">
+      <app-metadata-table [fileAnalysis]="analysis"></app-metadata-table>
+    </mat-tab>
   </mat-tab-group>
 </mat-dialog-content>
 

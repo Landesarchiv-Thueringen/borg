@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  margin-top: 2em;
+  padding: 0.2em;
+}
+
+mat-table {
+  max-height: 40vh;
+  overflow: auto;
+}
+
+.mat-column-value {
+  flex-grow: 2;
+}
