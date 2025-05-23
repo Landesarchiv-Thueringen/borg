@@ -20,126 +20,135 @@
       </div>
     }
   </div>
-  @if (data.analysis.summary.formatUncertain) {
-    <div class="icon-explanation">
-      <mat-icon class="uncertain-icon">warning</mat-icon>
-      <div>
-        <p>Der Typ der Datei konnte nicht zweifelsfrei ermittelt werden.</p>
-        <p>
-          Die Ursache kann ein exotisches Dateiformat, fehlende Werkzeuge oder auch eine
-          Beschädigung der Datei sein.
-        </p>
-        <p>Eine aussagekräftige Validierung kann deshalb nicht vorgenommen werden.</p>
-      </div>
-    </div>
-  }
-  @if (data.analysis.summary.validityConflict) {
-    <div class="icon-explanation">
-      <mat-icon class="uncertain-icon">warning</mat-icon>
-      <div>
-        <p>Widersprüchliche Validierungsergebnisse.</p>
-        <p>Verschiedene Validierungs-Werkzeuge haben unterschiedliche Ergebnisse ausgegeben.</p>
-        <p>Dies kann ein Zeichen für ein Problem mit der Datei oder einem der Werkzeuge sein.</p>
-      </div>
-    </div>
-  }
-  @if (data.analysis.summary.valid) {
-    <div class="icon-explanation">
-      <mat-icon class="valid-icon">check</mat-icon>
-      <div>
-        <p>Die Datei ist eine valide Datei ihres Typs.</p>
-      </div>
-    </div>
-  }
-  @if (data.analysis.summary.invalid) {
-    <div class="icon-explanation">
-      <mat-icon class="invalid-icon">close</mat-icon>
-      <div>
-        <p>Die Datei ist invalide.</p>
-        <p>
-          Die Ursache kann eine Erstellung mit ungeeigneten Werkzeugen oder eine Beschädigung der
-          Datei sein.
-        </p>
-        <p>Dies bedeutet nicht automatisch, dass die Datei unbrauchbar ist.</p>
-      </div>
-    </div>
-  }
-  @if (data.analysis.summary.error) {
-    <div class="icon-explanation">
-      <mat-icon class="error-icon">error</mat-icon>
-      <div>
-        <p>Bei der Überprüfung der Datei trat ein Fehler bei einem oder mehreren Werkzeugen auf.</p>
-        <p>
-          Die Ursache liegt in einem Programmierfehler des verwendeten Werkzeugs. Der Fehler kann
-          jedoch durch ein Problem mit der Datei ausgelöst worden sein.
-        </p>
-        <p>
-          Es können unter Umständen weniger oder keine Aussagen zum Typ oder der Validität der Datei
-          gemacht werden.
-        </p>
-      </div>
-    </div>
-  }
-  @if (
-    !data.analysis.summary.valid &&
-    !data.analysis.summary.invalid &&
-    !data.analysis.summary.formatUncertain &&
-    !data.analysis.summary.validityConflict &&
-    !data.analysis.summary.error
-  ) {
-    <div class="icon-explanation">
-      <div>
-        <p>
-          Die Validität der Datei konnte nicht geprüft werden, da kein geeignetes Werkzeug für
-          diesen Dateityp vorliegt.
-        </p>
-      </div>
-    </div>
-  }
-
-  <mat-table [dataSource]="dataSource">
-    @for (tableColumn of tableColumnList; track tableColumn; let first = $first) {
-      <ng-container matColumnDef="{{ tableColumn }}">
-        <mat-header-cell *matHeaderCellDef>{{ tableColumn | fileFeature }}</mat-header-cell>
-        <mat-cell *matCellDef="let fileInfo">
-          <div class="feature-info">
-            @if (fileInfo[tableColumn]?.value === true) {
-              <mat-icon>check</mat-icon>
-            } @else if (fileInfo[tableColumn]?.value === false) {
-              <mat-icon>close</mat-icon>
-            } @else if (fileInfo[tableColumn]) {
-              {{ fileInfo[tableColumn].value }}
-            }
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Dateiformat">
+      @if (data.analysis.summary.formatUncertain) {
+        <div class="icon-explanation">
+          <mat-icon class="uncertain-icon">warning</mat-icon>
+          <div>
+            <p>Der Typ der Datei konnte nicht zweifelsfrei ermittelt werden.</p>
+            <p>
+              Die Ursache kann ein exotisches Dateiformat, fehlende Werkzeuge oder auch eine
+              Beschädigung der Datei sein.
+            </p>
+            <p>Eine aussagekräftige Validierung kann deshalb nicht vorgenommen werden.</p>
           </div>
-          @if (fileInfo[tableColumn]?.icon) {
-            <mat-icon class="{{ fileInfo[tableColumn]!.icon }}-icon">{{
-              fileInfo[tableColumn]!.icon
-            }}</mat-icon>
-          }
-          @if (first && fileInfo.tool.value === "Gesamtergebnis") {
-            <button
-              mat-button
-              class="open-details-button"
-              (click)="showFeatureSets()"
-              aria-label="Gesamtergebnis anzeigen"
-            ></button>
-          } @else if (first) {
-            <button
-              mat-button
-              class="open-details-button"
-              (click)="showToolOutput(fileInfo.tool.value)"
-              aria-label="Details anzeigen"
-            ></button>
-          }
-        </mat-cell>
-      </ng-container>
-    }
-    <mat-header-row *matHeaderRowDef="tableColumnList"></mat-header-row>
-    <mat-row
-      *matRowDef="let row; columns: tableColumnList"
-      [class.summary-row]="row.tool.value === 'Gesamtergebnis'"
-    ></mat-row>
-  </mat-table>
+        </div>
+      }
+      @if (data.analysis.summary.validityConflict) {
+        <div class="icon-explanation">
+          <mat-icon class="uncertain-icon">warning</mat-icon>
+          <div>
+            <p>Widersprüchliche Validierungsergebnisse.</p>
+            <p>Verschiedene Validierungs-Werkzeuge haben unterschiedliche Ergebnisse ausgegeben.</p>
+            <p>
+              Dies kann ein Zeichen für ein Problem mit der Datei oder einem der Werkzeuge sein.
+            </p>
+          </div>
+        </div>
+      }
+      @if (data.analysis.summary.valid) {
+        <div class="icon-explanation">
+          <mat-icon class="valid-icon">check</mat-icon>
+          <div>
+            <p>Die Datei ist eine valide Datei ihres Typs.</p>
+          </div>
+        </div>
+      }
+      @if (data.analysis.summary.invalid) {
+        <div class="icon-explanation">
+          <mat-icon class="invalid-icon">close</mat-icon>
+          <div>
+            <p>Die Datei ist invalide.</p>
+            <p>
+              Die Ursache kann eine Erstellung mit ungeeigneten Werkzeugen oder eine Beschädigung
+              der Datei sein.
+            </p>
+            <p>Dies bedeutet nicht automatisch, dass die Datei unbrauchbar ist.</p>
+          </div>
+        </div>
+      }
+      @if (data.analysis.summary.error) {
+        <div class="icon-explanation">
+          <mat-icon class="error-icon">error</mat-icon>
+          <div>
+            <p>
+              Bei der Überprüfung der Datei trat ein Fehler bei einem oder mehreren Werkzeugen auf.
+            </p>
+            <p>
+              Die Ursache liegt in einem Programmierfehler des verwendeten Werkzeugs. Der Fehler
+              kann jedoch durch ein Problem mit der Datei ausgelöst worden sein.
+            </p>
+            <p>
+              Es können unter Umständen weniger oder keine Aussagen zum Typ oder der Validität der
+              Datei gemacht werden.
+            </p>
+          </div>
+        </div>
+      }
+      @if (
+        !data.analysis.summary.valid &&
+        !data.analysis.summary.invalid &&
+        !data.analysis.summary.formatUncertain &&
+        !data.analysis.summary.validityConflict &&
+        !data.analysis.summary.error
+      ) {
+        <div class="icon-explanation">
+          <div>
+            <p>
+              Die Validität der Datei konnte nicht geprüft werden, da kein geeignetes Werkzeug für
+              diesen Dateityp vorliegt.
+            </p>
+          </div>
+        </div>
+      }
+
+      <mat-table [dataSource]="dataSource">
+        @for (tableColumn of tableColumnList; track tableColumn; let first = $first) {
+          <ng-container matColumnDef="{{ tableColumn }}">
+            <mat-header-cell *matHeaderCellDef>{{ tableColumn | fileFeature }}</mat-header-cell>
+            <mat-cell *matCellDef="let fileInfo">
+              <div class="feature-info">
+                @if (fileInfo[tableColumn]?.value === true) {
+                  <mat-icon>check</mat-icon>
+                } @else if (fileInfo[tableColumn]?.value === false) {
+                  <mat-icon>close</mat-icon>
+                } @else if (fileInfo[tableColumn]) {
+                  {{ fileInfo[tableColumn].value }}
+                }
+              </div>
+              @if (fileInfo[tableColumn]?.icon) {
+                <mat-icon class="{{ fileInfo[tableColumn]!.icon }}-icon">{{
+                  fileInfo[tableColumn]!.icon
+                }}</mat-icon>
+              }
+              @if (first && fileInfo.tool.value === "Gesamtergebnis") {
+                <button
+                  mat-button
+                  class="open-details-button"
+                  (click)="showFeatureSets()"
+                  aria-label="Gesamtergebnis anzeigen"
+                ></button>
+              } @else if (first) {
+                <button
+                  mat-button
+                  class="open-details-button"
+                  (click)="showToolOutput(fileInfo.tool.value)"
+                  aria-label="Details anzeigen"
+                ></button>
+              }
+            </mat-cell>
+          </ng-container>
+        }
+        <mat-header-row *matHeaderRowDef="tableColumnList"></mat-header-row>
+        <mat-row
+          *matRowDef="let row; columns: tableColumnList"
+          [class.summary-row]="row.tool.value === 'Gesamtergebnis'"
+        ></mat-row>
+      </mat-table>
+    </mat-tab>
+    <mat-tab label="Metadaten"> </mat-tab>
+  </mat-tab-group>
 </mat-dialog-content>
 
 <mat-dialog-actions>

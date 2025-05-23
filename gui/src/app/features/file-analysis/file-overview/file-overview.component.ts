@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { FilePropertyDefinition } from '../file-analysis-table/file-analysis-table.component';
@@ -57,6 +58,7 @@ interface FileFeatures {
     MatIconModule,
     MatTableModule,
     RouterModule,
+    MatTabsModule,
   ],
 })
 export class FileOverviewComponent {
