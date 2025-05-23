@@ -1,12 +1,21 @@
 :host {
   display: block;
-  margin-top: 2em;
   padding: 0.2em;
+  max-height: 40vh;
 }
 
-mat-table {
-  max-height: 40vh;
-  overflow: auto;
+h2 {
+  font: var(--mat-sys-headline-small);
+}
+
+mat-row {
+  min-height: 0;
+}
+
+mat-cell {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom-style: none;
 }
 
 .mat-column-value {

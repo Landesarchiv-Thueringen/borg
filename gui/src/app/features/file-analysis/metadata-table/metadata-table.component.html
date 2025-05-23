@@ -1,33 +1,25 @@
-<mat-accordion>
-  @for (category of categories; track category.key) {
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ category.key }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-table [dataSource]="category.features">
-        <!-- Feature Key Column -->
-        <ng-container matColumnDef="key">
-          <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
-          <mat-cell *matCellDef="let feature"> {{ feature.key }} </mat-cell>
-        </ng-container>
+@for (category of categories; track category.key) {
+  <h2>{{ category.key }}</h2>
+  <mat-table [dataSource]="category.features">
+    <!-- Feature Key Column -->
+    <ng-container matColumnDef="key">
+      <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+      <mat-cell *matCellDef="let feature"> {{ feature.key }} </mat-cell>
+    </ng-container>
 
-        <!-- Value Column -->
-        <ng-container matColumnDef="value">
-          <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
-          <mat-cell *matCellDef="let feature"> {{ feature.value }} </mat-cell>
-        </ng-container>
+    <!-- Value Column -->
+    <ng-container matColumnDef="value">
+      <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
+      <mat-cell *matCellDef="let feature"> {{ feature.value }} </mat-cell>
+    </ng-container>
 
-        <!-- Tools Column -->
-        <ng-container matColumnDef="tools">
-          <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
-          <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
-        </ng-container>
+    <!-- Tools Column -->
+    <ng-container matColumnDef="tools">
+      <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
+      <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
+    </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-      </mat-table>
-    </mat-expansion-panel>
-  }
-</mat-accordion>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+}
