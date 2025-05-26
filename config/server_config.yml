@@ -500,3 +500,10 @@ fileIdentity:
         value: "PDF/UA"
       - feature: "format:valid"
         value: true
+
+localization:
+  audio: "Audio"
+  av_container: "Containerformat"
+  format: "Dateiformat"
+  general: "Allgemeines"
+  video: "Video"

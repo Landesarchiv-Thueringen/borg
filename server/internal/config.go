@@ -11,6 +11,7 @@ import (
 type ServerConfig struct {
 	Tools             []ToolConfig       `yaml:"tools"`
 	FileIdentityRules []FileIdentityRule `yaml:"fileIdentity"`
+	Localization      map[string]string  `yaml:"localization"`
 }
 
 type FileIdentityRule struct {

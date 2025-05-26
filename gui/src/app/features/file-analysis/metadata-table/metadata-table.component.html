@@ -1,8 +1,23 @@
-<mat-table [dataSource]="features">
+<div class="filter">
+  <form [formGroup]="filterForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Kategorie</mat-label>
+      <mat-select formControlName="category">
+        <mat-option [value]="undefined"></mat-option>
+        @for (category of categories; track category) {
+          <mat-option [value]="category">{{ category | localization: localization() }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<mat-table [dataSource]="filteredFeatures()">
   <!-- Category Key Column -->
   <ng-container matColumnDef="category">
     <mat-header-cell *matHeaderCellDef> Kategorie </mat-header-cell>
-    <mat-cell *matCellDef="let feature"> {{ feature.category }} </mat-cell>
+    <mat-cell *matCellDef="let feature">
+      {{ feature.category | localization: localization() }}
+    </mat-cell>
   </ng-container>
 
   <!-- Feature Key Column -->

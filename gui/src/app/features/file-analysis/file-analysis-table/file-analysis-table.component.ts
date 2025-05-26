@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Localization } from '../../../services/localization.service';
 import { FileOverviewComponent } from '../file-overview/file-overview.component';
 import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
@@ -81,6 +82,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
 
   readonly results = input<FileResult[]>();
   readonly getDetails = input.required<(id: string) => Promise<FileAnalysis | undefined>>();
+  readonly localization = input.required<Localization | undefined>();
   /**
    * Properties to be displayed in the table and in the details dialog.
    *
@@ -169,6 +171,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           info: this.resultsMap()[overview.id].info,
           analysis,
           properties: this.properties(),
+          localization: this.localization(),
         },
         autoFocus: false,
         width: '1200px',

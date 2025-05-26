@@ -5,17 +5,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { FileAnalysisTableComponent } from '../../features/file-analysis/file-analysis-table/file-analysis-table.component';
 import { FileResult } from '../../features/file-analysis/results';
+import { LocalizationService } from '../../services/localization.service';
 import { ResultsService } from '../../services/results.service';
 
 @Component({
-    selector: 'app-results-page',
-    imports: [FileAnalysisTableComponent, MatIconModule, MatButtonModule],
-    templateUrl: './results-page.component.html',
-    styleUrl: './results-page.component.scss'
+  selector: 'app-results-page',
+  imports: [FileAnalysisTableComponent, MatIconModule, MatButtonModule],
+  templateUrl: './results-page.component.html',
+  styleUrl: './results-page.component.scss',
 })
 export class ResultsPageComponent {
-  private router = inject(Router);
-  private resultsService = inject(ResultsService);
+  private readonly router = inject(Router);
+  private readonly resultsService = inject(ResultsService);
+  private readonly localizationService = inject(LocalizationService);
+  localization = this.localizationService.localization;
 
   results?: FileResult[];
   getDetails = (id: string) => this.resultsService.get(id);
