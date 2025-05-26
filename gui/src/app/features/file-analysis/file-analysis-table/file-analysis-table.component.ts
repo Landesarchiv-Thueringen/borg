@@ -19,7 +19,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Localization } from '../../../services/localization.service';
 import { FileOverviewComponent } from '../file-overview/file-overview.component';
 import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
-import { FileFeaturePipe } from '../pipes/file-feature.pipe';
+import { LocalizationPipe } from '../pipes/localization.pipe';
 import { FileAnalysis, FileResult, RowValue } from '../results';
 
 export interface StatusIcons {
@@ -67,7 +67,6 @@ export interface FilePropertyDefinition {
   imports: [
     BreakOpportunitiesPipe,
     CommonModule,
-    FileFeaturePipe,
     MatButtonModule,
     MatChipsModule,
     MatIconModule,
@@ -75,6 +74,7 @@ export interface FilePropertyDefinition {
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
+    LocalizationPipe,
   ],
 })
 export class FileAnalysisTableComponent implements AfterViewInit {

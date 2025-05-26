@@ -63,7 +63,7 @@ export class MetadataTableComponent implements OnInit {
         const featureKey = parts[1];
         this.features.push({
           category: categoryKey,
-          key: featureKey,
+          key: key,
           value: this.fileAnalysis().featureSets[0].features[key].value,
           supportingTools: this.fileAnalysis().featureSets[0].features[key].supportingTools,
         });

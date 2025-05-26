@@ -45,7 +45,7 @@
   <mat-table [dataSource]="dataSource" matSort>
     <ng-container *ngFor="let column of tableProperties()" matColumnDef="{{ column.key }}">
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{
-        column.label ?? (column.key | fileFeature)
+        column.label ?? (column.key | localization: localization())
       }}</mat-header-cell>
       <mat-cell *matCellDef="let row">
         @if (column.key === "status") {

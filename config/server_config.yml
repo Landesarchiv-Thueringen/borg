@@ -502,8 +502,27 @@ fileIdentity:
         value: true
 
 localization:
+  # table columns
+  error: "Fehler"
+  filename: "Dateiname"
+  formatVersion: "Formatversion"
+  mimeType: "MIME-Type"
+  puid: "PUID"
+  valid: "Valide"
+  status: "Status"
+  tool: "Werkzeug"
+  # categories
   audio: "Audio"
   av_container: "Containerformat"
   format: "Dateiformat"
   general: "Allgemeines"
   video: "Video"
+  # features
+  format:isText: "textbasiertes Dateiformat"
+  format:mimeType: "MIME-Type"
+  format:name: "Formatname"
+  format:puid: "PUID"
+  format:valid: "Valide"
+  format:version: "Formatversion"
+  format:wellFormed: "Wohlgeformt"
+  text:encoding: "Zeichenkodierung"
