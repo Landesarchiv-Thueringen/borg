@@ -18,6 +18,10 @@ mat-cell {
   border-bottom-style: none;
 }
 
+.mat-column-category {
+  flex-grow: 0.5;
+}
+
 .mat-column-value {
-  flex-grow: 2;
+  flex-grow: 3;
 }

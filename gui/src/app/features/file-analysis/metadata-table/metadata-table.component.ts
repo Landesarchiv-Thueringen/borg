@@ -3,12 +3,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { FileAnalysis } from '../results';
 
-interface Category {
-  key: string;
-  features: Feature[];
-}
-
 interface Feature {
+  category: string;
   key: string;
   value: string | number | boolean;
   supportingTools: string[];
@@ -22,8 +18,8 @@ interface Feature {
 })
 export class MetadataTableComponent implements OnInit {
   fileAnalysis = input.required<FileAnalysis>();
-  displayedColumns: string[] = ['key', 'value', 'tools'];
-  categories: Category[] = [];
+  displayedColumns: string[] = ['category', 'key', 'value', 'tools'];
+  features: Feature[] = [];
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
@@ -35,21 +31,14 @@ export class MetadataTableComponent implements OnInit {
         }
         const categoryKey = parts[0];
         const featureKey = parts[1];
-        let category = this.categories.find((c) => c.key === categoryKey);
-        if (!category) {
-          category = {
-            key: categoryKey,
-            features: [],
-          };
-          this.categories.push(category);
-        }
-        category.features.push({
+        this.features.push({
+          category: categoryKey,
           key: featureKey,
           value: this.fileAnalysis().featureSets[0].features[key].value,
           supportingTools: this.fileAnalysis().featureSets[0].features[key].supportingTools,
         });
       }
-      console.log(this.categories);
+      console.log(this.features);
     }
   }
 }
