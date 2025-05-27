@@ -12,12 +12,21 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
 }
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
+}
+
+var (
+	VALID_LABEL = "valide"
+)
 
 const (
 	TOOL_VERSION     = "2.1.5"
@@ -51,8 +60,11 @@ func validate(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]interface{})
-	extractedFeatures["format:valid"] = valid
+	extractedFeatures := make(map[string]ToolFeatureValue)
+	extractedFeatures["format:valid"] = ToolFeatureValue{
+		Value: valid,
+		Label: &VALID_LABEL,
+	}
 	response := ToolResponse{
 		ToolVersion:  TOOL_VERSION,
 		ToolOutput:   output,

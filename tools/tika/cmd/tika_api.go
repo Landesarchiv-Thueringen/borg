@@ -16,11 +16,16 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
+}
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
 }
 
 type TikaOutput struct {
@@ -29,6 +34,12 @@ type TikaOutput struct {
 	PDFVersion  *string `json:"pdf:PDFVersion"`
 	PDFAVersion *string `json:"pdfa:PDFVersion"`
 }
+
+var (
+	FORMAT_VERSION_LABEL = "Formatversion"
+	MIME_TYPE_LABEL      = "Mime-Type"
+	TEXT_ENCODING_LABEL  = "Zeichenkodierung"
+)
 
 const (
 	DEFAULT_RESPONSE = "Tika API is running"
@@ -126,7 +137,7 @@ func processTikaOutput(context *gin.Context, output string) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]interface{})
+	extractedFeatures := make(map[string]ToolFeatureValue)
 	response := ToolResponse{
 		ToolVersion:  toolVersion,
 		ToolOutput:   output,
@@ -141,17 +152,29 @@ func processTikaOutput(context *gin.Context, output string) {
 		if mimeType == "text/x-web-markdown" {
 			mimeType = "text/markdown"
 		}
-		extractedFeatures["format:mimeType"] = mimeType
+		extractedFeatures["format:mimeType"] = ToolFeatureValue{
+			Value: mimeType,
+			Label: &MIME_TYPE_LABEL,
+		}
 	}
 	if parsedTikaOutput.Encoding != nil {
-		extractedFeatures["text:encoding"] = *parsedTikaOutput.Encoding
+		extractedFeatures["text:encoding"] = ToolFeatureValue{
+			Value: *parsedTikaOutput.Encoding,
+			Label: &TEXT_ENCODING_LABEL,
+		}
 	}
 	// use PDF/A version if existing
 	if parsedTikaOutput.PDFAVersion != nil {
-		extractedFeatures["format:version"] = "PDF/" + *parsedTikaOutput.PDFAVersion
+		extractedFeatures["format:version"] = ToolFeatureValue{
+			Value: "PDF/" + *parsedTikaOutput.PDFAVersion,
+			Label: &FORMAT_VERSION_LABEL,
+		}
 	} else if parsedTikaOutput.PDFVersion != nil {
 		// no PDF/A version --> use normal version info
-		extractedFeatures["format:version"] = *parsedTikaOutput.PDFVersion
+		extractedFeatures["format:version"] = ToolFeatureValue{
+			Value: *parsedTikaOutput.PDFVersion,
+			Label: &FORMAT_VERSION_LABEL,
+		}
 	}
 	context.JSON(http.StatusOK, response)
 }

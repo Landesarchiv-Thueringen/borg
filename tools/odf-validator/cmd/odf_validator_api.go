@@ -18,12 +18,22 @@ const (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
 }
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
+}
+
+var (
+	MIME_TYPE_LABEL = "Mime-Type"
+	VALID_LABEL     = "valide"
+)
 
 var toolVersion string
 
@@ -73,12 +83,18 @@ func validate(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]interface{})
-	extractedFeatures["format:valid"] = valid
+	extractedFeatures := make(map[string]ToolFeatureValue)
+	extractedFeatures["format:valid"] = ToolFeatureValue{
+		Value: valid,
+		Label: &VALID_LABEL,
+	}
 	r := regexp.MustCompile(`Media Type:\s*([a-zA-Z0-9.+/-]+)`)
 	matches := r.FindStringSubmatch(output)
 	if len(matches) == 2 {
-		extractedFeatures["format:mimeType"] = matches[1]
+		extractedFeatures["format:mimeType"] = ToolFeatureValue{
+			Value: matches[1],
+			Label: &MIME_TYPE_LABEL,
+		}
 	}
 	response := ToolResponse{
 		ToolVersion:  toolVersion,

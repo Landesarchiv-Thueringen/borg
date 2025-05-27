@@ -16,11 +16,16 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
+}
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
 }
 
 type VeraPDFOutput struct {
@@ -39,6 +44,13 @@ type ValidationResult struct {
 	ProfileName string `json:"profileName"`
 	Compliant   bool   `json:"compliant"`
 }
+
+var (
+	FORMAT_VERSION_LABEL = "Formatversion"
+	MIME_TYPE_LABEL      = "Mime-Type"
+	PUID_LABEL           = "PUID"
+	VALID_LABEL          = "valide"
+)
 
 const (
 	DEFAULT_RESPONSE = "veraPDF API is running"
@@ -146,7 +158,7 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]interface{})
+	extractedFeatures := make(map[string]ToolFeatureValue)
 	response := ToolResponse{
 		ToolVersion:  toolVersion,
 		ToolOutput:   output,
@@ -154,33 +166,56 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 		Features:     extractedFeatures,
 	}
 	if len(veraPDFOutput.Report.Jobs) > 0 {
-		extractedFeatures["format:valid"] =
-			veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant
+		extractedFeatures["format:valid"] = ToolFeatureValue{
+			Value: veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant,
+			Label: &VALID_LABEL,
+		}
 		switch profile {
 		case "1a":
-			extractedFeatures["format:puid"] = "fmt/95"
-			extractedFeatures["format:mimeType"] = "application/pdf"
-			extractedFeatures["format:version"] = "PDF/A-1a"
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/95")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-1a")
 		case "1b":
-			extractedFeatures["format:puid"] = "fmt/354"
-			extractedFeatures["format:mimeType"] = "application/pdf"
-			extractedFeatures["format:version"] = "PDF/A-1b"
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/354")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-1b")
 		case "2a":
-			extractedFeatures["format:puid"] = "fmt/476"
-			extractedFeatures["format:mimeType"] = "application/pdf"
-			extractedFeatures["format:version"] = "PDF/A-2a"
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/476")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-2a")
 		case "2b":
-			extractedFeatures["format:puid"] = "fmt/477"
-			extractedFeatures["format:mimeType"] = "application/pdf"
-			extractedFeatures["format:version"] = "PDF/A-2b"
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/477")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-2b")
 		case "2u":
-			extractedFeatures["format:puid"] = "fmt/478"
-			extractedFeatures["format:mimeType"] = "application/pdf"
-			extractedFeatures["format:version"] = "PDF/A-2u"
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/478")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-2u")
 		case "ua1":
-			extractedFeatures["format:mimeType"] = "application/pdf"
-			extractedFeatures["format:version"] = "PDF/UA"
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/UA")
 		}
 	}
 	context.JSON(http.StatusOK, response)
+}
+
+func getPuidFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &PUID_LABEL,
+	}
+}
+
+func getMimeTypeFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &MIME_TYPE_LABEL,
+	}
+}
+
+func getVersionFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &FORMAT_VERSION_LABEL,
+	}
 }

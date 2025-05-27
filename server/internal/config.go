@@ -72,14 +72,14 @@ func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) (bool, map[stri
 }
 
 type FeatureSetConfig struct {
-	Features        []Feature        `yaml:"features"`
+	Features        []FeatureConfig  `yaml:"features"`
 	Weight          Weight           `yaml:"weight"`
 	MergeConditions []MergeCondition `yaml:"mergeConditions"`
 }
 
 func (c *FeatureSetConfig) AreMergeable(
 	fs1 map[string]FeatureValue,
-	fs2 map[string]interface{},
+	fs2 map[string]ToolFeatureValue,
 ) (isFulfilled bool, mergeModifier float64) {
 	// The merge is always possible if the origin set is empty.
 	if len(fs1) == 0 {
@@ -104,16 +104,16 @@ func (c *FeatureSetConfig) AreMergeable(
 	return
 }
 
-func (c *FeatureSetConfig) GetFeatureConfig(key string) (Feature, bool) {
+func (c *FeatureSetConfig) GetFeatureConfig(key string) (FeatureConfig, bool) {
 	for _, featureConfig := range c.Features {
 		if featureConfig.Key == key {
 			return featureConfig, true
 		}
 	}
-	return Feature{}, false
+	return FeatureConfig{}, false
 }
 
-type Feature struct {
+type FeatureConfig struct {
 	Key               string `yaml:"key"`
 	MergeOrder        uint   `yaml:"mergeOrder"`
 	ProvidedByTrigger bool   `yaml:"providedByTrigger"`
@@ -195,7 +195,7 @@ type MergeCondition struct {
 	ValueRegEx *string `yaml:"valueRegEx"`
 }
 
-func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string]interface{}) (isFulfilled bool, strongLink bool) {
+func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string]ToolFeatureValue) (isFulfilled bool, strongLink bool) {
 	// if the second feature sets doesn't contain any values
 	// the first feature set can be empty if merging against an empty set
 	if len(fs2) == 0 {
@@ -215,7 +215,7 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string
 		regEx := regexp.MustCompile(*c.ValueRegEx)
 		// extract comparable values from feature strings
 		s1, ok1 := fv1.Value.(string)
-		s2, ok2 := fv2.(string)
+		s2, ok2 := fv2.Value.(string)
 		if !ok1 || !ok2 {
 			log.Fatal("configuration faulty: used value extraction string on non string value")
 		}

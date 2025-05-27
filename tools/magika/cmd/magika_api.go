@@ -14,12 +14,17 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Score        *float64               `json:"score"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Score        *float64                    `json:"score"`
+	Error        *string                     `json:"error"`
+}
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
 }
 
 type Output struct {
@@ -55,6 +60,11 @@ const (
 	defaultResponse = "Magika API is running"
 	workDir         = "/borg/tools/magika"
 	storeDir        = "/borg/file-store"
+)
+
+var (
+	IS_TEXT_LABEL   = "textbasiertes Format"
+	MIME_TYPE_LABEL = "Mime-Type"
 )
 
 var toolVersion string
@@ -153,18 +163,26 @@ func identifyFileFormat(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
-func extractFeatures(data Data) map[string]interface{} {
-	features := make(map[string]interface{})
+func extractFeatures(data Data) map[string]ToolFeatureValue {
+	features := make(map[string]ToolFeatureValue)
 	if data.Result.Status == "ok" {
-		if data.Result.Value.Output.MimeType != "" {
-			features["format:mimeType"] = data.Result.Value.Output.MimeType
+		mimeType := data.Result.Value.Output.MimeType
+		if mimeType != "" {
 			// image/jpeg2000 is not the official Mime type
 			// https://www.iana.org/assignments/media-types/media-types.xhtml
-			if features["format:mimeType"] == "image/jpeg2000" {
-				features["format:mimeType"] = "image/jp2"
+			if mimeType == "image/jpeg2000" {
+				mimeType = "image/jp2"
 			}
+			features["format:mimeType"] = ToolFeatureValue{
+				Value: mimeType,
+				Label: &MIME_TYPE_LABEL,
+			}
+
 		}
-		features["format:isText"] = data.Result.Value.Output.IsText
+		features["format:isText"] = ToolFeatureValue{
+			Value: data.Result.Value.Output.IsText,
+			Label: &IS_TEXT_LABEL,
+		}
 	}
 	return features
 }

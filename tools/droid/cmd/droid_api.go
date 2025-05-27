@@ -16,12 +16,24 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
 }
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
+}
+
+var (
+	FORMAT_NAME_LABEL    = "Formatname"
+	FORMAT_VERSION_LABEL = "Formatversion"
+	MIME_TYPE_LABEL      = "Mime-Type"
+	PUID_LABEL           = "PUID"
+)
 
 const (
 	TOOL_VERSION                  = "6.8.0"
@@ -125,8 +137,8 @@ func identifyFileFormat(context *gin.Context) {
 
 // extractFeatures extracts all relevant information from parsed DROID output.
 // Extracts only features from the first detected format.
-func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
-	features := make(map[string]interface{})
+func extractFeatures(formatTable [][]string) (map[string]ToolFeatureValue, error) {
+	features := make(map[string]ToolFeatureValue)
 	keyMap := getKeyMap(formatTable[0])
 	formatNumberAsString, err := extractFeature("FORMAT_COUNT", formatTable[1], keyMap)
 	// key and value errors prevent further processing
@@ -149,7 +161,10 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 	puid, err := extractFeature("PUID", formatTable[1], keyMap)
 	if err == nil {
 		if puid != "" {
-			features["format:puid"] = puid
+			features["format:puid"] = ToolFeatureValue{
+				Value: puid,
+				Label: &PUID_LABEL,
+			}
 		}
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
@@ -158,7 +173,10 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 	mimeType, err := extractFeature("MIME_TYPE", formatTable[1], keyMap)
 	if err == nil {
 		if mimeType != "" {
-			features["format:mimeType"] = mimeType
+			features["format:mimeType"] = ToolFeatureValue{
+				Value: mimeType,
+				Label: &MIME_TYPE_LABEL,
+			}
 		}
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
@@ -167,7 +185,10 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 	formatName, err := extractFeature("FORMAT_NAME", formatTable[1], keyMap)
 	if err == nil {
 		if formatName != "" {
-			features["format:name"] = formatName
+			features["format:name"] = ToolFeatureValue{
+				Value: formatName,
+				Label: &FORMAT_NAME_LABEL,
+			}
 		}
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
@@ -180,7 +201,10 @@ func extractFeatures(formatTable [][]string) (map[string]interface{}, error) {
 			if strings.Contains(formatName, "PDF/A") {
 				formatVersion = "PDF/A-" + formatVersion
 			}
-			features["format:version"] = formatVersion
+			features["format:version"] = ToolFeatureValue{
+				Value: formatVersion,
+				Label: &FORMAT_VERSION_LABEL,
+			}
 		}
 
 	} else if errors.As(err, &keyError) {

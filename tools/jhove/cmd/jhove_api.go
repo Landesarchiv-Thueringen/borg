@@ -15,11 +15,16 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
+}
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
 }
 
 type JhoveOutput struct {
@@ -36,6 +41,15 @@ type JhoveRepInfo struct {
 	FormatVersion *string `json:"version"`
 	Validation    *string `json:"status"`
 }
+
+var (
+	FORMAT_NAME_LABEL    = "Formatname"
+	FORMAT_VERSION_LABEL = "Formatversion"
+	MIME_TYPE_LABEL      = "Mime-Type"
+	PUID_LABEL           = "PUID"
+	VALID_LABEL          = "valide"
+	WELL_FORMED_LABEL    = "wohlgeformt"
+)
 
 var defaultResponse = "JHOVE API is running"
 var storeDir = "/borg/file-store"
@@ -115,7 +129,7 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	extractedFeatures := make(map[string]interface{})
+	extractedFeatures := make(map[string]ToolFeatureValue)
 	response := ToolResponse{
 		ToolVersion:  parsedJhoveOutput.Root.ToolVersion,
 		ToolOutput:   output,
@@ -125,7 +139,7 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 	if parsedJhoveOutput.Root != nil && len(parsedJhoveOutput.Root.RepInfo) > 0 {
 		repInfo := parsedJhoveOutput.Root.RepInfo[0]
 		if repInfo.FormatName != nil {
-			extractedFeatures["format:name"] = *repInfo.FormatName
+			extractedFeatures["format:name"] = getFormatNameFeature(*repInfo.FormatName)
 		}
 		if repInfo.FormatVersion != nil {
 			if module == "html" {
@@ -134,79 +148,124 @@ func processJhoveOutput(context *gin.Context, output string, module string) {
 				r := regexp.MustCompile(`HTML ([0-9]+\.[0-9]+)`)
 				matches := r.FindStringSubmatch(*repInfo.FormatVersion)
 				if len(matches) == 2 {
-					extractedFeatures["format:version"] = matches[1]
+					extractedFeatures["format:version"] = getVersionFeature(matches[1])
 				}
 			} else {
-				extractedFeatures["format:version"] = *repInfo.FormatVersion
+				extractedFeatures["format:version"] = getVersionFeature(*repInfo.FormatVersion)
 			}
 		}
 		if repInfo.Validation != nil {
-			extractedFeatures["format:wellFormed"] = wellFormedRegEx.MatchString(*repInfo.Validation)
-			extractedFeatures["format:valid"] = validRegEx.MatchString(*repInfo.Validation)
+			extractedFeatures["format:wellFormed"] = getWellFormedFeature(wellFormedRegEx.MatchString(*repInfo.Validation))
+			extractedFeatures["format:valid"] = getValidFeature(validRegEx.MatchString(*repInfo.Validation))
 		}
 		switch module {
 		case "pdf":
-			extractedFeatures["format:mimeType"] = "application/pdf"
+			extractedFeatures["format:mimeType"] = ToolFeatureValue{
+				Value: "application/pdf",
+				Label: &MIME_TYPE_LABEL,
+			}
 			version, ok := extractedFeatures["format:version"]
 			if ok {
-				versionString, ok := version.(string)
+				versionString, ok := version.Value.(string)
 				if ok {
 					switch versionString {
 					case "1.0":
-						extractedFeatures["format:puid"] = "fmt/14"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/14")
 					case "1.1":
-						extractedFeatures["format:puid"] = "fmt/15"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/15")
 					case "1.2":
-						extractedFeatures["format:puid"] = "fmt/16"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/16")
 					case "1.3":
-						extractedFeatures["format:puid"] = "fmt/17"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/17")
 					case "1.4":
-						extractedFeatures["format:puid"] = "fmt/18"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/18")
 					case "1.5":
-						extractedFeatures["format:puid"] = "fmt/19"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/19")
 					case "1.6":
-						extractedFeatures["format:puid"] = "fmt/20"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/20")
 					case "1.7":
-						extractedFeatures["format:puid"] = "fmt/276"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/276")
 					}
 				}
 			}
 		case "html":
-			extractedFeatures["format:mimeType"] = "text/html"
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("text/html")
 			version, ok := extractedFeatures["format:version"]
 			if ok {
-				versionString, ok := version.(string)
+				versionString, ok := version.Value.(string)
 				if ok {
 					switch versionString {
 					case "3.2":
-						extractedFeatures["format:puid"] = "fmt/98"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/98")
 					case "4.0":
-						extractedFeatures["format:puid"] = "fmt/99"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/99")
 					case "4.01":
-						extractedFeatures["format:puid"] = "fmt/100"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/100")
 					}
 				}
 			}
 		case "tiff":
-			extractedFeatures["format:mimeType"] = "image/tiff"
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("image/tiff")
 		case "jpeg":
-			extractedFeatures["format:mimeType"] = "image/jpeg"
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("image/jpeg")
 			version, ok := extractedFeatures["format:version"]
 			if ok {
-				versionString, ok := version.(string)
+				versionString, ok := version.Value.(string)
 				if ok {
 					switch versionString {
 					case "1.00":
-						extractedFeatures["format:puid"] = "fmt/42"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/42")
 					case "1.01":
-						extractedFeatures["format:puid"] = "fmt/43"
+						extractedFeatures["format:puid"] = getPuidFeature("fmt/43")
 					}
 				}
 			}
 		case "jpeg2000":
-			extractedFeatures["format:mimeType"] = "image/jp2"
-			extractedFeatures["format:puid"] = "x-fmt/392"
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("image/jp2")
+			extractedFeatures["format:puid"] = getPuidFeature("x-fmt/392")
 		}
 	}
 	context.JSON(http.StatusOK, response)
+}
+
+func getPuidFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &PUID_LABEL,
+	}
+}
+
+func getMimeTypeFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &MIME_TYPE_LABEL,
+	}
+}
+
+func getVersionFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &FORMAT_VERSION_LABEL,
+	}
+}
+
+func getFormatNameFeature(value string) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &FORMAT_NAME_LABEL,
+	}
+}
+
+func getWellFormedFeature(value bool) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &WELL_FORMED_LABEL,
+	}
+}
+
+func getValidFeature(value bool) ToolFeatureValue {
+	return ToolFeatureValue{
+		Value: value,
+		Label: &VALID_LABEL,
+	}
 }

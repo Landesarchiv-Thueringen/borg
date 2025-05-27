@@ -23,11 +23,16 @@ type ToolResult struct {
 	// "text", "json", "xml" and "csv".
 	OutputFormat string `json:"outputFormat"`
 	// Features is a list of features as extracted from the tool's output.
-	Features map[string]interface{} `json:"features"`
+	Features map[string]ToolFeatureValue `json:"features"`
 	// Score is the from the tool supplied confidence of the result.
 	Score *float64 `json:"score"`
 	// Error is an error emitted from the tool in case of failure.
 	Error *string `json:"error"`
+}
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
 }
 
 type ByTitle []ToolResult
@@ -48,7 +53,7 @@ func RunIdentificationTools(filename string) map[string]ToolResult {
 		// request tool results concurrent
 		go func() {
 			response := getToolResult(tool.Endpoint, filename)
-			features := make(map[string]interface{})
+			features := make(map[string]ToolFeatureValue)
 			if len(response.Features) > 0 {
 				features = response.Features
 			}
@@ -89,7 +94,7 @@ func RunTriggeredTools(
 		// request tool results concurrent
 		go func() {
 			response := getToolResult(toolConfig.Endpoint, filename)
-			features := make(map[string]interface{})
+			features := make(map[string]ToolFeatureValue)
 			if len(response.Features) > 0 {
 				features = response.Features
 			}
@@ -98,7 +103,10 @@ func RunTriggeredTools(
 				if featureConfig.ProvidedByTrigger {
 					v, ok := matches[featureConfig.Key]
 					if ok {
-						features[featureConfig.Key] = v
+						// ToDo: Labeling
+						features[featureConfig.Key] = ToolFeatureValue{
+							Value: v,
+						}
 					}
 				}
 			}
