@@ -43,6 +43,7 @@ export interface FeatureSet {
 
 export interface FeatureValue {
   value: string | boolean | number;
+  label: string | null;
   supportingTools: string[];
 }
 
@@ -52,6 +53,11 @@ export interface ToolResult {
   toolVersion: string;
   toolOutput: string;
   outputFormat: 'text' | 'json' | 'csv' | 'xml';
-  features: { [key: string]: string };
+  features: { [key: string]: ToolFeatureValue };
   error: string | null;
+}
+
+export interface ToolFeatureValue {
+  value: string;
+  label: string | null;
 }

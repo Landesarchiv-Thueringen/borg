@@ -24,7 +24,7 @@
   <ng-container matColumnDef="key">
     <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
     <mat-cell *matCellDef="let feature">
-      {{ feature.key | localization: localization() }}
+      {{ feature.label ?? feature.key }}
     </mat-cell>
   </ng-container>
 

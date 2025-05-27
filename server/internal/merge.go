@@ -153,11 +153,13 @@ func (m *Merge) IsMergeable(tc2 ToolConfig, tr2 ToolResult) (isMergeable bool, m
 func (m *Merge) GetMergedToolResults() FeatureSet {
 	features := make(map[string]FeatureValue)
 	featureValues := make(map[string][]FeatureValue)
+	// gather all existing feature values
 	for _, tr := range m.toolResults {
 		tc := getToolConfig(tr.Id)
 		for k, v := range tr.Features {
 			featureValue := FeatureValue{
-				Value:           v,
+				Value:           v.Value,
+				Label:           v.Label,
 				SupportingTools: []string{tc.Id},
 			}
 			featureConfig, ok := tc.FeatureSet.GetFeatureConfig(k)
@@ -170,6 +172,7 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 			)
 		}
 	}
+	// merge the feature values
 	for key, values := range featureValues {
 		for i, v := range values {
 			if i == 0 {
@@ -178,11 +181,14 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 				if features[key].Value == v.Value {
 					tools := append(features[key].SupportingTools, v.SupportingTools...)
 					mergeOrder := features[key].MergeOrder
+					label := features[key].Label
 					if v.MergeOrder > mergeOrder {
 						mergeOrder = v.MergeOrder
+						label = v.Label
 					}
 					features[key] = FeatureValue{
 						Value:           v.Value,
+						Label:           label,
 						SupportingTools: tools,
 						MergeOrder:      mergeOrder,
 					}

@@ -174,7 +174,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
           localization: this.localization(),
         },
         autoFocus: false,
-        width: '1200px',
+        width: '1250px',
         maxWidth: '80vw',
       });
     } else {

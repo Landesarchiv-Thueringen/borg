@@ -35,7 +35,7 @@ type ToolConfig struct {
 	FeatureSet FeatureSetConfig `yaml:"featureSet"`
 }
 
-func (t *ToolConfig) IsTriggered(toolResults map[string]ToolResult) (bool, map[string]interface{}) {
+func (t *ToolConfig) IsTriggered(toolResults map[string]ToolResult) (bool, map[string]ToolFeatureValue) {
 	for _, t := range t.Triggers {
 		isTriggered, matches := t.IsTriggered(toolResults)
 		if isTriggered {
@@ -49,8 +49,8 @@ type Trigger struct {
 	Conditions []FeatureCondition `yaml:"conditions"`
 }
 
-func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) (bool, map[string]interface{}) {
-	matches := make(map[string]interface{})
+func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) (bool, map[string]ToolFeatureValue) {
+	matches := make(map[string]ToolFeatureValue)
 	for _, condition := range t.Conditions {
 		isFulFilled := false
 		for _, toolResult := range toolResults {
@@ -58,7 +58,7 @@ func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) (bool, map[stri
 			if !ok {
 				continue
 			}
-			if condition.IsFulfilled(v) {
+			if condition.IsFulfilled(v.Value) {
 				matches[condition.Feature] = v
 				isFulFilled = true
 				break
@@ -121,6 +121,7 @@ type FeatureConfig struct {
 
 type FeatureValue struct {
 	Value           interface{} `json:"value"`
+	Label           *string     `json:"label"`
 	MergeOrder      uint        `json:"-"`
 	SupportingTools []string    `json:"supportingTools"`
 }
@@ -163,7 +164,7 @@ func (w *ConditionalWeight) IsFulfilled(tr ToolResult) bool {
 		if !ok {
 			return false
 		}
-		if !c.IsFulfilled(v) {
+		if !c.IsFulfilled(v.Value) {
 			return false
 		}
 	}

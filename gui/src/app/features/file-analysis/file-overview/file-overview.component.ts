@@ -111,7 +111,7 @@ export class FileOverviewComponent {
       for (let featureName of OVERVIEW_FEATURES) {
         if (toolResult.features[featureName] !== undefined) {
           row[featureName] = {
-            value: toolResult.features[featureName],
+            value: toolResult.features[featureName].value,
           };
         }
       }

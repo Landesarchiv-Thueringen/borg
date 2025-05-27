@@ -29,9 +29,18 @@ mat-cell {
 }
 
 .mat-column-category {
-  flex-grow: 0.5;
+  flex-grow: 0.6;
 }
 
 .mat-column-value {
   flex-grow: 3;
 }
+
+// needed for wrapping key column
+// mat-cell.mat-column-key {
+//   display: table-cell;
+// }
+// .mat-column-key {
+//   flex-grow: 1.5;
+//   overflow-wrap: break-word !important;
+// }

@@ -10,6 +10,7 @@ import { FileAnalysis } from '../results';
 interface Feature {
   category: string;
   key: string;
+  label: string | null;
   value: string | number | boolean;
   supportingTools: string[];
 }
@@ -63,7 +64,8 @@ export class MetadataTableComponent implements OnInit {
         const featureKey = parts[1];
         this.features.push({
           category: categoryKey,
-          key: key,
+          key: featureKey,
+          label: this.fileAnalysis().featureSets[0].features[key].label,
           value: this.fileAnalysis().featureSets[0].features[key].value,
           supportingTools: this.fileAnalysis().featureSets[0].features[key].supportingTools,
         });

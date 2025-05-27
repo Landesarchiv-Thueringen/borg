@@ -14,7 +14,7 @@
           </ng-container>
           <ng-container matColumnDef="value">
             <mat-header-cell *matHeaderCellDef>Wert</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ element.value }}</mat-cell>
+            <mat-cell *matCellDef="let element">{{ element.value.value }}</mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="['key', 'value']"></mat-header-row>
           <mat-row *matRowDef="let row; columns: ['key', 'value']"></mat-row>

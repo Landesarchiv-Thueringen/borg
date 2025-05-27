@@ -17,11 +17,16 @@ import (
 )
 
 type ToolResponse struct {
-	ToolVersion  string                 `json:"toolVersion"`
-	ToolOutput   string                 `json:"toolOutput"`
-	OutputFormat string                 `json:"outputFormat"`
-	Features     map[string]interface{} `json:"features"`
-	Error        *string                `json:"error"`
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
+}
+
+type ToolFeatureValue struct {
+	Value interface{} `json:"value"`
+	Label *string     `json:"label"`
 }
 
 const (
@@ -127,8 +132,8 @@ func extractMetadata(context *gin.Context) {
 	context.JSON(http.StatusOK, response)
 }
 
-func extractFeatures(output string) (map[string]interface{}, error) {
-	features := make(map[string]interface{})
+func extractFeatures(output string) (map[string]ToolFeatureValue, error) {
+	features := make(map[string]ToolFeatureValue)
 	decoder := xml.NewDecoder(strings.NewReader(output))
 CATEGORY_LOOP:
 	for {
@@ -163,11 +168,13 @@ CATEGORY_LOOP:
 					if !ok {
 						continue
 					}
+					featureKey := strings.ToLower(innerElement.Name.Local)
 					key := fmt.Sprintf(
 						"%s:%s",
 						strings.ToLower(category),
-						strings.ToLower(innerElement.Name.Local))
-					features[key] = value
+						featureKey,
+					)
+					features[key] = getFeatureValue(featureKey, value)
 				case xml.EndElement:
 					if innerElement.Name.Local == "track" {
 						continue CATEGORY_LOOP
@@ -229,5 +236,40 @@ func readLocalizationCsv() map[string]string {
 		}
 		key := strings.ToLower(row[0])
 		dict[key] = row[1]
+	}
+}
+
+var keyRegEx = regexp.MustCompile(`^(.+?)_(string)(\d*)$`)
+
+func getFeatureValue(key string, value string) ToolFeatureValue {
+	// strings.LastIndex(key, "_string")
+	matches := keyRegEx.FindStringSubmatch(key)
+	if len(matches) > 2 {
+		subKey := matches[1]
+		label, ok := dict[subKey]
+		if ok {
+			if len(matches) == 4 && len(matches[3]) == 0 {
+				if label == "" {
+					log.Println(key)
+				}
+				label += " (string)"
+			} else if len(matches) == 4 && len(matches[3]) > 0 {
+				label += fmt.Sprintf(" (string %s)", matches[3])
+			}
+			return ToolFeatureValue{
+				Value: value,
+				Label: &label,
+			}
+		}
+	}
+	label, ok := dict[key]
+	if ok && len(label) > 0 {
+		return ToolFeatureValue{
+			Value: value,
+			Label: &label,
+		}
+	}
+	return ToolFeatureValue{
+		Value: value,
 	}
 }
