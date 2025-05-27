@@ -20,7 +20,7 @@ type ToolResult struct {
 	// ToolOutput is the tool's raw output string.
 	ToolOutput string `json:"toolOutput"`
 	// OutputFormat is the format expected for ToolOutput. Possible values are
-	// "text", "json", and "csv".
+	// "text", "json", "xml" and "csv".
 	OutputFormat string `json:"outputFormat"`
 	// Features is a list of features as extracted from the tool's output.
 	Features map[string]interface{} `json:"features"`

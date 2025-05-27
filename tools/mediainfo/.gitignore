@@ -10,3 +10,6 @@
 
 # allow dockerfile
 !Dockerfile
+
+# allow german language csv
+!third_party/de.csv

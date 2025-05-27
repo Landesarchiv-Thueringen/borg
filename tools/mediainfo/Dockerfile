@@ -7,6 +7,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o mediainfo_api cmd/mediainfo_api.go
 
 FROM alpine:3.21 AS prod
 WORKDIR /borg/tools/mediainfo
+COPY third_party/de.csv .
 COPY --from=build /build/mediainfo_api .
 RUN apk add --no-cache mediainfo
 ENTRYPOINT ["./mediainfo_api"]

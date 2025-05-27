@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/csv"
 	"encoding/xml"
 	"fmt"
 	"io"
@@ -29,13 +30,18 @@ const (
 	storeDir        = "/borg/file-store"
 )
 
-var toolVersion string
+var (
+	toolVersion string
+	dict        map[string]string
+)
 
 func main() {
 	toolVersion = getToolVersion()
+	dict = readLocalizationCsv()
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
+	router.GET("/localization-dict", getLocalizationDict)
 	router.GET("/extract-metadata", extractMetadata)
 	router.Run()
 }
@@ -60,6 +66,10 @@ func getToolVersion() string {
 
 func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, defaultResponse)
+}
+
+func getLocalizationDict(context *gin.Context) {
+	context.JSON(http.StatusOK, dict)
 }
 
 func extractMetadata(context *gin.Context) {
@@ -195,4 +205,29 @@ func getInnerValue(decoder *xml.Decoder, element xml.StartElement) (value string
 		}
 	}
 	return
+}
+
+func readLocalizationCsv() map[string]string {
+	file, err := os.Open("de.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	dict := make(map[string]string)
+	csvReader := csv.NewReader(file)
+	csvReader.Comma = ';'
+	for {
+		row, err := csvReader.Read()
+		if err != nil {
+			if err == io.EOF {
+				return dict
+			}
+			continue
+		}
+		if len(row) != 2 {
+			continue
+		}
+		key := strings.ToLower(row[0])
+		dict[key] = row[1]
+	}
 }
