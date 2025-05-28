@@ -9,12 +9,12 @@ FROM alpine:3.20 AS extract
 RUN apk add --no-cache unzip
 COPY third_party /third_party
 WORKDIR /third_party
-RUN unzip droid-binary-6.8.0-bin.zip
-RUN rm droid-binary-6.8.0-bin.zip
+RUN unzip droid-binary-6.8.1-bin.zip
+RUN rm droid-binary-6.8.1-bin.zip
 RUN chmod +x droid.sh
 
 FROM alpine:3.20 AS prod
-RUN apk add --no-cache openjdk17
+RUN apk add --no-cache openjdk21
 WORKDIR /borg/tools/droid
 COPY --from=build /build/droidapi .
 COPY --from=extract /third_party ./third_party
