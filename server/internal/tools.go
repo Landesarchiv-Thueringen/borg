@@ -25,9 +25,18 @@ type ToolResult struct {
 	// Features is a list of features as extracted from the tool's output.
 	Features map[string]ToolFeatureValue `json:"features"`
 	// Score is the from the tool supplied confidence of the result.
-	Score *float64 `json:"score"`
+	Score *float64 `json:"-"`
 	// Error is an error emitted from the tool in case of failure.
 	Error *string `json:"error"`
+}
+
+type ToolResponse struct {
+	ToolVersion  string                      `json:"toolVersion"`
+	ToolOutput   string                      `json:"toolOutput"`
+	OutputFormat string                      `json:"outputFormat"`
+	Features     map[string]ToolFeatureValue `json:"features"`
+	Error        *string                     `json:"error"`
+	Score        *float64                    `json:"score"`
 }
 
 type ToolFeatureValue struct {
@@ -133,13 +142,13 @@ func RunTriggeredTools(
 func getToolResult(
 	endpoint string,
 	filename string,
-) ToolResult {
+) ToolResponse {
 	// create http get request
 	req, err := http.NewRequest("GET", endpoint, nil)
 	if err != nil {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error creating request: %s", endpoint)
-		return ToolResult{Error: &errorMessage}
+		return ToolResponse{Error: &errorMessage}
 	}
 	// add file path URL parameter
 	query := req.URL.Query()
@@ -150,16 +159,16 @@ func getToolResult(
 	if err != nil {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error requesting: %s", req.URL.String())
-		return ToolResult{Error: &errorMessage}
+		return ToolResponse{Error: &errorMessage}
 	}
 	// process request response
 	return processToolResponse(response)
 }
 
-func processToolResponse(response *http.Response) ToolResult {
+func processToolResponse(response *http.Response) ToolResponse {
 	if response.StatusCode != http.StatusOK {
 		errorMessage := fmt.Sprintf("tool request error: %d", response.StatusCode)
-		toolResponse := ToolResult{
+		toolResponse := ToolResponse{
 			Error: &errorMessage,
 		}
 		bytes, err := httputil.DumpResponse(response, true)
@@ -170,13 +179,13 @@ func processToolResponse(response *http.Response) ToolResult {
 		}
 		return toolResponse
 	}
-	var result ToolResult
+	var result ToolResponse
 	err := json.NewDecoder(response.Body).Decode(&result)
 	if err != nil {
 		errorMessage := "error parsing tool response"
 		log.Println(errorMessage)
 		log.Println(err)
-		return ToolResult{Error: &errorMessage}
+		return ToolResponse{Error: &errorMessage}
 	}
 	return result
 }
