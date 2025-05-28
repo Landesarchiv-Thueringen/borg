@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0
+
+- Feature: Update DROID 6.8.0 -> 6.8.1
+
 ## 1.4.1
 
 - Feature: Version in Titelleiste und "Über Borg"-Dialog
