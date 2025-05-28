@@ -7,9 +7,16 @@ import (
 )
 
 type FeatureSet struct {
-	Features        map[string]FeatureValue `json:"features"`
-	SupportingTools []string                `json:"supportingTools"`
-	Score           float64                 `json:"score"`
+	Features        map[string]MergeFeatureValue `json:"features"`
+	SupportingTools []string                     `json:"supportingTools"`
+	Score           float64                      `json:"score"`
+}
+
+type MergeFeatureValue struct {
+	Value           interface{} `json:"value"`
+	Label           *string     `json:"label"`
+	MergeOrder      uint        `json:"-"`
+	SupportingTools []string    `json:"supportingTools"`
 }
 
 func (s *FeatureSet) FulFillesAny(fileIdentityRules []FileIdentityRule) bool {
@@ -151,13 +158,13 @@ func (m *Merge) IsMergeable(tc2 ToolConfig, tr2 ToolResult) (isMergeable bool, m
 }
 
 func (m *Merge) GetMergedToolResults() FeatureSet {
-	features := make(map[string]FeatureValue)
-	featureValues := make(map[string][]FeatureValue)
+	features := make(map[string]MergeFeatureValue)
+	featureValues := make(map[string][]MergeFeatureValue)
 	// gather all existing feature values
 	for _, tr := range m.toolResults {
 		tc := getToolConfig(tr.Id)
 		for k, v := range tr.Features {
-			featureValue := FeatureValue{
+			featureValue := MergeFeatureValue{
 				Value:           v.Value,
 				Label:           v.Label,
 				SupportingTools: []string{tc.Id},
@@ -186,7 +193,7 @@ func (m *Merge) GetMergedToolResults() FeatureSet {
 						mergeOrder = v.MergeOrder
 						label = v.Label
 					}
-					features[key] = FeatureValue{
+					features[key] = MergeFeatureValue{
 						Value:           v.Value,
 						Label:           label,
 						SupportingTools: tools,

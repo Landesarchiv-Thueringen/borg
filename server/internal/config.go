@@ -79,7 +79,7 @@ type FeatureSetConfig struct {
 }
 
 func (c *FeatureSetConfig) AreMergeable(
-	fs1 map[string]FeatureValue,
+	fs1 map[string]MergeFeatureValue,
 	fs2 map[string]ToolFeatureValue,
 ) (isFulfilled bool, mergeModifier float64) {
 	// The merge is always possible if the origin set is empty.
@@ -118,13 +118,6 @@ type FeatureConfig struct {
 	Key               string `yaml:"key"`
 	MergeOrder        uint   `yaml:"mergeOrder"`
 	ProvidedByTrigger bool   `yaml:"providedByTrigger"`
-}
-
-type FeatureValue struct {
-	Value           interface{} `json:"value"`
-	Label           *string     `json:"label"`
-	MergeOrder      uint        `json:"-"`
-	SupportingTools []string    `json:"supportingTools"`
 }
 
 type Weight struct {
@@ -197,7 +190,7 @@ type MergeCondition struct {
 	ValueRegEx *string `yaml:"valueRegEx"`
 }
 
-func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string]ToolFeatureValue) (isFulfilled bool, strongLink bool) {
+func (c *MergeCondition) IsFulfilled(fs1 map[string]MergeFeatureValue, fs2 map[string]ToolFeatureValue) (isFulfilled bool, strongLink bool) {
 	// if the second feature sets doesn't contain any values
 	// the first feature set can be empty if merging against an empty set
 	if len(fs2) == 0 {
@@ -239,7 +232,7 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string
 		return
 	}
 	// merge is possible if features are equal
-	isFulfilled = fv1.Value == fv2
+	isFulfilled = fv1.Value == fv2.Value
 	if isFulfilled {
 		strongLink = true
 	}
