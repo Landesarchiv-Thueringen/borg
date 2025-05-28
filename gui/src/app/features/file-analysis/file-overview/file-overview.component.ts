@@ -7,7 +7,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
-import { FilePropertyDefinition } from '../file-analysis-table/file-analysis-table.component';
 import { MetadataTableComponent } from '../metadata-table/metadata-table.component';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
 import { Localization } from '../pipes/localization.pipe';
@@ -35,7 +34,6 @@ interface DialogData {
   filename: string;
   info: { [key: string]: RowValue };
   analysis: FileAnalysis;
-  properties: FilePropertyDefinition[];
   localization: Localization | undefined;
 }
 
@@ -72,12 +70,6 @@ export class FileOverviewComponent {
   readonly localization: Localization | undefined = this.data.localization;
   dataSource = new MatTableDataSource<FileFeatures>();
   tableColumnList: string[] = [];
-  infoProperties = this.data.properties.filter(
-    (p) =>
-      p.key !== 'filename' &&
-      p.key !== 'status' &&
-      !OVERVIEW_FEATURES.includes(p.key as (typeof OVERVIEW_FEATURES)[number]),
-  );
 
   constructor() {
     this.initTableData();

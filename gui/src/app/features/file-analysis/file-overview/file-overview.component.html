@@ -1,25 +1,6 @@
 <h2 mat-dialog-title>{{ data.filename }}</h2>
 
 <mat-dialog-content>
-  <div class="info-table" role="table">
-    @for (property of infoProperties; track property.key) {
-      <div role="row">
-        <div role="cell">{{ property.label }}</div>
-        @if (data.info[property.key]; as row) {
-          <div role="cell">
-            @if (row.routerLink) {
-              <a mat-button [routerLink]="row.routerLink" target="_blank">
-                {{ row.displayString ?? row.value }}
-                <mat-icon iconPositionEnd>open_in_new</mat-icon>
-              </a>
-            } @else {
-              {{ row.displayString ?? row.value }}
-            }
-          </div>
-        }
-      </div>
-    }
-  </div>
   <mat-tab-group animationDuration="0ms">
     <mat-tab label="Dateiformat">
       @if (data.analysis.summary.formatUncertain) {
