@@ -231,7 +231,7 @@ func readLocalizationCsv() map[string]string {
 			}
 			continue
 		}
-		if len(row) != 2 {
+		if len(row) != 2 || len(row[1]) == 0 {
 			continue
 		}
 		key := strings.ToLower(row[0])
@@ -239,27 +239,21 @@ func readLocalizationCsv() map[string]string {
 	}
 }
 
-var keyRegEx = regexp.MustCompile(`^(.+?)_(string)(\d*)$`)
-
 func getFeatureValue(key string, value string) ToolFeatureValue {
-	// strings.LastIndex(key, "_string")
-	matches := keyRegEx.FindStringSubmatch(key)
-	if len(matches) > 2 {
-		subKey := matches[1]
-		label, ok := dict[subKey]
+	suffixIndex := strings.LastIndex(key, "_string")
+	if suffixIndex != -1 {
+		keyPart := key[:suffixIndex]
+		localKey, ok := dict[keyPart]
 		if ok {
-			if len(matches) == 4 && len(matches[3]) == 0 {
-				if label == "" {
-					log.Println(key)
-				}
-				label += " (string)"
-			} else if len(matches) == 4 && len(matches[3]) > 0 {
-				label += fmt.Sprintf(" (string %s)", matches[3])
-			}
+			suffix := key[suffixIndex+1:]
+			label := fmt.Sprintf("%s (%s)", localKey, suffix)
 			return ToolFeatureValue{
 				Value: value,
 				Label: &label,
 			}
+		}
+		return ToolFeatureValue{
+			Value: value,
 		}
 	}
 	label, ok := dict[key]
