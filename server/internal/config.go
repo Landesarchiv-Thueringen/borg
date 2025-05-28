@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -218,7 +219,11 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]FeatureValue, fs2 map[string
 		s1, ok1 := fv1.Value.(string)
 		s2, ok2 := fv2.Value.(string)
 		if !ok1 || !ok2 {
-			log.Fatal("configuration faulty: used value extraction string on non string value")
+			errorMessage := fmt.Sprintf(
+				"configuration error: "+
+					"used value extraction string on non string value for key {%s}",
+				c.Feature)
+			log.Fatal(errorMessage)
 		}
 		m1 := regEx.FindStringSubmatch(s1)
 		m2 := regEx.FindStringSubmatch(s2)

@@ -103,9 +103,8 @@ func RunTriggeredTools(
 				if featureConfig.ProvidedByTrigger {
 					v, ok := matches[featureConfig.Key]
 					if ok {
-						// ToDo: Labeling
 						features[featureConfig.Key] = ToolFeatureValue{
-							Value: v,
+							Value: v.Value,
 						}
 					}
 				}
