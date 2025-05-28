@@ -9,6 +9,7 @@ import (
 	"net/http/httputil"
 	"slices"
 	"sort"
+	"time"
 )
 
 type ToolResult struct {
@@ -26,6 +27,8 @@ type ToolResult struct {
 	Features map[string]ToolFeatureValue `json:"features"`
 	// Score is the from the tool supplied confidence of the result.
 	Score *float64 `json:"-"`
+	// ResponseTime
+	ResponseTimeInMs int64 `json:"responseTimeInMs"`
 	// Error is an error emitted from the tool in case of failure.
 	Error *string `json:"error"`
 }
@@ -61,20 +64,22 @@ func RunIdentificationTools(filename string) map[string]ToolResult {
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
 		go func() {
+			start := time.Now()
 			response := getToolResult(tool.Endpoint, filename)
 			features := make(map[string]ToolFeatureValue)
 			if len(response.Features) > 0 {
 				features = response.Features
 			}
 			rc <- ToolResult{
-				Id:           tool.Id,
-				Title:        tool.Title,
-				ToolVersion:  response.ToolVersion,
-				ToolOutput:   response.ToolOutput,
-				OutputFormat: response.OutputFormat,
-				Features:     features,
-				Score:        response.Score,
-				Error:        response.Error,
+				Id:               tool.Id,
+				Title:            tool.Title,
+				ToolVersion:      response.ToolVersion,
+				ToolOutput:       response.ToolOutput,
+				OutputFormat:     response.OutputFormat,
+				Features:         features,
+				Score:            response.Score,
+				Error:            response.Error,
+				ResponseTimeInMs: time.Since(start).Milliseconds(),
 			}
 		}()
 	}
@@ -102,6 +107,7 @@ func RunTriggeredTools(
 		responseChannels = append(responseChannels, rc)
 		// request tool results concurrent
 		go func() {
+			start := time.Now()
 			response := getToolResult(toolConfig.Endpoint, filename)
 			features := make(map[string]ToolFeatureValue)
 			if len(response.Features) > 0 {
@@ -119,14 +125,15 @@ func RunTriggeredTools(
 				}
 			}
 			rc <- ToolResult{
-				Id:           toolConfig.Id,
-				Title:        toolConfig.Title,
-				ToolVersion:  response.ToolVersion,
-				ToolOutput:   response.ToolOutput,
-				OutputFormat: response.OutputFormat,
-				Features:     features,
-				Score:        response.Score,
-				Error:        response.Error,
+				Id:               toolConfig.Id,
+				Title:            toolConfig.Title,
+				ToolVersion:      response.ToolVersion,
+				ToolOutput:       response.ToolOutput,
+				OutputFormat:     response.OutputFormat,
+				Features:         features,
+				Score:            response.Score,
+				Error:            response.Error,
+				ResponseTimeInMs: time.Duration(time.Since(start)).Milliseconds(),
 			}
 		}()
 	}

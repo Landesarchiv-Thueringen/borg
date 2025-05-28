@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -26,6 +27,8 @@ type fileAnalysis struct {
 	// ToolResults is a list of complete responses from all tools, mapped by
 	// tool name.
 	ToolResults []internal.ToolResult `json:"toolResults"`
+	// DurationInMs represents the duration of the analysis in milliseconds.
+	DurationInMs int64 `json:"durationInMs"`
 }
 
 func main() {
@@ -58,6 +61,7 @@ func getLocalization(c *gin.Context) {
 }
 
 func analyzeFile(c *gin.Context) {
+	start := time.Now()
 	file, err := c.FormFile("file")
 	// no file received
 	if err != nil {
@@ -86,9 +90,10 @@ func analyzeFile(c *gin.Context) {
 	}
 	tr := internal.GetSortedToolResults(identResults, triggeredResults)
 	fileAnalysis := fileAnalysis{
-		Summary:     internal.GetSummary(mergedSets, tr),
-		FeatureSets: mergedSets,
-		ToolResults: tr,
+		Summary:      internal.GetSummary(mergedSets, tr),
+		FeatureSets:  mergedSets,
+		ToolResults:  tr,
+		DurationInMs: time.Since(start).Milliseconds(),
 	}
 	c.JSON(http.StatusOK, fileAnalysis)
 }
