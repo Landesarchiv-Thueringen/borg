@@ -17,7 +17,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Localization } from '../../../services/localization.service';
-import { FileOverviewComponent } from '../file-overview/file-overview.component';
+import { FileDetailsComponent } from '../file-details/file-overview.component';
 import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { LocalizationPipe } from '../pipes/localization.pipe';
 import { FileAnalysis, FileResult, RowValue } from '../results';
@@ -165,7 +165,7 @@ export class FileAnalysisTableComponent implements AfterViewInit {
   async openDetails(overview: FileOverview): Promise<void> {
     const analysis = await this.getDetails()(overview.id);
     if (analysis) {
-      this.dialog.open(FileOverviewComponent, {
+      this.dialog.open(FileDetailsComponent, {
         data: {
           filename: overview.values['filename']!.value,
           info: this.resultsMap()[overview.id].info,

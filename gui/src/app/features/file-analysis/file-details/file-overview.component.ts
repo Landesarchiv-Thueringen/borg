@@ -48,9 +48,9 @@ interface FileFeatures {
 }
 
 @Component({
-  selector: 'app-file-overview',
-  templateUrl: './file-overview.component.html',
-  styleUrls: ['./file-overview.component.scss'],
+  selector: 'app-file-details',
+  templateUrl: './file-details.component.html',
+  styleUrls: ['./file-details.component.scss'],
   imports: [
     CommonModule,
     FileFeaturePipe,
@@ -63,7 +63,7 @@ interface FileFeatures {
     MetadataTableComponent,
   ],
 })
-export class FileOverviewComponent {
+export class FileDetailsComponent {
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private dialog = inject(MatDialog);
   readonly analysis: FileAnalysis = this.data.analysis;
