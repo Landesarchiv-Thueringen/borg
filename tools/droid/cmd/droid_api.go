@@ -36,7 +36,7 @@ var (
 )
 
 const (
-	TOOL_VERSION                  = "6.8.0"
+	TOOL_VERSION                  = "6.8.1"
 	DEFAULT_RESPONSE              = "DROID API is running"
 	WORK_DIR                      = "/borg/tools/droid"
 	STORE_DIR                     = "/borg/file-store"

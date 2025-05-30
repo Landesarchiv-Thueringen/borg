@@ -1,4 +1,19 @@
 tools:
+  - id: "siegfried"
+    title: "Siegfried"
+    endpoint: "http://siegfried/identify-file-format"
+    featureSet:
+      features:
+        - key: "format:name"
+          mergeOrder: 1
+      weight:
+        default: 0.75
+      mergeConditions:
+        - feature: "format:puid"
+        - feature: "format:mimeType"
+          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - feature: "format:version"
+
   - id: "droid"
     title: "DROID"
     endpoint: "http://droid/identify-file-format"

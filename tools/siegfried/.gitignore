@@ -1,0 +1,15 @@
+# allow readme
+!README.md
+
+# allow go project files
+!/go.mod
+!/go.sum
+
+# allow go source code
+!/**/*.go
+
+# allow dockerfile
+!Dockerfile
+
+# allow jhove jar
+!/third_party/siegfried_1-11-2_linux64.zip

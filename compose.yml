@@ -46,6 +46,20 @@ services:
       - PORT=80
       - GIN_MODE=${GIN_MODE}
 
+  siegfried:
+    restart: unless-stopped
+    image: ${IMAGE_PREFIX}/siegfried:${IMAGE_VERSION}
+    build:
+      context: ./tools/siegfried
+      args:
+        - HTTP_PROXY=${HTTP_PROXY}
+        - HTTPS_PROXY=${HTTPS_PROXY}
+    volumes:
+      - "file-store:/borg/file-store"
+    environment:
+      - PORT=80
+      - GIN_MODE=${GIN_MODE}
+
   tika:
     restart: unless-stopped
     image: ${IMAGE_PREFIX}/tika:${IMAGE_VERSION}
