@@ -136,7 +136,7 @@ func identifyFileFormat(context *gin.Context) {
 	if len(result.FileResults) > 0 && len(result.FileResults[0].IdentMatches) > 0 {
 		match := result.FileResults[0].IdentMatches[0]
 		if match.NameSpace == "pronom" {
-			if len(match.Id) > 0 {
+			if match.Id != "UNKNOWN" {
 				features["format:puid"] = ToolFeatureValue{
 					Value: match.Id,
 					Label: &PUID_LABEL,
