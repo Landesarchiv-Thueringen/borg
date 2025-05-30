@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { FileAnalysisTableComponent } from '../../features/file-analysis/file-analysis-table/file-analysis-table.component';
 import { FileResult } from '../../features/file-analysis/results';
-import { LocalizationService } from '../../services/localization.service';
 import { ResultsService } from '../../services/results.service';
 
 @Component({
@@ -17,8 +16,6 @@ import { ResultsService } from '../../services/results.service';
 export class ResultsPageComponent {
   private readonly router = inject(Router);
   private readonly resultsService = inject(ResultsService);
-  private readonly localizationService = inject(LocalizationService);
-  localization = this.localizationService.localization;
 
   results?: FileResult[];
   getDetails = (id: string) => this.resultsService.get(id);

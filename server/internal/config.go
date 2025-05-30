@@ -12,16 +12,10 @@ import (
 type ServerConfig struct {
 	Tools             []ToolConfig       `yaml:"tools"`
 	FileIdentityRules []FileIdentityRule `yaml:"fileIdentity"`
-	Localization      LocalizationConfig `yaml:"localization"`
 }
 
 type FileIdentityRule struct {
 	Conditions []FeatureCondition `yaml:"conditions"`
-}
-
-type LocalizationConfig struct {
-	Resources []LocalizationResource `yaml:"resources"`
-	Dict      map[string]string      `yaml:"dict"`
 }
 
 type LocalizationResource struct {

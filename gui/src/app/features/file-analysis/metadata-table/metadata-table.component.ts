@@ -4,7 +4,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { Localization, LocalizationPipe } from '../pipes/localization.pipe';
 import { FileAnalysis } from '../results';
 
 interface Feature {
@@ -27,14 +26,12 @@ interface FeatureFilter {
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    LocalizationPipe,
   ],
   templateUrl: './metadata-table.component.html',
   styleUrl: './metadata-table.component.scss',
 })
 export class MetadataTableComponent implements OnInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
-  readonly localization = input.required<Localization | undefined>();
   displayedColumns: string[] = ['category', 'key', 'value', 'tools'];
   features: Feature[] = [];
   categories: string[] = [];

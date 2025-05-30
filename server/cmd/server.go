@@ -39,7 +39,6 @@ func main() {
 	router.SetTrustedProxies([]string{})
 	router.GET("api", getDefaultResponse)
 	router.GET("api/version", getVersion)
-	router.GET("api/localization", getLocalization)
 	router.POST("api/analyze-file", analyzeFile)
 	router.Run()
 }
@@ -54,10 +53,6 @@ func getDefaultResponse(c *gin.Context) {
 
 func getVersion(c *gin.Context) {
 	c.String(http.StatusOK, VERSION)
-}
-
-func getLocalization(c *gin.Context) {
-	c.JSON(http.StatusOK, internal.GetLocalization())
 }
 
 func analyzeFile(c *gin.Context) {

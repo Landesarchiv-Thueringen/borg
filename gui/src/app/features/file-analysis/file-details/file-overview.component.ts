@@ -9,7 +9,6 @@ import { RouterModule } from '@angular/router';
 import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { MetadataTableComponent } from '../metadata-table/metadata-table.component';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
-import { Localization } from '../pipes/localization.pipe';
 import { FileAnalysis, RowValue } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
@@ -34,7 +33,6 @@ interface DialogData {
   filename: string;
   info: { [key: string]: RowValue };
   analysis: FileAnalysis;
-  localization: Localization | undefined;
 }
 
 interface FileFeature {
@@ -67,7 +65,6 @@ export class FileDetailsComponent {
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private dialog = inject(MatDialog);
   readonly analysis: FileAnalysis = this.data.analysis;
-  readonly localization: Localization | undefined = this.data.localization;
   dataSource = new MatTableDataSource<FileFeatures>();
   tableColumnList: string[] = [];
 

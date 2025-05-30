@@ -5,7 +5,7 @@
       <mat-select formControlName="category">
         <mat-option [value]="undefined"></mat-option>
         @for (category of categories; track category) {
-          <mat-option [value]="category">{{ category | localization: localization() }}</mat-option>
+          <mat-option [value]="category">{{ category }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -16,7 +16,7 @@
   <ng-container matColumnDef="category">
     <mat-header-cell *matHeaderCellDef> Kategorie </mat-header-cell>
     <mat-cell *matCellDef="let feature">
-      {{ feature.category | localization: localization() }}
+      {{ feature.category }}
     </mat-cell>
   </ng-container>
 
