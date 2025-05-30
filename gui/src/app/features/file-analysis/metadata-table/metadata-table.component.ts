@@ -68,7 +68,6 @@ export class MetadataTableComponent implements OnInit {
       const oa = this.categoryOrder[a.id];
       const ob = this.categoryOrder[b.id];
       if (oa && ob) {
-        console.log('good');
         return oa - ob;
       } else if (oa) {
         return 1;
