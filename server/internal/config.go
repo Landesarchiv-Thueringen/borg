@@ -30,6 +30,7 @@ type LocalizationResource struct {
 
 type ToolConfig struct {
 	Id         string           `yaml:"id"`
+	Enabled    bool             `yaml:"enabled"`
 	Title      string           `yaml:"title"`
 	Endpoint   string           `yaml:"endpoint"`
 	Triggers   []Trigger        `yaml:"triggers"`

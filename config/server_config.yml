@@ -1,5 +1,6 @@
 tools:
   - id: "siegfried"
+    enabled: true
     title: "Siegfried"
     endpoint: "http://siegfried/identify-file-format"
     featureSet:
@@ -15,6 +16,7 @@ tools:
         - feature: "format:version"
 
   - id: "droid"
+    enabled: false
     title: "DROID"
     endpoint: "http://droid/identify-file-format"
     featureSet:
@@ -33,6 +35,7 @@ tools:
         - feature: "format:version"
 
   - id: "tika"
+    enabled: true
     title: "Tika"
     endpoint: "http://tika/extract-metadata"
     featureSet:
@@ -48,6 +51,7 @@ tools:
         - feature: "format:version"
 
   - id: "magika"
+    enabled: true
     title: "Magika"
     endpoint: "http://magika/identify-file-format"
     featureSet:
@@ -66,6 +70,7 @@ tools:
           valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "mediainfo"
+    enabled: true
     title: "MediaInfo"
     endpoint: "http://mediainfo/extract-metadata"
     triggers:
@@ -85,6 +90,7 @@ tools:
           valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "jhove_pdf"
+    enabled: true
     title: "JHOVE (PDF-Modul)"
     endpoint: "http://jhove/validate/pdf"
     triggers:
@@ -136,6 +142,7 @@ tools:
         - feature: "format:valid"
 
   - id: "jhove_html"
+    enabled: true
     title: "JHOVE (HTML-Modul)"
     endpoint: "http://jhove/validate/html"
     triggers:
@@ -176,6 +183,7 @@ tools:
         - feature: "format:valid"
 
   - id: "jhove_tiff"
+    enabled: true
     title: "JHOVE (TIFF-Modul)"
     endpoint: "http://jhove/validate/tiff"
     triggers:
@@ -209,6 +217,7 @@ tools:
         - feature: "format:valid"
 
   - id: "jhove_jpeg"
+    enabled: true
     title: "JHOVE (JPEG-Modul)"
     endpoint: "http://jhove/validate/jpeg"
     triggers:
@@ -248,6 +257,7 @@ tools:
         - feature: "format:valid"
 
   - id: "jhove_jpeg2000"
+    enabled: true
     title: "JHOVE (JPEG2000-Modul)"
     endpoint: "http://jhove/validate/jpeg2000"
     triggers:
@@ -281,6 +291,7 @@ tools:
         - feature: "format:valid"
 
   - id: "verapdf_1a"
+    enabled: true
     title: "veraPDF (PDF/A-1a-Profil)"
     endpoint: "http://verapdf/validate/1a"
     triggers:
@@ -311,6 +322,7 @@ tools:
         - feature: "format:valid"
 
   - id: "verapdf_1b"
+    enabled: true
     title: "veraPDF (PDF/A-1b-Profil)"
     endpoint: "http://verapdf/validate/1b"
     triggers:
@@ -341,6 +353,7 @@ tools:
         - feature: "format:valid"
 
   - id: "verapdf_2a"
+    enabled: true
     title: "veraPDF (PDF/A-2a-Profil)"
     endpoint: "http://verapdf/validate/2a"
     triggers:
@@ -371,6 +384,7 @@ tools:
         - feature: "format:valid"
 
   - id: "verapdf_2b"
+    enabled: true
     title: "veraPDF (PDF/A-2b-Profil)"
     endpoint: "http://verapdf/validate/2b"
     triggers:
@@ -401,6 +415,7 @@ tools:
         - feature: "format:valid"
 
   - id: "verapdf_2u"
+    enabled: true
     title: "veraPDF (PDF/A-2u-Profil)"
     endpoint: "http://verapdf/validate/2u"
     triggers:
@@ -431,6 +446,7 @@ tools:
         - feature: "format:valid"
 
   - id: "verapdf_ua"
+    enabled: true
     title: "veraPDF (PDF/UA-Profil)"
     toolVersion: "1.26.2"
     endpoint: "http://verapdf/validate/ua1"
@@ -459,6 +475,7 @@ tools:
         - feature: "format:valid"
 
   - id: "odf"
+    enabled: true
     title: "ODF Validator"
     endpoint: "http://odf-validator/validate"
     triggers:
@@ -481,6 +498,7 @@ tools:
           valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "ooxml"
+    enabled: true
     title: "OOXML-Validator"
     toolVersion: "2.1.5"
     endpoint: "http://ooxml-validator/validate"

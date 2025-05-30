@@ -57,7 +57,7 @@ func RunIdentificationTools(filename string) map[string]ToolResult {
 	var responseChannels []chan ToolResult
 	// for every identification tool
 	for _, tool := range serverConfig.Tools {
-		if len(tool.Triggers) > 0 {
+		if !tool.Enabled || len(tool.Triggers) > 0 {
 			continue
 		}
 		rc := make(chan ToolResult)
@@ -100,7 +100,7 @@ func RunTriggeredTools(
 	// for every identification tool
 	for _, toolConfig := range serverConfig.Tools {
 		isTriggered, matches := toolConfig.IsTriggered(identificationResults)
-		if len(toolConfig.Triggers) == 0 || !isTriggered {
+		if !toolConfig.Enabled || len(toolConfig.Triggers) == 0 || !isTriggered {
 			continue
 		}
 		rc := make(chan ToolResult)
