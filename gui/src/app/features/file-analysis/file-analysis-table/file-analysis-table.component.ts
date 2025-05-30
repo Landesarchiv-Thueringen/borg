@@ -92,12 +92,12 @@ export class FileAnalysisTableComponent implements AfterViewInit {
    */
   readonly properties = input<FilePropertyDefinition[]>([
     { key: 'path', label: 'Pfad' },
-    { key: 'filename' },
+    { key: 'filename', label: 'Dateiname' },
     { key: 'fileSize', label: 'Dateigröße' },
-    { key: 'puid' },
-    { key: 'mimeType' },
-    { key: 'formatVersion' },
-    { key: 'status' },
+    { key: 'puid', label: 'PUID' },
+    { key: 'mimeType', label: 'MIME-Type' },
+    { key: 'formatVersion', label: 'Formatversion' },
+    { key: 'status', label: 'Status' },
   ]);
 
   readonly paginator = viewChild.required(MatPaginator);
