@@ -1,45 +1,31 @@
-<div class="filter">
-  <form [formGroup]="filterForm">
-    <mat-form-field appearance="outline">
-      <mat-label>Kategorie</mat-label>
-      <mat-select formControlName="category">
-        <mat-option [value]="undefined"></mat-option>
-        @for (category of categories; track category) {
-          <mat-option [value]="category">{{ category }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  </form>
-</div>
-<mat-table [dataSource]="filteredFeatures()">
-  <!-- Category Key Column -->
-  <ng-container matColumnDef="category">
-    <mat-header-cell *matHeaderCellDef> Kategorie </mat-header-cell>
-    <mat-cell *matCellDef="let feature">
-      {{ feature.category }}
-    </mat-cell>
-  </ng-container>
+@for (category of categories; track category.id) {
+  <mat-table [dataSource]="category.features">
+    <!-- Category Header -->
+    <ng-container matColumnDef="category">
+      <mat-header-cell *matHeaderCellDef>{{ category.id | category }}</mat-header-cell>
+    </ng-container>
+    <!-- Feature Key Column -->
+    <ng-container matColumnDef="key">
+      <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+      <mat-cell *matCellDef="let feature">
+        {{ feature.label ?? feature.key }}
+      </mat-cell>
+    </ng-container>
 
-  <!-- Feature Key Column -->
-  <ng-container matColumnDef="key">
-    <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
-    <mat-cell *matCellDef="let feature">
-      {{ feature.label ?? feature.key }}
-    </mat-cell>
-  </ng-container>
+    <!-- Value Column -->
+    <ng-container matColumnDef="value">
+      <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
+      <mat-cell *matCellDef="let feature"> {{ feature.value }} </mat-cell>
+    </ng-container>
 
-  <!-- Value Column -->
-  <ng-container matColumnDef="value">
-    <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
-    <mat-cell *matCellDef="let feature"> {{ feature.value }} </mat-cell>
-  </ng-container>
+    <!-- Tools Column -->
+    <ng-container matColumnDef="tools">
+      <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
+      <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
+    </ng-container>
 
-  <!-- Tools Column -->
-  <ng-container matColumnDef="tools">
-    <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
-    <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-</mat-table>
+    <mat-header-row *matHeaderRowDef="['category']"></mat-header-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+}

@@ -1,53 +1,37 @@
-import { Component, computed, input, OnInit, signal, WritableSignal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { Component, input, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
+import { CategoryPipe } from '../pipes/category.pipe';
 import { FileAnalysis } from '../results';
 
+interface Category {
+  id: string;
+  features: Feature[];
+}
+
 interface Feature {
-  category: string;
   key: string;
   label: string | null;
   value: string | number | boolean;
   supportingTools: string[];
 }
 
-interface FeatureFilter {
-  category: string | null;
-}
-
 @Component({
   selector: 'app-metadata-table',
-  imports: [
-    MatExpansionModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-  ],
+  imports: [MatTableModule, CategoryPipe],
   templateUrl: './metadata-table.component.html',
   styleUrl: './metadata-table.component.scss',
 })
 export class MetadataTableComponent implements OnInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
-  displayedColumns: string[] = ['category', 'key', 'value', 'tools'];
-  features: Feature[] = [];
-  categories: string[] = [];
-  filterForm = new FormGroup({
-    category: new FormControl(''),
-  });
-  filter: WritableSignal<FeatureFilter | undefined> = signal(undefined);
-  filteredFeatures = computed(() => this.filterFeatures(this.features, this.filter()));
-
-  constructor() {
-    this.filterForm.controls.category.valueChanges.subscribe((value) => {
-      this.filter.set({
-        category: value,
-      });
-    });
-  }
+  displayedColumns: string[] = ['key', 'value', 'tools'];
+  categories: Category[] = [];
+  categoryOrder: { [key: string]: number | undefined } = {
+    general: 1,
+    format: 2,
+    av_container: 3,
+    audio: 4,
+    video: 5,
+  };
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
@@ -59,40 +43,39 @@ export class MetadataTableComponent implements OnInit {
         }
         const categoryKey = parts[0];
         const featureKey = parts[1];
-        this.features.push({
-          category: categoryKey,
+        const feature: Feature = {
           key: featureKey,
           label: this.fileAnalysis().featureSets[0].features[key].label,
           value: this.fileAnalysis().featureSets[0].features[key].value,
           supportingTools: this.fileAnalysis().featureSets[0].features[key].supportingTools,
-        });
-        if (!this.categories.includes(categoryKey)) {
-          this.categories.push(categoryKey);
+        };
+        const category = this.categories.find((c) => c.id === categoryKey);
+        if (!category) {
+          this.categories.push({
+            id: categoryKey,
+            features: [feature],
+          });
+        } else {
+          category.features.push(feature);
         }
       }
+      this.sortCategories();
     }
   }
 
-  filterFeatures(features: Feature[], filter: FeatureFilter | undefined): Feature[] {
-    const filteredFeatures: Feature[] = [];
-    for (let f of features) {
-      if (!filter) {
-        filteredFeatures.push(f);
-      } else if (this.featureFilterApplies(f, filter)) {
-        filteredFeatures.push(f);
+  sortCategories(): void {
+    this.categories = this.categories.sort((a, b) => {
+      const oa = this.categoryOrder[a.id];
+      const ob = this.categoryOrder[b.id];
+      if (oa && ob) {
+        console.log('good');
+        return oa - ob;
+      } else if (oa) {
+        return 1;
+      } else if (ob) {
+        return -1;
       }
-    }
-    return filteredFeatures;
-  }
-
-  featureFilterApplies(feature: Feature, filter: FeatureFilter) {
-    if (filter.category && feature.category !== filter.category) {
-      return false;
-    }
-    return true;
-  }
-
-  setCategoryFilter(event: any) {
-    console.log(event);
+      return a.id.localeCompare(b.id);
+    });
   }
 }
