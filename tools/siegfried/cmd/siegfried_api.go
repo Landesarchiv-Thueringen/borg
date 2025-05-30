@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -148,8 +149,13 @@ func identifyFileFormat(context *gin.Context) {
 				}
 			}
 			if len(match.FormatVersion) > 0 {
+				version := match.FormatVersion
+				// add prefix to format version if format name contains PDF/A
+				if strings.Contains(match.FormatName, "PDF/A") {
+					version = "PDF/A-" + version
+				}
 				features["format:version"] = ToolFeatureValue{
-					Value: match.FormatVersion,
+					Value: version,
 					Label: &FORMAT_VERSION_LABEL,
 				}
 			}

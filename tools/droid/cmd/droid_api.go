@@ -206,7 +206,6 @@ func extractFeatures(formatTable [][]string) (map[string]ToolFeatureValue, error
 				Label: &FORMAT_VERSION_LABEL,
 			}
 		}
-
 	} else if errors.As(err, &keyError) {
 		return features, fmt.Errorf("extractFeatures: unexpected csv layout: %w", keyError)
 	}
