@@ -68,9 +68,8 @@ func (t *Trigger) IsTriggered(toolResults map[string]ToolResult) (bool, map[stri
 }
 
 type FeatureSetConfig struct {
-	Features        []FeatureConfig  `yaml:"features"`
-	Weight          Weight           `yaml:"weight"`
-	MergeConditions []MergeCondition `yaml:"mergeConditions"`
+	Features []FeatureConfig `yaml:"features"`
+	Weight   Weight          `yaml:"weight"`
 }
 
 func (c *FeatureSetConfig) AreMergeable(
@@ -82,14 +81,16 @@ func (c *FeatureSetConfig) AreMergeable(
 		isFulfilled = true
 		return
 	}
-	for _, condition := range c.MergeConditions {
-		ok, strongLink := condition.IsFulfilled(fs1, fs2)
-		if !ok {
-			isFulfilled = false
-			return
-		}
-		if strongLink {
-			mergeModifier += 0.25
+	for _, feature := range c.Features {
+		if feature.MergeCondition != nil {
+			ok, strongLink := feature.MergeCondition.IsFulfilled(feature.Key, fs1, fs2)
+			if !ok {
+				isFulfilled = false
+				return
+			}
+			if strongLink {
+				mergeModifier += 0.25
+			}
 		}
 	}
 	// The merge is possible, if at least on condition is truly fulfilled.
@@ -110,9 +111,15 @@ func (c *FeatureSetConfig) GetFeatureConfig(key string) (FeatureConfig, bool) {
 }
 
 type FeatureConfig struct {
-	Key               string `yaml:"key"`
-	MergeOrder        uint   `yaml:"mergeOrder"`
-	ProvidedByTrigger bool   `yaml:"providedByTrigger"`
+	Key               string          `yaml:"key"`
+	MergeOrder        uint            `yaml:"mergeOrder"`
+	ProvidedByTrigger bool            `yaml:"providedByTrigger"`
+	MergeCondition    *MergeCondition `yaml:"mergeCondition"`
+}
+
+type MergeCondition struct {
+	ExactMatch bool    `yaml:"exactMatch"`
+	ValueRegEx *string `yaml:"valueRegEx"`
 }
 
 type Weight struct {
@@ -180,20 +187,15 @@ func (c *FeatureCondition) IsFulfilled(value interface{}) bool {
 	return false
 }
 
-type MergeCondition struct {
-	Feature    string  `yaml:"feature"`
-	ValueRegEx *string `yaml:"valueRegEx"`
-}
-
-func (c *MergeCondition) IsFulfilled(fs1 map[string]MergeFeatureValue, fs2 map[string]ToolFeatureValue) (isFulfilled bool, strongLink bool) {
+func (c *MergeCondition) IsFulfilled(featureKey string, fs1 map[string]MergeFeatureValue, fs2 map[string]ToolFeatureValue) (isFulfilled bool, strongLink bool) {
 	// if the second feature sets doesn't contain any values
 	// the first feature set can be empty if merging against an empty set
 	if len(fs2) == 0 {
 		// merge is not possible because it doesn't add any features but improves the score
 		return
 	}
-	fv1, ok1 := fs1[c.Feature]
-	fv2, ok2 := fs2[c.Feature]
+	fv1, ok1 := fs1[featureKey]
+	fv2, ok2 := fs2[featureKey]
 	// if not both feature sets include the feature of the merge condition
 	if !ok1 || !ok2 {
 		// merge is possible but not a strong link
@@ -210,7 +212,7 @@ func (c *MergeCondition) IsFulfilled(fs1 map[string]MergeFeatureValue, fs2 map[s
 			errorMessage := fmt.Sprintf(
 				"configuration error: "+
 					"used value extraction string on non string value for key {%s}",
-				c.Feature)
+				featureKey)
 			log.Fatal(errorMessage)
 		}
 		m1 := regEx.FindStringSubmatch(s1)

@@ -5,15 +5,19 @@ tools:
     endpoint: "http://siegfried/identify-file-format"
     featureSet:
       features:
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
         - key: "format:name"
           mergeOrder: 1
       weight:
         default: 0.75
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
 
   - id: "droid"
     enabled: false
@@ -22,17 +26,18 @@ tools:
     featureSet:
       features:
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
         - key: "format:name"
           mergeOrder: 1
-        - key: "format:version"
       weight:
         default: 0.75
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
 
   - id: "tika"
     enabled: true
@@ -41,14 +46,13 @@ tools:
     featureSet:
       features:
         - key: "format:mimeType"
-        - key: "text:encoding"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.75
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
 
   - id: "magika"
     enabled: true
@@ -57,7 +61,8 @@ tools:
     featureSet:
       features:
         - key: "format:mimeType"
-        - key: "format:isText"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
       weight:
         providedByTool: true
         conditional:
@@ -65,9 +70,6 @@ tools:
             conditions:
               - feature: "format:mimeType"
                 value: "application/octet-stream" # nonsensical
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "mediainfo"
     enabled: true
@@ -83,11 +85,10 @@ tools:
     featureSet:
       features:
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
       weight:
         default: 1.0
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "jhove_pdf"
     enabled: true
@@ -120,11 +121,21 @@ tools:
             regEx: "^fmt/276$" # PDF 1.7
     featureSet:
       features:
-        - key: "format:wellFormed"
-        - key: "format:valid"
-        - key: "format:name"
-        - key: "format:version"
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:wellFormed"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -134,12 +145,6 @@ tools:
                 value: true
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:wellFormed"
-        - feature: "format:valid"
 
   - id: "jhove_html"
     enabled: true
@@ -161,11 +166,21 @@ tools:
       # 06.11.2023: JHOVE HTML-Hul doesn't support HTML 5
     featureSet:
       features:
-        - key: "format:wellFormed"
-        - key: "format:valid"
-        - key: "format:name"
-        - key: "format:version"
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:wellFormed"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -175,12 +190,6 @@ tools:
                 value: true
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:wellFormed"
-        - feature: "format:valid"
 
   - id: "jhove_tiff"
     enabled: true
@@ -195,11 +204,18 @@ tools:
             regEx: "^fmt/153$" # TIFF
     featureSet:
       features:
-        - key: "format:wellFormed"
-        - key: "format:valid"
-        - key: "format:name"
-        - key: "format:version"
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:wellFormed"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -209,12 +225,6 @@ tools:
                 value: true
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:wellFormed"
-        - feature: "format:valid"
 
   - id: "jhove_jpeg"
     enabled: true
@@ -235,11 +245,21 @@ tools:
             regEx: "^fmt/44$" # JPEG File Interchange Format 1.02
     featureSet:
       features:
-        - key: "format:wellFormed"
-        - key: "format:valid"
-        - key: "format:name"
-        - key: "format:version"
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:wellFormed"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -249,12 +269,6 @@ tools:
                 value: true
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:wellFormed"
-        - feature: "format:valid"
 
   - id: "jhove_jpeg2000"
     enabled: true
@@ -269,11 +283,21 @@ tools:
             regEx: "^x-fmt/392$" # JP2 (JPEG 2000 part 1)
     featureSet:
       features:
-        - key: "format:wellFormed"
-        - key: "format:valid"
-        - key: "format:name"
-        - key: "format:version"
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:wellFormed"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -283,12 +307,6 @@ tools:
                 value: true
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:wellFormed"
-        - feature: "format:valid"
 
   - id: "verapdf_1a"
     enabled: true
@@ -303,10 +321,18 @@ tools:
             regEx: "^fmt/95$" # PDF/A-1a
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -314,12 +340,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:valid"
 
   - id: "verapdf_1b"
     enabled: true
@@ -334,10 +354,18 @@ tools:
             regEx: "^fmt/354$" # PDF/A-1b
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -345,12 +373,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:valid"
 
   - id: "verapdf_2a"
     enabled: true
@@ -365,10 +387,18 @@ tools:
             regEx: "^fmt/476$" # PDF/A-2a
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -376,12 +406,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:valid"
 
   - id: "verapdf_2b"
     enabled: true
@@ -396,10 +420,18 @@ tools:
             regEx: "^fmt/477$" # PDF/A-2b
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -407,12 +439,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:valid"
 
   - id: "verapdf_2u"
     enabled: true
@@ -427,10 +453,18 @@ tools:
             regEx: "^fmt/478$" # PDF/A-2u
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -438,12 +472,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:valid"
 
   - id: "verapdf_ua"
     enabled: true
@@ -456,10 +484,18 @@ tools:
             regEx: "pdf"
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
         - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -467,12 +503,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:puid"
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
-        - feature: "format:version"
-        - feature: "format:valid"
 
   - id: "odf"
     enabled: true
@@ -484,8 +514,12 @@ tools:
             regEx: "^application/vnd\\.oasis\\.opendocument\\."
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -493,9 +527,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
   - id: "ooxml"
     enabled: true
@@ -508,9 +539,13 @@ tools:
             regEx: "^application/vnd\\.openxmlformats-officedocument\\."
     featureSet:
       features:
-        - key: "format:valid"
         - key: "format:mimeType"
           providedByTrigger: true
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
       weight:
         default: 0.0
         conditional:
@@ -518,9 +553,6 @@ tools:
             conditions:
               - feature: "format:valid"
                 value: true
-      mergeConditions:
-        - feature: "format:mimeType"
-          valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
 
 fileIdentity:
   - conditions:
