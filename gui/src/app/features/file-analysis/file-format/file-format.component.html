@@ -30,16 +30,16 @@
     </mat-cell>
   </ng-container>
 
-  <!-- score column -->
-  <ng-container matColumnDef="score">
-    <mat-header-cell *matHeaderCellDef> Bewertung </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.score | percent }} </mat-cell>
-  </ng-container>
-
   <!-- tools column -->
   <ng-container matColumnDef="tools">
     <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{ element.tools }} </mat-cell>
+  </ng-container>
+
+  <!-- score column -->
+  <ng-container matColumnDef="score">
+    <mat-header-cell *matHeaderCellDef> Bewertung </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.score | percent }} </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -23,7 +23,7 @@ interface FormatRow {
 })
 export class FileFormatComponent implements OnInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
-  displayedColumns: string[] = ['puid', 'mimeType', 'formatVersion', 'valid', 'score', 'tools'];
+  displayedColumns: string[] = ['puid', 'mimeType', 'formatVersion', 'valid', 'tools', 'score'];
   rows: FormatRow[] = [];
 
   ngOnInit(): void {

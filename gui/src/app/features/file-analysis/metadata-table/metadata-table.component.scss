@@ -3,12 +3,12 @@
   flex-direction: column;
 }
 
-h2 {
-  font: var(--mat-sys-title-medium);
+.category {
+  margin-bottom: 2em;
 }
 
-mat-table {
-  margin-top: 2em;
+h3 {
+  font: var(--mat-sys-title-medium);
 }
 
 mat-header-row {

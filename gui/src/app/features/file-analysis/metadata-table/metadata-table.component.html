@@ -1,31 +1,29 @@
 @for (category of categories; track category.id) {
-  <mat-table [dataSource]="category.features">
-    <!-- Category Header -->
-    <ng-container matColumnDef="category">
-      <mat-header-cell *matHeaderCellDef>{{ category.id | category }}</mat-header-cell>
-    </ng-container>
-    <!-- Feature Key Column -->
-    <ng-container matColumnDef="key">
-      <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
-      <mat-cell *matCellDef="let feature">
-        {{ feature.label ?? feature.key }}
-      </mat-cell>
-    </ng-container>
+  <div class="category">
+    <h3>{{ category.id | category }}</h3>
+    <mat-table [dataSource]="category.features">
+      <!-- Feature Key Column -->
+      <ng-container matColumnDef="key">
+        <mat-header-cell *matHeaderCellDef> Eigenschaft </mat-header-cell>
+        <mat-cell *matCellDef="let feature">
+          {{ feature.label ?? feature.key }}
+        </mat-cell>
+      </ng-container>
 
-    <!-- Value Column -->
-    <ng-container matColumnDef="value">
-      <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
-      <mat-cell *matCellDef="let feature"> {{ feature.value }} </mat-cell>
-    </ng-container>
+      <!-- Value Column -->
+      <ng-container matColumnDef="value">
+        <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
+        <mat-cell *matCellDef="let feature"> {{ feature.value }} </mat-cell>
+      </ng-container>
 
-    <!-- Tools Column -->
-    <ng-container matColumnDef="tools">
-      <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
-      <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
-    </ng-container>
+      <!-- Tools Column -->
+      <ng-container matColumnDef="tools">
+        <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
+        <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
+      </ng-container>
 
-    <mat-header-row *matHeaderRowDef="['category']"></mat-header-row>
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  </mat-table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
 }
