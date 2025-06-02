@@ -64,13 +64,12 @@ func getDefaultResponse(context *gin.Context) {
 
 func getToolVersion() string {
 	cmd := exec.Command(
-		"java",
-		"-jar",
-		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
+		"./third_party/tika",
 		"--version",
 	)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println(string(output))
 		log.Fatal(err)
 	}
 	r := regexp.MustCompile(`Apache Tika ([0-9]+\.[0-9]+\.[0-9]+)`)
@@ -95,9 +94,7 @@ func extractMetadata(context *gin.Context) {
 		return
 	}
 	cmd := exec.Command(
-		"java",
-		"-jar",
-		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
+		"./third_party/tika",
 		"--metadata",
 		"--json",
 		fileStorePath,
