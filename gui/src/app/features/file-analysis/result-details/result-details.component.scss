@@ -1,0 +1,53 @@
+.uncertain-icon {
+  color: #ff6600;
+}
+.valid-icon {
+  color: #00a000;
+}
+.invalid-icon {
+  color: #c00000;
+}
+.error-icon {
+  color: #c00000;
+}
+
+.mat-mdc-row {
+  position: relative;
+}
+
+.summary-row {
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.feature-info {
+  overflow-wrap: anywhere;
+  > * {
+    vertical-align: middle;
+  }
+}
+
+.open-details-button {
+  position: absolute;
+  border-radius: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  &:hover::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    opacity: 0.04;
+  }
+}
+
+mat-dialog-actions {
+  .button-left {
+    margin-right: auto;
+  }
+}

@@ -5,6 +5,7 @@ const labelMap: { [key in string]?: string } = {
   av_container: 'Containerformat',
   format: 'Dateiformat',
   general: 'Allgemein',
+  text: 'Text',
   video: 'Video',
 };
 

@@ -45,9 +45,9 @@ export class MetadataTableComponent implements OnInit {
         const featureKey = parts[1];
         const feature: Feature = {
           key: featureKey,
-          label: this.fileAnalysis().featureSets[0].features[key].label,
-          value: this.fileAnalysis().featureSets[0].features[key].value,
-          supportingTools: this.fileAnalysis().featureSets[0].features[key].supportingTools,
+          label: this.fileAnalysis().featureSets[0].features[key]!.label,
+          value: this.fileAnalysis().featureSets[0].features[key]!.value,
+          supportingTools: this.fileAnalysis().featureSets[0].features[key]!.supportingTools,
         };
         const category = this.categories.find((c) => c.id === categoryKey);
         if (!category) {
@@ -70,9 +70,9 @@ export class MetadataTableComponent implements OnInit {
       if (oa && ob) {
         return oa - ob;
       } else if (oa) {
-        return 1;
-      } else if (ob) {
         return -1;
+      } else if (ob) {
+        return 1;
       }
       return a.id.localeCompare(b.id);
     });

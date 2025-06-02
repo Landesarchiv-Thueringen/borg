@@ -1,0 +1,43 @@
+<mat-table [dataSource]="dataSource">
+  @for (tableColumn of tableColumnList; track tableColumn; let first = $first) {
+    <ng-container matColumnDef="{{ tableColumn }}">
+      <mat-header-cell *matHeaderCellDef>{{ tableColumn | fileFeature }}</mat-header-cell>
+      <mat-cell *matCellDef="let fileInfo">
+        <div class="feature-info">
+          @if (fileInfo[tableColumn]?.value === true) {
+            <mat-icon>check</mat-icon>
+          } @else if (fileInfo[tableColumn]?.value === false) {
+            <mat-icon>close</mat-icon>
+          } @else if (fileInfo[tableColumn]) {
+            {{ fileInfo[tableColumn].value }}
+          }
+        </div>
+        @if (fileInfo[tableColumn]?.icon) {
+          <mat-icon class="{{ fileInfo[tableColumn]!.icon }}-icon">{{
+            fileInfo[tableColumn]!.icon
+          }}</mat-icon>
+        }
+        @if (first && fileInfo.tool.value === "Gesamtergebnis") {
+          <button
+            mat-button
+            class="open-details-button"
+            (click)="showFeatureSets()"
+            aria-label="Gesamtergebnis anzeigen"
+          ></button>
+        } @else if (first) {
+          <button
+            mat-button
+            class="open-details-button"
+            (click)="showToolOutput(fileInfo.tool.value)"
+            aria-label="Details anzeigen"
+          ></button>
+        }
+      </mat-cell>
+    </ng-container>
+  }
+  <mat-header-row *matHeaderRowDef="tableColumnList"></mat-header-row>
+  <mat-row
+    *matRowDef="let row; columns: tableColumnList"
+    [class.summary-row]="row.tool.value === 'Gesamtergebnis'"
+  ></mat-row>
+</mat-table>

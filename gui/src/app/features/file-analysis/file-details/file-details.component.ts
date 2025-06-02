@@ -7,8 +7,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
+import { FileFormatComponent } from '../file-format/file-format.component';
 import { MetadataTableComponent } from '../metadata-table/metadata-table.component';
-import { FileFeaturePipe } from '../pipes/file-feature.pipe';
 import { FileAnalysis, RowValue } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
@@ -51,7 +51,6 @@ interface FileFeatures {
   styleUrls: ['./file-details.component.scss'],
   imports: [
     CommonModule,
-    FileFeaturePipe,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
@@ -59,6 +58,7 @@ interface FileFeatures {
     RouterModule,
     MatTabsModule,
     MetadataTableComponent,
+    FileFormatComponent,
   ],
 })
 export class FileDetailsComponent {

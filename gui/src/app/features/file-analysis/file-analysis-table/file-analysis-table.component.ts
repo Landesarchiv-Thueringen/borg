@@ -16,7 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FileDetailsComponent } from '../file-details/file-overview.component';
+import { FileDetailsComponent } from '../file-details/file-details.component';
 import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FileAnalysis, FileResult, RowValue } from '../results';
 

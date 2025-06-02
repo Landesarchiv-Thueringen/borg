@@ -38,7 +38,7 @@ export interface Summary {
 export interface FeatureSet {
   score: number;
   supportingTools: string[];
-  features: { [key: string]: FeatureValue };
+  features: { [key: string]: FeatureValue | undefined };
 }
 
 export interface FeatureValue {
