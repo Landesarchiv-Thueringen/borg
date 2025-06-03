@@ -37,7 +37,7 @@
   <!-- tools column -->
   <ng-container matColumnDef="tools">
     <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.tools }} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{ element.tools | tools }} </mat-cell>
   </ng-container>
 
   <!-- score column -->

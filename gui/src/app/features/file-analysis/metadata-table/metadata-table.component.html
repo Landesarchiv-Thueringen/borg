@@ -19,7 +19,7 @@
       <!-- Tools Column -->
       <ng-container matColumnDef="tools">
         <mat-header-cell *matHeaderCellDef> Werkzeuge </mat-header-cell>
-        <mat-cell *matCellDef="let feature"> {{ feature.supportingTools }} </mat-cell>
+        <mat-cell *matCellDef="let feature"> {{ feature.supportingTools | tools }} </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

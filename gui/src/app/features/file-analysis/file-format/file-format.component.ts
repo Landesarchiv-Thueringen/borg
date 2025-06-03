@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
+import { ToolsPipe } from '../pipes/tools.pipe';
 import { DialogData, ResultDetailsComponent } from '../result-details/result-details.component';
 import { FeatureValue, FileAnalysis } from '../results';
 
@@ -28,6 +29,7 @@ interface FormatRow {
     MatIconModule,
     MatRippleModule,
     BreakOpportunitiesPipe,
+    ToolsPipe,
   ],
   templateUrl: './file-format.component.html',
   styleUrl: './file-format.component.scss',

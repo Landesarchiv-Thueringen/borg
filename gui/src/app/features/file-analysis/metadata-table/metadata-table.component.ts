@@ -1,6 +1,7 @@
 import { Component, input, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { CategoryPipe } from '../pipes/category.pipe';
+import { ToolsPipe } from '../pipes/tools.pipe';
 import { FileAnalysis } from '../results';
 
 interface Category {
@@ -17,7 +18,7 @@ interface Feature {
 
 @Component({
   selector: 'app-metadata-table',
-  imports: [MatTableModule, CategoryPipe],
+  imports: [MatTableModule, CategoryPipe, ToolsPipe],
   templateUrl: './metadata-table.component.html',
   styleUrl: './metadata-table.component.scss',
 })
