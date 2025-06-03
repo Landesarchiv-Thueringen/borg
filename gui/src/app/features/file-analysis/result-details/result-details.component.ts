@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -67,15 +67,16 @@ interface ToolRow {
   templateUrl: './result-details.component.html',
   styleUrl: './result-details.component.scss',
 })
-export class ResultDetailsComponent {
+export class ResultDetailsComponent implements OnInit {
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private dialog = inject(MatDialog);
   private readonly featureSet: FeatureSet = this.data.featureSet;
+  private readonly toolResults: ToolResult[] = this.data.toolResults;
   readonly analysis: FileAnalysis = this.data.analysis;
   dataSource = new MatTableDataSource<FileFeatures>();
   tableColumnList: string[] = [];
 
-  constructor() {
+  ngOnInit() {
     this.initTableData();
   }
 
@@ -133,16 +134,6 @@ export class ResultDetailsComponent {
         maxWidth: '80vw',
       });
     }
-  }
-
-  exportResult(): void {
-    const a = document.createElement('a');
-    document.body.appendChild(a);
-    a.download = 'borg-results.json';
-    a.href =
-      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.analysis, null, 2));
-    a.click();
-    document.body.removeChild(a);
   }
 }
 
