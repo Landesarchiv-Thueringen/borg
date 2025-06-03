@@ -1,5 +1,6 @@
-import { Component, input, OnInit } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
+import { AfterViewInit, Component, input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CategoryPipe } from '../pipes/category.pipe';
 import { ToolsPipe } from '../pipes/tools.pipe';
 import { FileAnalysis, ToolResult } from '../results';
@@ -7,6 +8,7 @@ import { FileAnalysis, ToolResult } from '../results';
 interface Category {
   id: string;
   features: Feature[];
+  dataSource?: MatTableDataSource<Feature>;
 }
 
 interface Feature {
@@ -18,11 +20,11 @@ interface Feature {
 
 @Component({
   selector: 'app-metadata-table',
-  imports: [MatTableModule, CategoryPipe, ToolsPipe],
+  imports: [MatTableModule, CategoryPipe, ToolsPipe, MatSortModule],
   templateUrl: './metadata-table.component.html',
   styleUrl: './metadata-table.component.scss',
 })
-export class MetadataTableComponent implements OnInit {
+export class MetadataTableComponent implements OnInit, AfterViewInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
   toolResults: ToolResult[] = [];
   displayedColumns: string[] = ['key', 'value', 'tools'];
@@ -34,6 +36,8 @@ export class MetadataTableComponent implements OnInit {
     audio: 4,
     video: 5,
   };
+
+  @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
@@ -63,7 +67,36 @@ export class MetadataTableComponent implements OnInit {
         }
       }
       this.sortCategories();
+      for (let category of this.categories) {
+        category.dataSource = new MatTableDataSource<Feature>(category.features);
+      }
     }
+  }
+
+  ngAfterViewInit(): void {
+    const sortArray = this.sorts.toArray();
+    sortArray.forEach((sort, index) => {
+      this.categories[index].dataSource!.sortingDataAccessor = (item, property) => {
+        switch (property) {
+          case 'key':
+            return item.label ?? item.key;
+          case 'value':
+            if (typeof item.value === 'boolean') {
+              return item.value.toString();
+            }
+            return item.value;
+          case 'tools':
+            return item.supportingTools.join('');
+          default:
+            return '';
+        }
+      };
+      sort.active = 'key';
+      sort.direction = 'asc';
+      sort.sortChange.emit(); // Triggers the sort logic
+      sort._stateChanges.next(); // Triggers the UI update
+      this.categories[index].dataSource!.sort = sort;
+    });
   }
 
   sortCategories(): void {
