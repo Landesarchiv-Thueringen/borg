@@ -12,6 +12,13 @@ h3 {
   font: var(--mat-sys-title-medium);
 }
 
+::ng-deep mat-tab-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2;
+  background-color: var(--mat-sys-surface);
+}
+
 .state {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
