@@ -85,7 +85,7 @@ export class ResultDetailsComponent implements OnInit {
     };
   }
 
-  showToolOutput(toolName: string): void {
+  showToolOutput(toolName: string, event: Event): void {
     const toolResult = this.toolResults.find((r) => r.title === toolName);
     if (toolResult) {
       this.dialog.open(ToolOutputComponent, {
@@ -96,6 +96,11 @@ export class ResultDetailsComponent implements OnInit {
         autoFocus: false,
         maxWidth: '80vw',
       });
+    }
+    // Remove focus after click
+    const target = event.currentTarget as HTMLElement;
+    if (target?.blur) {
+      target.blur();
     }
   }
 }

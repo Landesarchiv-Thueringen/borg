@@ -49,7 +49,7 @@
     [class.summary-row]="i === 0"
     tabindex="0"
     role="button"
-    (click)="showResultDetails(row.setIndex)"
-    (keydown.enter)="showResultDetails(row.setIndex)"
+    (click)="showResultDetails(row.setIndex, $event)"
+    (keydown.enter)="showResultDetails(row.setIndex, $event)"
   ></mat-row>
 </mat-table>

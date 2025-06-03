@@ -20,3 +20,13 @@
 pre {
   overflow: auto;
 }
+
+mat-row {
+  min-height: 0;
+}
+
+mat-cell {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom-style: none;
+}

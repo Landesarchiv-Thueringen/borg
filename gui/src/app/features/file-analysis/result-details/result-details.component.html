@@ -56,8 +56,8 @@
       [class.tool-row]="i !== 0"
       [attr.tabindex]="i !== 0 ? 0 : null"
       [attr.role]="i !== 0 ? 'button' : null"
-      (click)="showToolOutput(row.toolName)"
-      (keydown.enter)="showToolOutput(row.toolName)"
+      (click)="showToolOutput(row.toolName, $event)"
+      (keydown.enter)="showToolOutput(row.toolName, $event)"
     ></mat-row>
   </mat-table>
 </mat-dialog-content>

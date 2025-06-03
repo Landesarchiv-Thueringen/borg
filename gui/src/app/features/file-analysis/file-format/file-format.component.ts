@@ -46,7 +46,7 @@ export class FileFormatComponent implements OnInit {
     }
   }
 
-  showResultDetails(setIndex: number): void {
+  showResultDetails(setIndex: number, event: Event): void {
     const featureSet = this.fileAnalysis().featureSets[setIndex];
     const toolResults = this.fileAnalysis().toolResults;
     if (featureSet && toolResults) {
@@ -61,6 +61,11 @@ export class FileFormatComponent implements OnInit {
         width: '70em',
         maxWidth: '80vw',
       });
+    }
+    // Remove focus after click
+    const target = event.currentTarget as HTMLElement;
+    if (target?.blur) {
+      target.blur();
     }
   }
 }
