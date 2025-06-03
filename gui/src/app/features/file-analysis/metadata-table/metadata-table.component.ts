@@ -2,7 +2,7 @@ import { Component, input, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { CategoryPipe } from '../pipes/category.pipe';
 import { ToolsPipe } from '../pipes/tools.pipe';
-import { FileAnalysis } from '../results';
+import { FileAnalysis, ToolResult } from '../results';
 
 interface Category {
   id: string;
@@ -24,6 +24,7 @@ interface Feature {
 })
 export class MetadataTableComponent implements OnInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
+  toolResults: ToolResult[] = [];
   displayedColumns: string[] = ['key', 'value', 'tools'];
   categories: Category[] = [];
   categoryOrder: { [key: string]: number | undefined } = {
@@ -36,6 +37,7 @@ export class MetadataTableComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
+      this.toolResults = this.fileAnalysis().toolResults;
       for (let key in this.fileAnalysis().featureSets[0].features) {
         const parts = key.split(':');
         if (parts.length !== 2) {

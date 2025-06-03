@@ -8,7 +8,7 @@ import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
 import { ToolsPipe } from '../pipes/tools.pipe';
 import { DialogData, ResultDetailsComponent } from '../result-details/result-details.component';
-import { FeatureValue, FileAnalysis } from '../results';
+import { FeatureValue, FileAnalysis, ToolResult } from '../results';
 
 interface FormatRow {
   setIndex: number;
@@ -37,12 +37,14 @@ interface FormatRow {
 export class FileFormatComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   readonly fileAnalysis = input.required<FileAnalysis>();
+  toolResults: ToolResult[] = [];
   resultUncertain: boolean = false;
   displayedColumns: string[] = ['puid', 'mimeType', 'formatVersion', 'valid', 'tools', 'score'];
   rows: FormatRow[] = [];
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
+      this.toolResults = this.fileAnalysis().toolResults;
       this.resultUncertain = this.fileAnalysis().summary.formatUncertain;
       this.rows = this.fileAnalysis().featureSets.map((set, index) => {
         return {
