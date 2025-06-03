@@ -121,6 +121,8 @@ func extractMetadata(context *gin.Context) {
 	}
 	mimeType, ok := features["av_container:internetmediatype"]
 	if ok {
+		label := "MIME-Type"
+		mimeType.Label = &label
 		features["format:mimeType"] = mimeType
 	}
 	response := ToolResponse{
