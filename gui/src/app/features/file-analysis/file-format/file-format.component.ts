@@ -16,7 +16,6 @@ interface FormatRow {
   valid: FeatureValue | undefined;
   score: number;
   tools: string[];
-  errors: boolean;
 }
 
 @Component({
@@ -42,9 +41,6 @@ export class FileFormatComponent implements OnInit {
           valid: set.features['format:valid'],
           score: set.score,
           tools: set.supportingTools,
-          errors: this.fileAnalysis().toolResults.some(
-            (tr) => set.supportingTools.includes(tr.id) && tr.error,
-          ),
         };
       });
     }

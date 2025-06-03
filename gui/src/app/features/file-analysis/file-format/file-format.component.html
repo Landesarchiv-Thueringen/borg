@@ -23,9 +23,9 @@
     <mat-header-cell *matHeaderCellDef> Valide </mat-header-cell>
     <mat-cell *matCellDef="let element">
       @if (element.valid?.value === true) {
-        <mat-icon>check</mat-icon>
+        <mat-icon class="valid-icon">check</mat-icon>
       } @else if (element.valid?.value === false) {
-        <mat-icon>close</mat-icon>
+        <mat-icon class="invalid-icon">close</mat-icon>
       }
     </mat-cell>
   </ng-container>

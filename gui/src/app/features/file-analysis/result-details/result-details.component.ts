@@ -59,21 +59,30 @@ export class ResultDetailsComponent implements OnInit {
       valid: this.featureSet.features['format:valid'],
       error: false,
     });
-    for (let toolResult of this.toolResults) {
-      if (this.featureSet.supportingTools.includes(toolResult.id) || toolResult.error) {
-        this.rows.push({
-          toolName: toolResult.title,
-          puid: toolResult.features['format:puid'],
-          mimeType: toolResult.features['format:mimeType'],
-          formatVersion: toolResult.features['format:version'],
-          valid: toolResult.features['format:valid'],
-          error: !!toolResult.error,
-        });
-      }
+    // gather all tool results which support the feature set
+    for (let toolResult of this.toolResults.filter((tr) =>
+      this.featureSet.supportingTools.includes(tr.id),
+    )) {
+      this.rows.push(this.getToolRow(toolResult));
+    }
+    // gather all tool results with errors
+    for (let toolResult of this.toolResults.filter((tr) => tr.error)) {
+      this.rows.push(this.getToolRow(toolResult));
     }
     if (this.rows.some((row) => row.error)) {
       this.displayedColumns.push('error');
     }
+  }
+
+  getToolRow(tr: ToolResult): ToolRow {
+    return {
+      toolName: tr.title,
+      puid: tr.features['format:puid'],
+      mimeType: tr.features['format:mimeType'],
+      formatVersion: tr.features['format:version'],
+      valid: tr.features['format:valid'],
+      error: !!tr.error,
+    };
   }
 
   showToolOutput(toolName: string): void {

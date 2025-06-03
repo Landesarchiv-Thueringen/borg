@@ -15,11 +15,12 @@
   font-weight: 500;
   background-color: rgba(0, 0, 0, 0.03);
 }
-
 .tool-row:hover {
   background-color: var(--mat-sys-primary-container);
 }
-
+.mat-column-mimeType {
+  flex-grow: 3;
+}
 .cdk-cell.cdk-column-mimeType {
   overflow-wrap: anywhere;
 }

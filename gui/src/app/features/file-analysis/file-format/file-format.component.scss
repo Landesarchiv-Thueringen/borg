@@ -8,7 +8,26 @@ mat-row:hover {
   font-weight: 500;
   background-color: rgba(0, 0, 0, 0.03);
 }
+.mat-column-tools {
+  flex-grow: 2;
+}
+.mat-column-mimeType {
+  flex-grow: 3;
+}
 .cdk-cell.cdk-column-tools,
 .cdk-cell.cdk-column-mimeType {
   overflow-wrap: anywhere;
+}
+
+.uncertain-icon {
+  color: #ff6600;
+}
+.valid-icon {
+  color: #00a000;
+}
+.invalid-icon {
+  color: #c00000;
+}
+.error-icon {
+  color: #c00000;
 }
