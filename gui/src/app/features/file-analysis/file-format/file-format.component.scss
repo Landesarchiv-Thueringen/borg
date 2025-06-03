@@ -5,6 +5,10 @@ mat-row:hover {
   background-color: var(--mat-sys-primary-container);
   cursor: pointer;
 }
+mat-row:focus {
+  outline: none;
+  background-color: var(--mat-sys-primary-container);
+}
 .summary-row {
   font-weight: 500;
   background-color: rgba(0, 0, 0, 0.03);

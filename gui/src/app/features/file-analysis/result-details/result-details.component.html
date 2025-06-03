@@ -54,8 +54,10 @@
       [matRippleDisabled]="i === 0"
       [class.summary-row]="i === 0"
       [class.tool-row]="i !== 0"
+      [attr.tabindex]="i !== 0 ? 0 : null"
       [attr.role]="i !== 0 ? 'button' : null"
       (click)="showToolOutput(row.toolName)"
+      (keydown.enter)="showToolOutput(row.toolName)"
     ></mat-row>
   </mat-table>
 </mat-dialog-content>

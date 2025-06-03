@@ -47,7 +47,9 @@
     *matRowDef="let row; columns: displayedColumns; let i = index"
     matRipple
     [class.summary-row]="i === 0"
-    (click)="showResultDetails(row.setIndex)"
+    tabindex="0"
     role="button"
+    (click)="showResultDetails(row.setIndex)"
+    (keydown.enter)="showResultDetails(row.setIndex)"
   ></mat-row>
 </mat-table>

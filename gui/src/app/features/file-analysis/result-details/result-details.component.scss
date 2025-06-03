@@ -6,6 +6,10 @@
   background-color: var(--mat-sys-primary-container);
   cursor: pointer;
 }
+.tool-row:focus {
+  outline: none;
+  background-color: var(--mat-sys-primary-container);
+}
 .mat-column-mimeType {
   flex-grow: 3;
 }
