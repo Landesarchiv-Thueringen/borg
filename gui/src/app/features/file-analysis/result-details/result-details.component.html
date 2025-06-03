@@ -20,14 +20,7 @@
               fileInfo[tableColumn]!.icon
             }}</mat-icon>
           }
-          @if (first && fileInfo.tool.value === "Gesamtergebnis") {
-            <button
-              mat-button
-              class="open-details-button"
-              (click)="showFeatureSets()"
-              aria-label="Gesamtergebnis anzeigen"
-            ></button>
-          } @else if (first) {
+          @if (first && fileInfo.tool.value !== "Gesamtergebnis") {
             <button
               mat-button
               class="open-details-button"

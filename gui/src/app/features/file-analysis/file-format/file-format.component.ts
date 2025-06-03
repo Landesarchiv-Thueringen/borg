@@ -59,7 +59,7 @@ export class FileFormatComponent implements OnInit {
           featureSet: featureSet,
         },
         autoFocus: false,
-        minWidth: '70em',
+        width: '70em',
         maxWidth: '80vw',
       });
     }

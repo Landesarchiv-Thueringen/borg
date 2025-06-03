@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { FileFormatComponent } from '../file-format/file-format.component';
 import { MetadataTableComponent } from '../metadata-table/metadata-table.component';
 import { FileAnalysis, RowValue } from '../results';
@@ -126,17 +125,6 @@ export class FileDetailsComponent {
         maxWidth: '80vw',
       });
     }
-  }
-
-  showFeatureSets(): void {
-    this.dialog.open(FeatureSetsTableComponent, {
-      data: {
-        featureSets: this.analysis.featureSets,
-        toolResults: this.analysis.toolResults,
-      },
-      autoFocus: false,
-      maxWidth: '80vw',
-    });
   }
 
   exportResult(): void {

@@ -6,9 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
-import { FeatureSet, FileAnalysis, RowValue } from '../results';
+import { FeatureSet, FeatureValue, FileAnalysis, ToolResult } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
 const OVERVIEW_FEATURES = [
@@ -29,9 +28,8 @@ const featureOrder = new Map<string, number>([
 ]);
 
 interface DialogData {
-  filename: string;
-  info: { [key: string]: RowValue };
   featureSet: FeatureSet;
+  toolResults: ToolResult[];
   analysis: FileAnalysis;
 }
 
@@ -43,6 +41,15 @@ interface FileFeature {
 
 interface FileFeatures {
   [key: string]: FileFeature;
+}
+
+interface ToolRow {
+  toolName: string;
+  puid: FeatureValue | undefined;
+  mimeType: FeatureValue | undefined;
+  formatVersion: FeatureValue | undefined;
+  valid: FeatureValue | undefined;
+  error: boolean;
 }
 
 @Component({
@@ -126,17 +133,6 @@ export class ResultDetailsComponent {
         maxWidth: '80vw',
       });
     }
-  }
-
-  showFeatureSets(): void {
-    this.dialog.open(FeatureSetsTableComponent, {
-      data: {
-        featureSets: this.analysis.featureSets,
-        toolResults: this.analysis.toolResults,
-      },
-      autoFocus: false,
-      maxWidth: '80vw',
-    });
   }
 
   exportResult(): void {
