@@ -5,7 +5,7 @@ mat-row:hover {
   background-color: var(--mat-sys-primary-container);
   cursor: pointer;
 }
-mat-row:focus {
+mat-row:focus-visible {
   outline: none;
   background-color: var(--mat-sys-primary-container);
 }

@@ -6,7 +6,7 @@
   background-color: var(--mat-sys-primary-container);
   cursor: pointer;
 }
-.tool-row:focus {
+.tool-row:focus-visible {
   outline: none;
   background-color: var(--mat-sys-primary-container);
 }
