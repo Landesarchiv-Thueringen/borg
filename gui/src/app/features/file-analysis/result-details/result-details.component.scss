@@ -11,39 +11,17 @@
   color: #c00000;
 }
 
-.mat-mdc-row {
-  position: relative;
-}
-
 .summary-row {
   font-weight: 500;
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-.feature-info {
-  overflow-wrap: anywhere;
-  > * {
-    vertical-align: middle;
-  }
+.tool-row:hover {
+  background-color: var(--mat-sys-primary-container);
 }
 
-.open-details-button {
-  position: absolute;
-  border-radius: 0;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  &:hover::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: currentColor;
-    opacity: 0.04;
-  }
+.cdk-cell.cdk-column-mimeType {
+  overflow-wrap: anywhere;
 }
 
 mat-dialog-actions {

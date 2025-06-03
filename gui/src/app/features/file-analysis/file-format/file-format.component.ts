@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
-import { ResultDetailsComponent } from '../result-details/result-details.component';
+import { DialogData, ResultDetailsComponent } from '../result-details/result-details.component';
 import { FeatureValue, FileAnalysis } from '../results';
 
 interface FormatRow {
@@ -52,12 +52,15 @@ export class FileFormatComponent implements OnInit {
 
   showResultDetails(setIndex: number): void {
     const featureSet = this.fileAnalysis().featureSets[setIndex];
-    if (featureSet) {
+    const toolResults = this.fileAnalysis().toolResults;
+    if (featureSet && toolResults) {
+      const data: DialogData = {
+        analysis: this.fileAnalysis(),
+        featureSet: featureSet,
+        toolResults: toolResults,
+      };
       this.dialog.open(ResultDetailsComponent, {
-        data: {
-          analysis: this.fileAnalysis(),
-          featureSet: featureSet,
-        },
+        data: data,
         autoFocus: false,
         width: '70em',
         maxWidth: '80vw',

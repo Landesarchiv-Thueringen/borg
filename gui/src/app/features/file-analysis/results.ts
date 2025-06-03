@@ -53,11 +53,11 @@ export interface ToolResult {
   toolVersion: string;
   toolOutput: string;
   outputFormat: 'text' | 'json' | 'csv' | 'xml';
-  features: { [key: string]: ToolFeatureValue };
+  features: { [key: string]: ToolFeatureValue | undefined };
   error: string | null;
 }
 
 export interface ToolFeatureValue {
-  value: string;
+  value: string | boolean | number;
   label: string | null;
 }

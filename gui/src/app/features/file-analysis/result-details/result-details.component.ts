@@ -1,54 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { FileFeaturePipe } from '../pipes/file-feature.pipe';
-import { FeatureSet, FeatureValue, FileAnalysis, ToolResult } from '../results';
+import { FeatureValuePipe } from '../pipes/feature-value.pipe';
+import { FeatureSet, FileAnalysis, ToolFeatureValue, ToolResult } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
-const OVERVIEW_FEATURES = [
-  'format:puid',
-  'format:mimeType',
-  'format:version',
-  'format:valid',
-] as const;
-
-const featureOrder = new Map<string, number>([
-  ['puid', 4],
-  ['mimeType', 5],
-  ['formatVersion', 6],
-  ['encoding', 7],
-  ['', 101],
-  ['wellFormed', 1001],
-  ['valid', 1002],
-]);
-
-interface DialogData {
+export interface DialogData {
   featureSet: FeatureSet;
   toolResults: ToolResult[];
   analysis: FileAnalysis;
 }
 
-interface FileFeature {
-  value?: string | boolean | number;
-  confidence?: number;
-  icon?: string;
-}
-
-interface FileFeatures {
-  [key: string]: FileFeature;
-}
-
 interface ToolRow {
   toolName: string;
-  puid: FeatureValue | undefined;
-  mimeType: FeatureValue | undefined;
-  formatVersion: FeatureValue | undefined;
-  valid: FeatureValue | undefined;
+  puid: ToolFeatureValue | undefined;
+  mimeType: ToolFeatureValue | undefined;
+  formatVersion: ToolFeatureValue | undefined;
+  valid: ToolFeatureValue | undefined;
   error: boolean;
 }
 
@@ -56,74 +30,54 @@ interface ToolRow {
   selector: 'app-result-details',
   imports: [
     CommonModule,
-    FileFeaturePipe,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
     MatTableModule,
     RouterModule,
     MatTabsModule,
+    FeatureValuePipe,
+    MatRippleModule,
   ],
   templateUrl: './result-details.component.html',
   styleUrl: './result-details.component.scss',
 })
 export class ResultDetailsComponent implements OnInit {
-  data = inject<DialogData>(MAT_DIALOG_DATA);
-  private dialog = inject(MatDialog);
+  private readonly data = inject<DialogData>(MAT_DIALOG_DATA);
+  private readonly dialog = inject(MatDialog);
   private readonly featureSet: FeatureSet = this.data.featureSet;
   private readonly toolResults: ToolResult[] = this.data.toolResults;
-  readonly analysis: FileAnalysis = this.data.analysis;
-  dataSource = new MatTableDataSource<FileFeatures>();
-  tableColumnList: string[] = [];
+  readonly rows: ToolRow[] = [];
+  displayedColumns: string[] = ['tool', 'puid', 'mimeType', 'formatVersion', 'valid'];
 
   ngOnInit() {
-    this.initTableData();
-  }
-
-  initTableData(): void {
-    if (this.analysis.featureSets.length === 0) {
-      return;
-    }
-    const sortedFeatures: string[] = sortFeatures([...OVERVIEW_FEATURES]);
-    this.tableColumnList = ['tool', ...sortedFeatures];
-    if (this.analysis.summary.error) {
-      this.tableColumnList.push('error');
-    }
-    const rows: FileFeatures[] = [];
-    const row: FileFeatures = {};
-    row['tool'] = {
-      value: 'Gesamtergebnis',
-    };
-    for (let featureName of OVERVIEW_FEATURES) {
-      if (this.featureSet.features[featureName] !== undefined) {
-        row[featureName] = {
-          value: this.featureSet.features[featureName].value,
-        };
+    this.rows.push({
+      toolName: 'Gesamtergebnis',
+      puid: this.featureSet.features['format:puid'],
+      mimeType: this.featureSet.features['format:mimeType'],
+      formatVersion: this.featureSet.features['format:version'],
+      valid: this.featureSet.features['format:valid'],
+      error: false,
+    });
+    for (let toolResult of this.toolResults) {
+      if (this.featureSet.supportingTools.includes(toolResult.id) || toolResult.error) {
+        this.rows.push({
+          toolName: toolResult.title,
+          puid: toolResult.features['format:puid'],
+          mimeType: toolResult.features['format:mimeType'],
+          formatVersion: toolResult.features['format:version'],
+          valid: toolResult.features['format:valid'],
+          error: !!toolResult.error,
+        });
       }
     }
-    rows.push(row);
-    for (let toolResult of this.analysis.toolResults) {
-      const row: FileFeatures = {};
-      row['tool'] = { value: toolResult.title };
-      for (let featureName of OVERVIEW_FEATURES) {
-        if (toolResult.features[featureName] !== undefined) {
-          row[featureName] = {
-            value: toolResult.features[featureName].value,
-          };
-        }
-      }
-      if (toolResult.error) {
-        row['error'] = {
-          icon: 'error',
-        };
-      }
-      rows.push(row);
+    if (this.rows.some((row) => row.error)) {
+      this.displayedColumns.push('error');
     }
-    this.dataSource.data = rows;
   }
 
   showToolOutput(toolName: string): void {
-    const toolResult = this.analysis.toolResults.find((r) => r.title === toolName);
+    const toolResult = this.toolResults.find((r) => r.title === toolName);
     if (toolResult) {
       this.dialog.open(ToolOutputComponent, {
         data: {
@@ -135,25 +89,4 @@ export class ResultDetailsComponent implements OnInit {
       });
     }
   }
-}
-
-/** Sorts feature keys and removes duplicates. */
-function sortFeatures(features: string[]): string[] {
-  features = [...new Set(features)];
-  return features.sort((f1: string, f2: string) => {
-    let orderF1: number | undefined = featureOrder.get(f1);
-    if (!orderF1) {
-      orderF1 = featureOrder.get('');
-    }
-    let orderF2: number | undefined = featureOrder.get(f2);
-    if (!orderF2) {
-      orderF2 = featureOrder.get('');
-    }
-    if (orderF1! < orderF2!) {
-      return -1;
-    } else if (orderF1! > orderF2!) {
-      return 1;
-    }
-    return 0;
-  });
 }
