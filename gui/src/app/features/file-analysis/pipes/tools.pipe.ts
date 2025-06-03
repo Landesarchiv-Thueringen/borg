@@ -9,7 +9,7 @@ export class ToolsPipe implements PipeTransform {
   transform(value: string[], toolResults: ToolResult[]): string {
     const labels = value.map((toolId) => {
       if (toolId === 'browser') {
-        return 'Browser';
+        return 'Webbrowser';
       }
       const tr = toolResults.find((tr) => tr.id === toolId);
       return tr ? tr.title : toolId;
