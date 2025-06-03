@@ -32,6 +32,16 @@ h3 {
   }
 }
 
+.mat-mdc-row {
+  position: relative;
+}
+
+mat-dialog-actions {
+  .button-left {
+    margin-right: auto;
+  }
+}
+
 .uncertain-icon {
   color: #ff6600;
 }
@@ -43,14 +53,4 @@ h3 {
 }
 .error-icon {
   color: #c00000;
-}
-
-.mat-mdc-row {
-  position: relative;
-}
-
-mat-dialog-actions {
-  .button-left {
-    margin-right: auto;
-  }
 }

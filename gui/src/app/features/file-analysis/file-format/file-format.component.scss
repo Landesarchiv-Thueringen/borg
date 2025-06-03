@@ -3,6 +3,7 @@ h3 {
 }
 mat-row:hover {
   background-color: var(--mat-sys-primary-container);
+  cursor: pointer;
 }
 .summary-row {
   font-weight: 500;

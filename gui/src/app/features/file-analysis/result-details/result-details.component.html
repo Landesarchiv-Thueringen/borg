@@ -51,10 +51,11 @@
     <mat-row
       *matRowDef="let row; columns: displayedColumns; let i = index"
       matRipple
+      [matRippleDisabled]="i === 0"
       [class.summary-row]="i === 0"
       [class.tool-row]="i !== 0"
+      [attr.role]="i !== 0 ? 'button' : null"
       (click)="showToolOutput(row.toolName)"
-      role="button"
     ></mat-row>
   </mat-table>
 </mat-dialog-content>
