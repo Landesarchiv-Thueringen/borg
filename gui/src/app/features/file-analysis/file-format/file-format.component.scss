@@ -1,3 +1,14 @@
 h3 {
   font: var(--mat-sys-title-medium);
 }
+mat-row:hover {
+  background-color: var(--mat-sys-primary-container);
+}
+.summary-row {
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.cdk-cell.cdk-column-tools,
+.cdk-cell.cdk-column-mimeType {
+  overflow-wrap: anywhere;
+}

@@ -8,7 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { FeatureSetsTableComponent } from '../feature-sets-table/feature-sets-table.component';
 import { FileFeaturePipe } from '../pipes/file-feature.pipe';
-import { FileAnalysis, RowValue } from '../results';
+import { FeatureSet, FileAnalysis, RowValue } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
 
 const OVERVIEW_FEATURES = [
@@ -31,6 +31,7 @@ const featureOrder = new Map<string, number>([
 interface DialogData {
   filename: string;
   info: { [key: string]: RowValue };
+  featureSet: FeatureSet;
   analysis: FileAnalysis;
 }
 
@@ -62,6 +63,7 @@ interface FileFeatures {
 export class ResultDetailsComponent {
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private dialog = inject(MatDialog);
+  private readonly featureSet: FeatureSet = this.data.featureSet;
   readonly analysis: FileAnalysis = this.data.analysis;
   dataSource = new MatTableDataSource<FileFeatures>();
   tableColumnList: string[] = [];
@@ -85,9 +87,9 @@ export class ResultDetailsComponent {
       value: 'Gesamtergebnis',
     };
     for (let featureName of OVERVIEW_FEATURES) {
-      if (this.analysis.featureSets[0].features[featureName] !== undefined) {
+      if (this.featureSet.features[featureName] !== undefined) {
         row[featureName] = {
-          value: this.analysis.featureSets[0].features[featureName].value,
+          value: this.featureSet.features[featureName].value,
         };
       }
     }

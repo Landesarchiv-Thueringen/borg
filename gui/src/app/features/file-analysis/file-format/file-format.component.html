@@ -43,5 +43,11 @@
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-row
+    *matRowDef="let row; columns: displayedColumns; let i = index"
+    matRipple
+    [class.summary-row]="i === 0"
+    (click)="showResultDetails(row.setIndex)"
+    role="button"
+  ></mat-row>
 </mat-table>

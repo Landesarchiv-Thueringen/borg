@@ -1,11 +1,15 @@
 import { PercentPipe } from '@angular/common';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
+import { MatRippleModule } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
+import { ResultDetailsComponent } from '../result-details/result-details.component';
 import { FeatureValue, FileAnalysis } from '../results';
 
 interface FormatRow {
+  setIndex: number;
   puid: FeatureValue | undefined;
   mimeType: FeatureValue | undefined;
   formatVersion: FeatureValue | undefined;
@@ -17,21 +21,21 @@ interface FormatRow {
 
 @Component({
   selector: 'app-file-format',
-  imports: [MatTableModule, PercentPipe, FeatureValuePipe, MatIconModule],
+  imports: [MatTableModule, PercentPipe, FeatureValuePipe, MatIconModule, MatRippleModule],
   templateUrl: './file-format.component.html',
   styleUrl: './file-format.component.scss',
 })
 export class FileFormatComponent implements OnInit {
+  private readonly dialog = inject(MatDialog);
   readonly fileAnalysis = input.required<FileAnalysis>();
   displayedColumns: string[] = ['puid', 'mimeType', 'formatVersion', 'valid', 'tools', 'score'];
   rows: FormatRow[] = [];
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
-      let setIndex = 0;
-      this.rows = this.fileAnalysis().featureSets.map((set) => {
-        setIndex += 1;
+      this.rows = this.fileAnalysis().featureSets.map((set, index) => {
         return {
+          setIndex: index,
           puid: set.features['format:puid'],
           mimeType: set.features['format:mimeType'],
           formatVersion: set.features['format:version'],
@@ -42,6 +46,21 @@ export class FileFormatComponent implements OnInit {
             (tr) => set.supportingTools.includes(tr.id) && tr.error,
           ),
         };
+      });
+    }
+  }
+
+  showResultDetails(setIndex: number): void {
+    const featureSet = this.fileAnalysis().featureSets[setIndex];
+    if (featureSet) {
+      this.dialog.open(ResultDetailsComponent, {
+        data: {
+          analysis: this.fileAnalysis(),
+          featureSet: featureSet,
+        },
+        autoFocus: false,
+        minWidth: '70em',
+        maxWidth: '80vw',
       });
     }
   }
