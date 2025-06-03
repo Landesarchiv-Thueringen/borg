@@ -16,7 +16,11 @@
     <!-- MIME type Column -->
     <ng-container matColumnDef="mimeType">
       <mat-header-cell *matHeaderCellDef> MIME-Type </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.mimeType | featureValue }} </mat-cell>
+      <mat-cell *matCellDef="let element">
+        <span
+          [innerHTML]="element.mimeType ? (element.mimeType.value | breakOpportunities) : ''"
+        ></span>
+      </mat-cell>
     </ng-container>
 
     <!-- format version Column -->

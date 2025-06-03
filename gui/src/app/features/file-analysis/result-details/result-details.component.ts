@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
 import { FeatureSet, FileAnalysis, ToolFeatureValue, ToolResult } from '../results';
 import { ToolOutputComponent } from '../tool-output/tool-output.component';
@@ -38,6 +39,7 @@ interface ToolRow {
     MatTabsModule,
     FeatureValuePipe,
     MatRippleModule,
+    BreakOpportunitiesPipe,
   ],
   templateUrl: './result-details.component.html',
   styleUrl: './result-details.component.scss',

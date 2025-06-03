@@ -13,12 +13,6 @@ mat-row:focus-visible {
   font-weight: 500;
   background-color: rgba(0, 0, 0, 0.03);
 }
-.mat-column-tools {
-  flex-grow: 2;
-}
-.mat-column-mimeType {
-  flex-grow: 3;
-}
 .cdk-cell.cdk-column-tools,
 .cdk-cell.cdk-column-mimeType {
   overflow-wrap: anywhere;

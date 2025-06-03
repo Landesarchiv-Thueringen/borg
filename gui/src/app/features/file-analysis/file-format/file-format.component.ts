@@ -4,6 +4,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
 import { DialogData, ResultDetailsComponent } from '../result-details/result-details.component';
 import { FeatureValue, FileAnalysis } from '../results';
@@ -20,7 +21,14 @@ interface FormatRow {
 
 @Component({
   selector: 'app-file-format',
-  imports: [MatTableModule, PercentPipe, FeatureValuePipe, MatIconModule, MatRippleModule],
+  imports: [
+    MatTableModule,
+    PercentPipe,
+    FeatureValuePipe,
+    MatIconModule,
+    MatRippleModule,
+    BreakOpportunitiesPipe,
+  ],
   templateUrl: './file-format.component.html',
   styleUrl: './file-format.component.scss',
 })
