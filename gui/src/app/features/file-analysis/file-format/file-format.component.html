@@ -43,7 +43,12 @@
   <!-- score column -->
   <ng-container matColumnDef="score">
     <mat-header-cell *matHeaderCellDef> Bewertung </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.score | percent }} </mat-cell>
+    <mat-cell *matCellDef="let element; let i = index">
+      <span>{{ element.score | percent }}</span>
+      @if (i === 0 && resultUncertain) {
+        <mat-icon class="uncertain-icon">warning</mat-icon>
+      }
+    </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

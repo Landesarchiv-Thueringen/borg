@@ -35,11 +35,13 @@ interface FormatRow {
 export class FileFormatComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   readonly fileAnalysis = input.required<FileAnalysis>();
+  resultUncertain: boolean = false;
   displayedColumns: string[] = ['puid', 'mimeType', 'formatVersion', 'valid', 'tools', 'score'];
   rows: FormatRow[] = [];
 
   ngOnInit(): void {
     if (this.fileAnalysis().featureSets.length > 0) {
+      this.resultUncertain = this.fileAnalysis().summary.formatUncertain;
       this.rows = this.fileAnalysis().featureSets.map((set, index) => {
         return {
           setIndex: index,
