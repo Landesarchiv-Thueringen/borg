@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="de" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Development (en) - Borg</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Development (en)";
+        var mkdocs_page_input_path = "development.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+ <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Borg
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigationsmenü">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user_manual/">Benutzerhandbuch</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Development (en)</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#run">Run</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#embedding">Embedding</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#development">Development</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile Navigationsmenü">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Borg</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Dokumentation"></a></li>
+      <li class="breadcrumb-item active">Development (en)</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="borgformat">BorgFormat</h1>
+<p>Identifies and validates file formats.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Copy <code>.env.example</code> to <code>.env</code> and make changes as required:</p>
+<pre><code class="language-sh">cp .env.example .env
+$EDITOR .env
+</code></pre>
+<h2 id="run">Run</h2>
+<p>Build or rebuild images as required and start backend and frontend services:</p>
+<pre><code class="language-sh">docker compose up --build
+</code></pre>
+<h2 id="embedding">Embedding</h2>
+<p>Borg can be embedded in other Angular applications.
+See <a href="../gui/src/app/features/file-analysis/README.md">../gui/src/app/features/file-analysis/README.md</a>.</p>
+<h2 id="development">Development</h2>
+<h3 id="start-a-frontend-development-server">Start a Frontend Development Server</h3>
+<p>In the directory <code>gui</code> run</p>
+<pre><code class="language-sh">pnpm install
+pnpm start
+</code></pre>
+<h3 id="go-workspaces">Go Workspaces</h3>
+<p>We use Go workspaces so any tooling (e.g., IDE integration) knows about directories that contain Go modules.</p>
+<p>To add a new directory, run for example</p>
+<pre><code class="language-sh">go work use ./tools/new-tool
+</code></pre>
+<h3 id="releasing-a-new-version">Releasing a new version</h3>
+<ul>
+<li>Choose a version tag based on semantic versioning. In most cases, this means incrementing the minor version when there are new features and otherwise, incrementing the patch version.</li>
+<li>Update <code>CHANGELOG.md</code> with the chosen version tag and any changes.</li>
+<li>Update the <code>version</code> constant in server/cmd/server.go.</li>
+<li>Push any changes to <code>main</code>.</li>
+<li>Draft a new <a href="https://github.com/Landesarchiv-Thueringen/borg/releases">release</a> on GitHub.</li>
+<li>Include the release's section of <code>CHANGELOG.md</code> as description.</li>
+</ul>
+<h2 id="documentation">Documentation</h2>
+<p>The documentation is generated with <a href="https://www.mkdocs.org/">MkDocs</a>. To change it, edit the markdown files under docs.</p>
+<h3 id="build">Build</h3>
+<p>To build and server the documentation use</p>
+<pre><code class="language-sh">mkdocs serve
+</code></pre>
+<h4 id="prerequisites-arch-linux">Prerequisites (Arch Linux)</h4>
+<ul>
+<li>mkdocs</li>
+<li>python-pymdown-extensions</li>
+<li>mkdocs-glightbox (AUR)</li>
+</ul>
+<h3 id="deploy">Deploy</h3>
+<p>To deploy the documentation to GitHub Pages use</p>
+<pre><code class="language-sh">mkdocs gh-deploy
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer-Navigation">
+        <a href="../user_manual/" class="btn btn-neutral float-left" title="Benutzerhandbuch"><span class="icon icon-circle-arrow-left"></span> Zurück</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Erzeugt mit <a href="https://www.mkdocs.org/">MkDocs</a> mit einem <a href="https://github.com/readthedocs/sphinx_rtd_theme">Thema</a> von <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versionen">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Landesarchiv-Thueringen/borg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../user_manual/" style="color: #fcfcfc">&laquo; Zurück</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+</script></body>
+</html>

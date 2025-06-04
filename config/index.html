@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="de" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Konfiguration - Borg</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Konfiguration";
+        var mkdocs_page_input_path = "config.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+ <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Borg
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigationsmenü">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user_manual/">Benutzerhandbuch</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../development/">Development (en)</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile Navigationsmenü">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Borg</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Dokumentation"></a></li>
+      <li class="breadcrumb-item active">Konfiguration</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="konfiguration">Konfiguration</h1>
+<p>Das Verhalten des Borg-Servers wird mittels eine <a href="config/server_config.yml">Konfigurationsdatei</a> eingestellt. Die Datei bestimmt, wie die Werkzeuge angesprochen werden, unter welchen Bedingungen Validatoren ausgeführt werden und wie einzelne Werkzeugergebnisse gewichtet werden.</p>
+<p>Die Konfigurationsdatei wird beim Start des Servers gelesen.</p>
+<h2 id="voreinstellungen">Voreinstellungen</h2>
+<p>Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stellt sich vereinfacht wie folgt dar:</p>
+<h3 id="bedingungen-fur-die-ausfuhrung">Bedingungen für die Ausführung</h3>
+<table>
+<thead>
+<tr>
+<th>Werkzeug</th>
+<th>Bedingung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DROID</td>
+<td>wird immer ausgeführt</td>
+</tr>
+<tr>
+<td>Tika</td>
+<td>wird immer ausgeführt</td>
+</tr>
+<tr>
+<td>Magika</td>
+<td>wird immer ausgeführt</td>
+</tr>
+<tr>
+<td>JHOVE (PDF-Modul)</td>
+<td>PUID entspricht PDF Version 1.0 bis 1.7</td>
+</tr>
+<tr>
+<td>JHOVE (HTML-Modul)</td>
+<td>PUID entspricht HTML Version 3.2, 4.0 oder 4.01 (HTML 5 wird nicht unterstützt) oder MIME-Type enthält html</td>
+</tr>
+<tr>
+<td>JHOVE (TIFF-Modul)</td>
+<td>PUID entspricht TIFF oder MIME-Type enthält tiff</td>
+</tr>
+<tr>
+<td>JHOVE (JPEG-Modul)</td>
+<td>PUID entspricht JPEG oder MIME-Type enthält jpeg</td>
+</tr>
+<tr>
+<td>JHOVE (JPEG2000-Modul)</td>
+<td>PUID entspricht JP2 (JPEG 2000 part 1) oder MIME-Type enthält jp2</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/A-1a-Profil)</td>
+<td>PUID entspricht PDF/A-1a oder Formatversion entspricht PDF/A-1a</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/A-1b-Profil)</td>
+<td>PUID entspricht PDF/A-1b oder Formatversion entspricht PDF/A-1b</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/A-2a-Profil)</td>
+<td>PUID entspricht PDF/A-2a oder Formatversion entspricht PDF/A-2a</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/A-2b-Profil)</td>
+<td>PUID entspricht PDF/A-2b oder Formatversion entspricht PDF/A-2b</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/A-2u-Profil)</td>
+<td>PUID entspricht PDF/A-2u oder Formatversion entspricht PDF/A-2u</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/UA-Profile)</td>
+<td>MIME-Type enthält pdf, nach aktuellen Stand keine PUID verfügbar</td>
+</tr>
+<tr>
+<td>ODF Validator</td>
+<td>MIME-Type beginnt mit application/vnd.oasis.opendocument.</td>
+</tr>
+<tr>
+<td>OOXML Validator</td>
+<td>MIME-Type beginnt mit application/vnd.openxmlformats-officedocument.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gewichtung-der-extrahierten-eigenschaften">Gewichtung der extrahierten Eigenschaften</h3>
+<table>
+<thead>
+<tr>
+<th>Werkzeug</th>
+<th>PUID</th>
+<th>MIME-Type</th>
+<th>Formatversion</th>
+<th>Validierung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DROID</td>
+<td>90%</td>
+<td>90%</td>
+<td>90%</td>
+<td></td>
+</tr>
+<tr>
+<td>Tika</td>
+<td></td>
+<td>90%</td>
+<td>90%</td>
+<td></td>
+</tr>
+<tr>
+<td>Magika</td>
+<td></td>
+<td>Magika-Score</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>JHOVE</td>
+<td></td>
+<td></td>
+<td>80%</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>JHOVE (PDF-Modul)</td>
+<td></td>
+<td></td>
+<td>80% bzw. 0% bei PDF/A</td>
+<td>100% bzw. 0% bei PDF/A</td>
+</tr>
+<tr>
+<td>veraPDF</td>
+<td></td>
+<td></td>
+<td></td>
+<td>100%</td>
+</tr>
+<tr>
+<td>veraPDF (PDF/UA-Profile)</td>
+<td></td>
+<td></td>
+<td></td>
+<td>30%</td>
+</tr>
+<tr>
+<td>ODF Validator</td>
+<td></td>
+<td></td>
+<td></td>
+<td>100%</td>
+</tr>
+<tr>
+<td>OOXML Validator</td>
+<td></td>
+<td></td>
+<td></td>
+<td>100%</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Erzeugt mit <a href="https://www.mkdocs.org/">MkDocs</a> mit einem <a href="https://github.com/readthedocs/sphinx_rtd_theme">Thema</a> von <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versionen">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/Landesarchiv-Thueringen/borg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+</script></body>
+</html>
