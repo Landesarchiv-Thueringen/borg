@@ -1,0 +1,24 @@
+site_name: Borg
+repo_url: https://github.com/Landesarchiv-Thueringen/borg
+edit_uri: ""
+
+nav:
+  - concept.md
+  - installation.md
+  - user_manual.md
+  - Development (en): development.md
+
+not_in_nav: index.md
+
+theme:
+  name: readthedocs
+  navigation_depth: 2
+  locale: de
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+
+plugins:
+  - glightbox

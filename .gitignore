@@ -31,3 +31,8 @@
 
 # allow scripts
 !/scripts/*.sh
+
+# allow documentation
+!/mkdocs.yml
+!docs/*.md
+!docs/img/*.png
