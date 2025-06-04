@@ -26,3 +26,23 @@ Um alle für den Betrieb von Borg benötigten Container zu starten, genügen die
 cp .env.example .env
 docker compose up --build -d
 ```
+
+## Logdateien
+
+Borg und die integrierten Werkzeuge verwenden Dockers [Log-Mechanismus](https://docs.docker.com/config/containers/logging/). Logs können über `docker` oder `docker compose` angezeigt werden, zum Beispiel:
+
+```sh
+docker compose logs -f server
+```
+
+!!! warning
+
+    Standardmäßig ist die Größe von Logdateien nicht begrenzt und sie können sehr schnell sehr groß werden!
+
+Um den von Docker empfohlenen Logging-Mechanismus mit standardmäßig 5 rotierenden Dateien und einer maximalen Größe von 20 MB zu aktivieren, füge Folgendes in `/etc/docker/daemon.json`:
+
+```json
+{
+  "log-driver": "local"
+}
+```
