@@ -2,6 +2,8 @@
 
 BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert verschiedene Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.
 
+Siehe [Dokumentation](https://landesarchiv-thueringen.github.io/borg/) für weitere Informationen.
+
 ## Lizenz
 
 Dieses Projekt wird unter der [GNU General Public License Version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.de.html) veröffentlicht. Weitere Informationen finden Sie in der Datei [LICENSE](LICENSE).
