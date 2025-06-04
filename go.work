@@ -4,8 +4,11 @@ use (
 	./server
 	./tools/droid
 	./tools/jhove
+	./tools/magika
+	./tools/mediainfo
 	./tools/odf-validator
 	./tools/ooxml-validator
+	./tools/siegfried
 	./tools/tika
 	./tools/verapdf
 )
