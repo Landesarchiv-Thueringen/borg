@@ -22,7 +22,7 @@ docker compose up --build
 ## Embedding
 
 Borg can be embedded in other Angular applications.
-See [../gui/src/app/features/file-analysis/README.md](../gui/src/app/features/file-analysis/README.md).
+See [README.md](https://github.com/Landesarchiv-Thueringen/borg/blob/main/gui/src/app/features/file-analysis/README.md).
 
 ## Development
 
