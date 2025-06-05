@@ -15,3 +15,5 @@ Die integrierten Werkzeuge werden containerisiert betrieben.
 ## Eigenschaftsmengen
 
 _PUID_, _MIME-Type_, _Formatversion_ und _Validität_ sind die zentralen Eigenschaften zur Bestimmung des Dateityps.
+
+Eigenschaftsmengen können nur zusammengeführt werden, wenn mindestens eine Bedingung erfüllt wird.

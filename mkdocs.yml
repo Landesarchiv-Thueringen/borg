@@ -6,6 +6,7 @@ nav:
   - installation.md
   - user_manual.md
   - concept.md
+  - config.md
   - Development (en): development.md
 
 not_in_nav: index.md

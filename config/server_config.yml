@@ -557,7 +557,27 @@ tools:
 fileIdentity:
   - conditions:
       - feature: "format:version"
+        value: "PDF/A-1a"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
+        value: "PDF/A-1b"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
+        value: "PDF/A-2a"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
         value: "PDF/A-2b"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
+        value: "PDF/A-2u"
       - feature: "format:valid"
         value: true
   - conditions:
