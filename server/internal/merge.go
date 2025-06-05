@@ -44,6 +44,7 @@ func (a ByScore) Len() int           { return len(a) }
 func (a ByScore) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByScore) Less(i, j int) bool { return a[i].Score < a[j].Score }
 
+// IsEqual compares two feature sets. Sets are considered as equal if the same tools support them.
 func (s1 *FeatureSet) IsEqual(s2 FeatureSet) bool {
 	if len(s1.SupportingTools) != len(s2.SupportingTools) {
 		return false
@@ -60,13 +61,18 @@ func (s1 *FeatureSet) IsEqual(s2 FeatureSet) bool {
 	return true
 }
 
+// filterDuplicateSets removes duplicates of sets depending on the supporting tools.
+// If duplicates are found the one with the higher score remains.
 func filterDuplicateSets(sets []FeatureSet) []FeatureSet {
 	var filteredSets []FeatureSet
 	for _, s := range sets {
 		setExistsAlready := false
-		for _, fs := range filteredSets {
-			if s.IsEqual(fs) {
+		for index, fs := range filteredSets {
+			if fs.IsEqual(s) {
 				setExistsAlready = true
+				if s.Score > fs.Score {
+					filteredSets[index] = s
+				}
 				break
 			}
 		}
