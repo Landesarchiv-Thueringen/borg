@@ -3,9 +3,9 @@ repo_url: https://github.com/Landesarchiv-Thueringen/borg
 edit_uri: ""
 
 nav:
-  - concept.md
   - installation.md
   - user_manual.md
+  - concept.md
   - Development (en): development.md
 
 not_in_nav: index.md

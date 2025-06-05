@@ -2,7 +2,11 @@
 
 ## 2.0.0
 
+- Feature: neues Konzept zur Berechnung des Gesamtergebnisses
+- Feature: neue Ansicht für Metadaten
 - Feature: Update DROID 6.8.0 -> 6.8.1
+- Feature: Integration Siegfried 1.11.2
+- Feature: Integration MediaInfo 24.11
 
 ## 1.4.1
 
@@ -13,7 +17,7 @@
 
 ## 1.4.0
 
-- Feature: Integration Formaterkennungswerkzeug Magika v0.6.0
+- Feature: Integration Magika v0.6.0
 - Fix: DROID-Fehler bei nicht erkannten Format
 - Fix: Filter-Chips können ausgewählt werden
 - Fix: HTML-Attribut `lang`
