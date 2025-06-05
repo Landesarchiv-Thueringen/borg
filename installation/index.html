@@ -39,10 +39,6 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigationsmenü">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
-                </li>
-              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
     <ul class="current">
@@ -53,6 +49,14 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../user_manual/">Benutzerhandbuch</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../config/">Konfiguration</a>
                 </li>
               </ul>
               <ul>
@@ -83,7 +87,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="installation">Installation</h1>
-<p>Für den Betrieb von Borg wird <a href="https://docs.docker.com/">Docker</a> inklusive <a href="https://docs.docker.com/compose/">Docker Compose</a> benötigt. Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Für einen lokalen Test der Standalone-Version von Borg ist auch der Einsatz von <a href="https://docs.docker.com/desktop/">Docker Desktop</a> möglich. In der Datei <a href=".env">.env</a> kann ein Proxy für den Zugriff auf das Internet und der Port unter dem die Anwendung angesprochen werden soll, festgelegt werden. Borg benötigt nur bei der Erstellung der Container eine Internetverbindung. Im Betrieb wird keine Internetverbindung benötigt.</p>
+<p>Für den Betrieb von Borg wird <a href="https://docs.docker.com/">Docker</a> inklusive <a href="https://docs.docker.com/compose/">Docker Compose</a> benötigt. Für den regulären Betrieb empfehlen wir die Installation auf einem Linux-Server. Für einen lokalen Test der Standalone-Version von Borg ist auch der Einsatz von <a href="https://docs.docker.com/desktop/">Docker Desktop</a> möglich. In der Datei <a href="https://github.com/Landesarchiv-Thueringen/borg/blob/main/.env.example">.env</a> kann ein Proxy für den Zugriff auf das Internet und der Port unter dem die Anwendung angesprochen werden soll, festgelegt werden. Borg benötigt nur bei der Erstellung der Container eine Internetverbindung. Im Betrieb wird keine Internetverbindung benötigt.</p>
 <p>Um die Anwendung in einem Netzwerk verfügbar zu machen, eignet sich ein Webserver als Reverse-Proxy wie bspw. <a href="https://www.nginx.com/">nginx</a>, der die Anfragen auf den konfigurierten Port der Anwendung weiterleitet. Bei der Konfiguration des Webservers ist zu beachten, dass die Grenzen für die Dateigröße beim Upload und Timeouts von Verbindungen ausreichend bemessen werden, so dass auch größere Dateien analysiert werden können. Die notwendigen Einstellungen sind für alle Webserver unterschiedlich.</p>
 <p>Folgend ist eine mögliche Teilkonfiguration für nginx abgebildet, die Dateigröße und Timeouts für den Upload erhöht:</p>
 <p><strong>Beispiel nginx</strong></p>
@@ -118,7 +122,6 @@ docker compose up --build -d
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer-Navigation">
-        <a href="../concept/" class="btn btn-neutral float-left" title="Konzept"><span class="icon icon-circle-arrow-left"></span> Zurück</a>
         <a href="../user_manual/" class="btn btn-neutral float-right" title="Benutzerhandbuch">Weiter <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -145,8 +148,6 @@ docker compose up --build -d
           <a href="https://github.com/Landesarchiv-Thueringen/borg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
-    
-      <span><a href="../concept/" style="color: #fcfcfc">&laquo; Zurück</a></span>
     
     
       <span><a href="../user_manual/" style="color: #fcfcfc">Weiter &raquo;</a></span>

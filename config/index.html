@@ -40,15 +40,23 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigationsmenü">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../user_manual/">Benutzerhandbuch</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Konfiguration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#voreinstellungen">Voreinstellungen</a>
+    </li>
+    </ul>
                 </li>
               </ul>
               <ul>
@@ -79,7 +87,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="konfiguration">Konfiguration</h1>
-<p>Das Verhalten des Borg-Servers wird mittels eine <a href="config/server_config.yml">Konfigurationsdatei</a> eingestellt. Die Datei bestimmt, wie die Werkzeuge angesprochen werden, unter welchen Bedingungen Validatoren ausgeführt werden und wie einzelne Werkzeugergebnisse gewichtet werden.</p>
+<p>Das Verhalten des Borg-Servers wird mittels eine <a href="https://github.com/Landesarchiv-Thueringen/borg/blob/main/config/server_config.yml">Konfigurationsdatei</a> eingestellt. Die Datei bestimmt, wie die Werkzeuge angesprochen werden, unter welchen Bedingungen Validatoren ausgeführt werden und wie einzelne Werkzeugergebnisse gewichtet werden.</p>
 <p>Die Konfigurationsdatei wird beim Start des Servers gelesen.</p>
 <h2 id="voreinstellungen">Voreinstellungen</h2>
 <p>Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stellt sich vereinfacht wie folgt dar:</p>
@@ -94,6 +102,10 @@
 <tbody>
 <tr>
 <td>DROID</td>
+<td>wird immer ausgeführt (aus Performancegründen standardmäßig deaktiviert)</td>
+</tr>
+<tr>
+<td>Siegfried</td>
 <td>wird immer ausgeführt</td>
 </tr>
 <tr>
@@ -103,6 +115,10 @@
 <tr>
 <td>Magika</td>
 <td>wird immer ausgeführt</td>
+</tr>
+<tr>
+<td>MediaInfo</td>
+<td>MIME-Type beginnt mit audio oder video</td>
 </tr>
 <tr>
 <td>JHOVE (PDF-Modul)</td>
@@ -158,86 +174,80 @@
 </tr>
 </tbody>
 </table>
-<h3 id="gewichtung-der-extrahierten-eigenschaften">Gewichtung der extrahierten Eigenschaften</h3>
+<h3 id="gewichtung-der-werkzeugergebnisse">Gewichtung der Werkzeugergebnisse</h3>
 <table>
 <thead>
 <tr>
 <th>Werkzeug</th>
-<th>PUID</th>
-<th>MIME-Type</th>
-<th>Formatversion</th>
-<th>Validierung</th>
+<th>Gewichtung</th>
+<th>Bedingte Gewichtung</th>
+<th>Bedingung</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>DROID</td>
-<td>90%</td>
-<td>90%</td>
-<td>90%</td>
+<td>75%</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Siegfried</td>
+<td>75%</td>
+<td></td>
 <td></td>
 </tr>
 <tr>
 <td>Tika</td>
+<td>75%</td>
 <td></td>
-<td>90%</td>
-<td>90%</td>
 <td></td>
 </tr>
 <tr>
 <td>Magika</td>
-<td></td>
 <td>Magika-Score</td>
+<td>0%</td>
+<td>MIME-Type entspricht <em>application/octet-stream</em></td>
+</tr>
+<tr>
+<td>MediaInfo</td>
+<td>100%</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td>JHOVE</td>
-<td></td>
-<td></td>
-<td>80%</td>
+<td>0%</td>
 <td>100%</td>
-</tr>
-<tr>
-<td>JHOVE (PDF-Modul)</td>
-<td></td>
-<td></td>
-<td>80% bzw. 0% bei PDF/A</td>
-<td>100% bzw. 0% bei PDF/A</td>
+<td>Datei ist valide</td>
 </tr>
 <tr>
 <td>veraPDF</td>
-<td></td>
-<td></td>
-<td></td>
+<td>0%</td>
 <td>100%</td>
-</tr>
-<tr>
-<td>veraPDF (PDF/UA-Profile)</td>
-<td></td>
-<td></td>
-<td></td>
-<td>30%</td>
+<td>Datei ist valide</td>
 </tr>
 <tr>
 <td>ODF Validator</td>
-<td></td>
-<td></td>
-<td></td>
+<td>0%</td>
 <td>100%</td>
+<td>Datei ist valide</td>
 </tr>
 <tr>
 <td>OOXML Validator</td>
-<td></td>
-<td></td>
-<td></td>
+<td>0%</td>
 <td>100%</td>
+<td>Datei ist valide</td>
 </tr>
 </tbody>
 </table>
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer-Navigation">
+        <a href="../concept/" class="btn btn-neutral float-left" title="Konzept"><span class="icon icon-circle-arrow-left"></span> Zurück</a>
+        <a href="../development/" class="btn btn-neutral float-right" title="Development (en)">Weiter <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -263,6 +273,10 @@
         </span>
     
     
+      <span><a href="../concept/" style="color: #fcfcfc">&laquo; Zurück</a></span>
+    
+    
+      <span><a href="../development/" style="color: #fcfcfc">Weiter &raquo;</a></span>
     
   </span>
 </div>

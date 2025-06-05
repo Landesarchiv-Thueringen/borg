@@ -40,15 +40,19 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigationsmenü">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="concept/">Konzept</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a>
                 </li>
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="user_manual/">Benutzerhandbuch</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="concept/">Konzept</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="config/">Konfiguration</a>
                 </li>
               </ul>
               <ul>
@@ -80,8 +84,86 @@
               
                 <h1 id="borgformat">BorgFormat</h1>
 <p>BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierung. Die Anwendung integriert verschiedene Werkzeuge um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen.</p>
-<p><a class="btn" href="user_manual">Benutzerhandbuch</a>
-<a class="btn" href="installation">Installation</a></p>
+<h2 id="lizenz">Lizenz</h2>
+<p>Dieses Projekt wird unter der <a href="https://www.gnu.org/licenses/gpl-3.0.de.html">GNU General Public License Version 3 (GPLv3)</a> veröffentlicht.</p>
+<p>Diese Lizenz gilt nicht für eingebundene Werkzeuge, die jeweils unter eigenen Lizenzen stehen (siehe unten).</p>
+<h2 id="integrierte-werkzeuge">Integrierte Werkzeuge</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Version</th>
+<th>Funktion</th>
+<th>Ressourcen</th>
+<th>Lizenz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Droid</td>
+<td>6.8.1</td>
+<td>Formaterkennung</td>
+<td><a href="https://digital-preservation.github.io/droid/">Homepage </a></td>
+<td><a href="https://github.com/richardlehane/siegfried?tab=Apache-2.0-1-ov-file">Apache License, Version 2.0</a></td>
+</tr>
+<tr>
+<td>Siegfried</td>
+<td>1.11.2</td>
+<td>Formaterkennung</td>
+<td><a href="https://www.itforarchivists.com/siegfried">Homepage </a></td>
+<td><a href="https://github.com/digital-preservation/droid/blob/master/license.md">BSD License</a></td>
+</tr>
+<tr>
+<td>Tika</td>
+<td>2.9.2</td>
+<td>Formaterkennung</td>
+<td><a href="https://tika.apache.org/">Homepage</a></td>
+<td><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></td>
+</tr>
+<tr>
+<td>Magika</td>
+<td>standard_v3_3</td>
+<td>Formaterkennung</td>
+<td><a href="https://github.com/google/magika">GitHub</a></td>
+<td><a href="https://github.com/google/magika?tab=Apache-2.0-1-ov-file">Apache License, Version 2.0</a></td>
+</tr>
+<tr>
+<td>MediaInfo</td>
+<td>24.11</td>
+<td>Metadatenextraktion</td>
+<td><a href="https://mediaarea.net/en/MediaInfo">Homepage</a></td>
+<td><a href="https://mediaarea.net/en/MediaInfo/License">BSD-style license</a></td>
+</tr>
+<tr>
+<td>JHOVE</td>
+<td>1.30.1</td>
+<td>Validierung</td>
+<td><a href="https://jhove.openpreservation.org">Homepage</a></td>
+<td><a href="https://www.gnu.org/licenses/lgpl-3.0.html">GNU Lesser General Public License</a></td>
+</tr>
+<tr>
+<td>veraPDF</td>
+<td>1.26.2</td>
+<td>Validierung</td>
+<td><a href="https://verapdf.org/">Homepage</a></td>
+<td><a href="https://github.com/veraPDF/veraPDF-validation/blob/integration/LICENSE.GPL">GNU General Public License v3.0</a></td>
+</tr>
+<tr>
+<td>ODF Validator</td>
+<td>0.12.0</td>
+<td>Validierung</td>
+<td><a href="https://odftoolkit.org/conformance/ODFValidator.html">Homepage</a></td>
+<td><a href="https://github.com/tdf/odftoolkit/blob/master/validator/LICENSE.txt">Apache License, Version 2.0</a></td>
+</tr>
+<tr>
+<td>OOXML Validator</td>
+<td>2.1.5</td>
+<td>Validierung</td>
+<td><a href="https://github.com/mikeebowen/OOXML-Validator">GitHub</a></td>
+<td><a href="https://github.com/mikeebowen/OOXML-Validator/blob/main/LICENSE">MIT License</a></td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div><footer>
@@ -129,5 +211,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2025-06-04 14:31:33.376181+00:00
+Build Date UTC : 2025-06-05 15:52:26.800311+00:00
 -->
