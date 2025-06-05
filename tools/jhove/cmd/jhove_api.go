@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -99,9 +100,12 @@ func validateFile(context *gin.Context) {
 		"json",
 		fileStorePath,
 	)
-	jhoveOutput, err := cmd.CombinedOutput()
+	var outBuffer, errBuffer bytes.Buffer
+	cmd.Stdout = &outBuffer
+	cmd.Stderr = &errBuffer
+	err = cmd.Run()
 	if err != nil {
-		errorMessage := fmt.Sprintf("error executing JHOVE command: %s", string(jhoveOutput))
+		errorMessage := fmt.Sprintf("error executing JHOVE command: %s", errBuffer.String())
 		log.Println(errorMessage)
 		log.Println(err)
 		response := ToolResponse{
@@ -110,8 +114,7 @@ func validateFile(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-	jhoveOutputString := string(jhoveOutput)
-	processJhoveOutput(context, jhoveOutputString, module)
+	processJhoveOutput(context, outBuffer.String(), module)
 }
 
 func processJhoveOutput(context *gin.Context, output string, module string) {
