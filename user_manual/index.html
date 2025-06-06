@@ -56,10 +56,6 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../concept/">Konzept</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../config/">Konfiguration</a>
                 </li>
               </ul>
@@ -93,7 +89,7 @@
                 <h1 id="benutzerhandbuch">Benutzerhandbuch</h1>
 <p>Borg stellt eine Standalone-Webanwendung bereit, mit der beliebige Dateien analysiert werden können.</p>
 <h2 id="datei-auswahl">Datei-Auswahl</h2>
-<p>Der Reiter Dateiauswahl ermöglicht die Auswahl von einzelnen Dateien und ganzen Ordnern für die Analyse. Die Auswahl kann per Dialog oder Drag and Drop erfolgen. Wenn ein Ordner ausgewählt wird, werden auch die Dateien aller enthaltenen Ordner hochgeladen.</p>
+<p>Der Reiter Dateiauswahl ermöglicht das Hinzufügen einzelner Dateien oder ganzer Ordner zur Analyse. Die Auswahl erfolgt entweder über einen Dateidialog oder per Drag-and-Drop. Beim Hochladen eines Ordners werden auch alle Dateien aus enthaltenen Unterordnern automatisch mit einbezogen.</p>
 <figure>
   <a class="glightbox" href="../img/upload_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Dateiauswahl" loading="lazy" src="../img/upload_cut.png" /></a>
   <br>
@@ -103,7 +99,7 @@
 </center>
 </figure>
 <h2 id="auswertung">Auswertung</h2>
-<p>Im Reiter Auswertung wird das Gesamtergebnis für alle hochgeladenen Dateien dargestellt. Für jede Datei werden in einer eigenen Zeile die wichtigsten extrahierten Eigenschaften sowie der Status angezeigt. Der Status stellt die Qualität des Gesamtergebnisses symbolisch dar. Detaillierte Ergebnisse können durch einen Klick auf die Zeile aufgerufen werden.</p>
+<p>Im Reiter Auswertung wird das Gesamtergebnis aller hochgeladenen Dateien übersichtlich dargestellt. Jede Datei erscheint in einer eigenen Zeile mit den wichtigsten extrahierten Eigenschaften und einem Statussymbol, das die Qualität des Analyseergebnisses veranschaulicht. Durch Klicken auf eine Zeile wird die Detailansicht des jeweiligen Dateiergebnisses geöffnet.</p>
 <figure>
   <a class="glightbox" href="../img/overview_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Auswertung" loading="lazy" src="../img/overview_cut.png" /></a>
   <br>
@@ -113,9 +109,9 @@
 </center>
 </figure>
 <h2 id="detailansicht-von-dateiergebnissen">Detailansicht von Dateiergebnissen</h2>
-<p>Die Detailansicht eines Dateiergebnisses ist in zwei Reiter unterteilt, um eine klare und strukturierte Darstellung der Analyseinformationen zu gewährleisten.</p>
+<p>Die Detailansicht eines Dateiergebnisses ist in zwei Reiter unterteilt.</p>
 <p>Im ersten Reiter mit dem Titel <em>Überblick</em> erhalten Sie eine allgemeine Zusammenfassung des Analyseergebnisses. Hier wird zunächst der Status der Analyse erläutert – beispielsweise, ob die Verarbeitung erfolgreich war, ob Warnungen aufgetreten sind oder ob es Fehler gab.</p>
-<p>Darüber hinaus werden in diesem Reiter alle erkannten Dateiformate aufgelistet, die bei der Analyse der Datei identifiziert wurden. Diese Übersicht dient als Einstiegspunkt, um sich einen schnellen Eindruck vom Inhalt und von der Interpretation der Datei durch die verschiedenen Analysewerkzeuge zu verschaffen.</p>
+<p>Darüber hinaus werden in diesem Reiter alle erkannten Dateiformate aufgelistet, die bei der Analyse der Datei identifiziert wurden.</p>
 <figure>
   <a class="glightbox" href="../img/file_details_1_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Detailansicht Datei 1" loading="lazy" src="../img/file_details_1_cut.png" /></a>
   <br>
@@ -134,9 +130,8 @@
 <figcaption>Abb. 4: Metadatenansicht einer Videodatei</figcaption>
 </center>
 </figure>
-<p>In der Anwendung können Sie sich zu jedem erkannten Dateiformat eine Detailansicht anzeigen lassen. Klicken Sie dazu einfach auf eine Zeile in der Übersichtstabelle der erkannten Formate. Daraufhin öffnet sich ein neuer Dialog, der Ihnen eine tiefere Einsicht in die Zusammensetzung der ermittelten Eigenschaften bietet.</p>
-<p>In dieser Detailansicht finden Sie eine strukturierte Tabelle, in der nachvollziehbar aufgeschlüsselt ist, welche Werkzeuge (Tools) zur Analyse eingesetzt wurden, welche spezifischen Eigenschaften sie jeweils extrahiert haben, und wie diese Einzelergebnisse schließlich zum Gesamtergebnis des erkannten Dateiformats zusammengeführt wurden.</p>
-<p>Diese transparente Darstellung hilft dabei, die Herkunft und Zuverlässigkeit einzelner Informationen besser nachzuvollziehen und ermöglicht eine fundierte Bewertung der Analyseergebnisse.</p>
+<p>Zu jedem erkannten Dateiformat kann eine Detailansicht geöffnet werden. Ein Klick auf eine Zeile in der Übersichtstabelle öffnet einen Dialog mit einer tabellarischen Darstellung der ermittelten Eigenschaften.</p>
+<p>Dort ist ersichtlich, welche Werkzeuge welche Eigenschaften extrahiert haben und wie daraus das Gesamtergebnis gebildet wurde. Durch Klicken auf eine Zeile wird die Detailansicht des jeweiligen Werkzeugs geöffnet.</p>
 <figure>
   <a class="glightbox" href="../img/format_result_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Detailansicht Datei 1" loading="lazy" src="../img/format_result_cut.png" /></a>
   <br>
@@ -145,22 +140,39 @@
 <figcaption>Abb. 5: Detailansicht für ein erkanntes Dateiformat</figcaption>
 </center>
 </figure>
+<p>In der Detailansicht eines Werkzeugs werden alle von diesem Werkzeug extrahierten Eigenschaften sowie die vollständige Rohausgabe angezeigt. Zusätzlich werden in dieser Ansicht auch eventuelle Fehlermeldungen oder Warnungen angezeigt, die während der Ausführung des Werkzeugs aufgetreten sind.</p>
+<figure>
+  <a class="glightbox" href="../img/tool_details_1_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Detailansicht Werkzeug 1" loading="lazy" src="../img/tool_details_1_cut.png" /></a>
+  <br>
+<br />
+<center>
+<figcaption>Abb. 6: Extrahierte Eigenschaften von MediaInfo</figcaption>
+</center>
+</figure>
+<figure>
+  <a class="glightbox" href="../img/tool_details_2_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Detailansicht Werkzeug 2" loading="lazy" src="../img/tool_details_2_cut.png" /></a>
+  <br>
+<br />
+<center>
+<figcaption>Abb. 7: Rohausgabe von MediaInfo</figcaption>
+</center>
+</figure>
 <p>Wenn bei der Analyse mehrere mögliche Dateiformate erkannt werden, unterstützt die Bewertung der Ergebnisse dabei, diese einzuordnen und die wahrscheinlichste Interpretation auszuwählen.</p>
 <figure>
   <a class="glightbox" href="../img/file_details_2_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Detailansicht Datei 2" loading="lazy" src="../img/file_details_2_cut.png" /></a>
   <br>
 <br />
 <center>
-<figcaption>Abb. 6: Detailansicht einer Datei mit mehreren erkannten Dateiformaten</figcaption>
+<figcaption>Abb. 8: Detailansicht einer Datei mit mehreren erkannten Dateiformaten</figcaption>
 </center>
 </figure>
-<p>Werden Probleme mit einer Datei festgestellt wird das klar in der Oberfläche kommuniziert.</p>
+<p>Probleme mit einer Datei werden klar und deutlich in der Benutzeroberfläche angezeigt.</p>
 <figure>
   <a class="glightbox" href="../img/file_details_3_cut.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Detailansicht Datei 3" loading="lazy" src="../img/file_details_3_cut.png" /></a>
   <br>
 <br />
 <center>
-<figcaption>Abb. 7: Detailansicht einer fehlerhaften Datei</figcaption>
+<figcaption>Abb. 9: Detailansicht einer fehlerhaften Datei</figcaption>
 </center>
 </figure>
               
@@ -168,7 +180,7 @@
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer-Navigation">
         <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Zurück</a>
-        <a href="../concept/" class="btn btn-neutral float-right" title="Konzept">Weiter <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../config/" class="btn btn-neutral float-right" title="Konfiguration">Weiter <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -198,7 +210,7 @@
       <span><a href="../installation/" style="color: #fcfcfc">&laquo; Zurück</a></span>
     
     
-      <span><a href="../concept/" style="color: #fcfcfc">Weiter &raquo;</a></span>
+      <span><a href="../config/" style="color: #fcfcfc">Weiter &raquo;</a></span>
     
   </span>
 </div>
