@@ -4,9 +4,9 @@ BorgFormat (kurz Borg) ist ein Programm für die Formaterkennung und -validierun
 
 Borg lässt sich auf zwei Arten nutzen:
 
-Zum einen stehen die Funktionen zur Formatverifikation über eine REST-API zur Verfügung, die sich in beliebige Systeme integrieren lässt – beispielsweise in ein digitales Archiv.
-
-Zum anderen gibt es eine Webanwendung zur manuellen Analyse, die direkt im Browser am Arbeitsplatz verwendet werden kann.
+- Zum einen stehen die Funktionen zur Formatverifikation über eine REST-API zur Verfügung, die sich in beliebige Systeme integrieren lässt – beispielsweise in ein digitales Archiv.
+  <br>
+- Zum anderen gibt es eine Webanwendung zur manuellen Analyse, die direkt im Browser am Arbeitsplatz verwendet werden kann.
 
 ## Lizenz
 
