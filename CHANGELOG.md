@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+
+-
+
 ## 2.0.0
 
 - Feature: neues Konzept zur Berechnung des Gesamtergebnisses
@@ -7,6 +11,7 @@
 - Feature: Update DROID 6.8.0 -> 6.8.1
 - Feature: Integration Siegfried 1.11.2
 - Feature: Integration MediaInfo 24.11
+- Dokumentation: neue [Dokumentation](https://landesarchiv-thueringen.github.io/borg)
 
 ## 1.4.1
 
