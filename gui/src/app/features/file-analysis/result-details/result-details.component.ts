@@ -96,6 +96,8 @@ export class ResultDetailsComponent implements OnInit {
           toolResult,
         },
         autoFocus: false,
+        height: '40em',
+        width: '70em',
         maxWidth: '80vw',
       });
     }

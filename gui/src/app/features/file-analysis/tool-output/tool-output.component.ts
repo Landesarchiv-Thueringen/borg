@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { PrettyPrintCsvPipe } from '../pipes/pretty-print-csv.pipe';
 import { PrettyPrintJsonPipe } from '../pipes/pretty-print-json.pipe';
 import { PrettyPrintXmlPipe } from '../pipes/pretty-print-xml.pipe';
@@ -27,6 +28,7 @@ interface DialogData {
     PrettyPrintCsvPipe,
     PrettyPrintJsonPipe,
     PrettyPrintXmlPipe,
+    MatTabsModule,
   ],
 })
 export class ToolOutputComponent {

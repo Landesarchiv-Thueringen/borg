@@ -1,12 +1,9 @@
 <h1 mat-dialog-title>{{ toolName }} ({{ toolResult.toolVersion }})</h1>
 
 <mat-dialog-content>
-  <mat-accordion multi="true">
+  <mat-tab-group animationDuration="0ms">
     @if (showFeatures) {
-      <mat-expansion-panel expanded="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>Extrahierte Eigenschaften</mat-panel-title>
-        </mat-expansion-panel-header>
+      <mat-tab label="Extrahierte Eigenschaften">
         <mat-table [dataSource]="toolResult.features | keyvalue">
           <ng-container matColumnDef="key">
             <mat-header-cell *matHeaderCellDef>Eigenschaft</mat-header-cell>
@@ -19,13 +16,10 @@
           <mat-header-row *matHeaderRowDef="['key', 'value']"></mat-header-row>
           <mat-row *matRowDef="let row; columns: ['key', 'value']"></mat-row>
         </mat-table>
-      </mat-expansion-panel>
+      </mat-tab>
     }
     @if (toolResult.toolOutput) {
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>Werkzeug-Ausgabe</mat-panel-title>
-        </mat-expansion-panel-header>
+      <mat-tab label="Werkzeug-Ausgabe">
         @switch (toolResult.outputFormat) {
           @case ("csv") {
             <pre>{{ toolResult.toolOutput | prettyPrintCsv }}</pre>
@@ -40,17 +34,14 @@
             <pre>{{ toolResult.toolOutput }}</pre>
           }
         }
-      </mat-expansion-panel>
+      </mat-tab>
     }
     @if (toolResult.error) {
-      <mat-expansion-panel expanded="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>Fehler</mat-panel-title>
-        </mat-expansion-panel-header>
+      <mat-tab label="Fehler">
         <pre>{{ toolResult.error }}</pre>
-      </mat-expansion-panel>
+      </mat-tab>
     }
-  </mat-accordion>
+  </mat-tab-group>
 </mat-dialog-content>
 
 <mat-dialog-actions>
