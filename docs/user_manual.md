@@ -24,7 +24,11 @@ Im Reiter Auswertung wird das Gesamtergebnis für alle hochgeladenen Dateien dar
 
 ## Detailansicht von Dateiergebnissen
 
-Die Detailansicht von Dateiergebnissen ist in zwei Reiter aufgeteilt. Im Reiter Überblick wird der Status erläutert und alle erkannten Dateiformate aufgelistet.
+Die Detailansicht eines Dateiergebnisses ist in zwei Reiter unterteilt, um eine klare und strukturierte Darstellung der Analyseinformationen zu gewährleisten.
+
+Im ersten Reiter mit dem Titel _Überblick_ erhalten Sie eine allgemeine Zusammenfassung des Analyseergebnisses. Hier wird zunächst der Status der Analyse erläutert – beispielsweise, ob die Verarbeitung erfolgreich war, ob Warnungen aufgetreten sind oder ob es Fehler gab.
+
+Darüber hinaus werden in diesem Reiter alle erkannten Dateiformate aufgelistet, die bei der Analyse der Datei identifiziert wurden. Diese Übersicht dient als Einstiegspunkt, um sich einen schnellen Eindruck vom Inhalt und von der Interpretation der Datei durch die verschiedenen Analysewerkzeuge zu verschaffen.
 
 <figure markdown="span">
   ![Detailansicht Datei 1](img/file_details_1_cut.png){ loading=lazy }
@@ -32,20 +36,34 @@ Die Detailansicht von Dateiergebnissen ist in zwei Reiter aufgeteilt. Im Reiter 
   <center><figcaption>Abb. 3: Detailansicht einer validen JPEG-Datei</figcaption></center>
 </figure>
 
-Wie sich die Eigenschaften von den erkannten Dateiformaten zusammensetzen, wird in einer Detailansicht klar.
+Im zweiten Reiter _Metadaten_ werden alle Eigenschaften angezeigt, die durch Borg während der Analyse aus der Datei extrahiert wurden. Die Informationen sind thematisch nach Kategorien gruppiert, um eine bessere Übersicht und schnellere Orientierung zu ermöglichen.
+
+Der Fokus liegt hierbei vor allem auf technischen und inhaltlichen Metadaten. Dazu zählen beispielsweise Angaben zum Dateiformat, verwendete Codecs bei Audio- und Videodateien (wie z. B. Video-Codec, Auflösung oder Bildrate) sowie inhaltliche Informationen wie Titel, Autor, Erstellungsdatum oder andere eingebettete Metadaten.
+
+<figure markdown="span">
+  ![Datei Metadaten](img/file_metadata.png){ loading=lazy }
+  <br>
+  <center><figcaption>Abb. 4: Metadatenansicht einer Videodatei</figcaption></center>
+</figure>
+
+In der Anwendung können Sie sich zu jedem erkannten Dateiformat eine Detailansicht anzeigen lassen. Klicken Sie dazu einfach auf eine Zeile in der Übersichtstabelle der erkannten Formate. Daraufhin öffnet sich ein neuer Dialog, der Ihnen eine tiefere Einsicht in die Zusammensetzung der ermittelten Eigenschaften bietet.
+
+In dieser Detailansicht finden Sie eine strukturierte Tabelle, in der nachvollziehbar aufgeschlüsselt ist, welche Werkzeuge (Tools) zur Analyse eingesetzt wurden, welche spezifischen Eigenschaften sie jeweils extrahiert haben, und wie diese Einzelergebnisse schließlich zum Gesamtergebnis des erkannten Dateiformats zusammengeführt wurden.
+
+Diese transparente Darstellung hilft dabei, die Herkunft und Zuverlässigkeit einzelner Informationen besser nachzuvollziehen und ermöglicht eine fundierte Bewertung der Analyseergebnisse.
 
 <figure markdown="span">
   ![Detailansicht Datei 1](img/format_result_cut.png){ loading=lazy }
   <br>
-  <center><figcaption>Abb. 4: Detailansicht für ein erkanntes Dateiformat</figcaption></center>
+  <center><figcaption>Abb. 5: Detailansicht für ein erkanntes Dateiformat</figcaption></center>
 </figure>
 
-Wenn mehrere mögliche Dateiformate erkannt werden, hilft die Bewertung bei der Einordnung der Ergebnisse.
+Wenn bei der Analyse mehrere mögliche Dateiformate erkannt werden, unterstützt die Bewertung der Ergebnisse dabei, diese einzuordnen und die wahrscheinlichste Interpretation auszuwählen.
 
 <figure markdown="span">
   ![Detailansicht Datei 2](img/file_details_2_cut.png){ loading=lazy }
   <br>
-  <center><figcaption>Abb. 5: Detailansicht einer Datei mit mehreren erkannten Dateiformaten</figcaption></center>
+  <center><figcaption>Abb. 6: Detailansicht einer Datei mit mehreren erkannten Dateiformaten</figcaption></center>
 </figure>
 
 Werden Probleme mit einer Datei festgestellt wird das klar in der Oberfläche kommuniziert.
@@ -53,13 +71,5 @@ Werden Probleme mit einer Datei festgestellt wird das klar in der Oberfläche ko
 <figure markdown="span">
   ![Detailansicht Datei 3](img/file_details_3_cut.png){ loading=lazy }
   <br>
-  <center><figcaption>Abb. 6: Detailansicht einer fehlerhaften Datei</figcaption></center>
-</figure>
-
-Im Reiter Metadaten werden alle Eigenschaften die von Borg extrahiert wurden gruppiert nach Kategorie aufgelistet.
-
-<figure markdown="span">
-  ![Datei Metadaten](img/file_metadata.png){ loading=lazy }
-  <br>
-  <center><figcaption>Abb. 7: Metadatenansicht einer Videodatei</figcaption></center>
+  <center><figcaption>Abb. 7: Detailansicht einer fehlerhaften Datei</figcaption></center>
 </figure>
