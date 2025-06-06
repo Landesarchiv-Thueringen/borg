@@ -48,7 +48,7 @@ Der Fokus liegt hierbei vor allem auf technischen und inhaltlichen Metadaten. Da
 
 Zu jedem erkannten Dateiformat kann eine Detailansicht geöffnet werden. Ein Klick auf eine Zeile in der Übersichtstabelle öffnet einen Dialog mit einer tabellarischen Darstellung der ermittelten Eigenschaften.
 
-Dort ist ersichtlich, welche Werkzeuge welche Eigenschaften extrahiert haben und wie daraus das Gesamtergebnis gebildet wurde.
+Dort ist ersichtlich, welche Werkzeuge welche Eigenschaften extrahiert haben und wie daraus das Gesamtergebnis gebildet wurde. Durch Klicken auf eine Zeile wird die Detailansicht des jeweiligen Werkzeugs geöffnet.
 
 <figure markdown="span">
   ![Detailansicht Datei 1](img/format_result_cut.png){ loading=lazy }
@@ -56,12 +56,26 @@ Dort ist ersichtlich, welche Werkzeuge welche Eigenschaften extrahiert haben und
   <center><figcaption>Abb. 5: Detailansicht für ein erkanntes Dateiformat</figcaption></center>
 </figure>
 
+In der Detailansicht eines Werkzeugs werden alle von diesem Werkzeug extrahierten Eigenschaften sowie die vollständige Rohausgabe angezeigt. Zusätzlich werden in dieser Ansicht auch eventuelle Fehlermeldungen oder Warnungen angezeigt, die während der Ausführung des Werkzeugs aufgetreten sind.
+
+<figure markdown="span">
+  ![Detailansicht Werkzeug 1](img/tool_details_1_cut.png){ loading=lazy }
+  <br>
+  <center><figcaption>Abb. 6: Extrahierte Eigenschaften von MediaInfo</figcaption></center>
+</figure>
+
+<figure markdown="span">
+  ![Detailansicht Werkzeug 2](img/tool_details_2_cut.png){ loading=lazy }
+  <br>
+  <center><figcaption>Abb. 7: Rohausgabe von MediaInfo</figcaption></center>
+</figure>
+
 Wenn bei der Analyse mehrere mögliche Dateiformate erkannt werden, unterstützt die Bewertung der Ergebnisse dabei, diese einzuordnen und die wahrscheinlichste Interpretation auszuwählen.
 
 <figure markdown="span">
   ![Detailansicht Datei 2](img/file_details_2_cut.png){ loading=lazy }
   <br>
-  <center><figcaption>Abb. 6: Detailansicht einer Datei mit mehreren erkannten Dateiformaten</figcaption></center>
+  <center><figcaption>Abb. 8: Detailansicht einer Datei mit mehreren erkannten Dateiformaten</figcaption></center>
 </figure>
 
 Probleme mit einer Datei werden klar und deutlich in der Benutzeroberfläche angezeigt.
@@ -69,5 +83,5 @@ Probleme mit einer Datei werden klar und deutlich in der Benutzeroberfläche ang
 <figure markdown="span">
   ![Detailansicht Datei 3](img/file_details_3_cut.png){ loading=lazy }
   <br>
-  <center><figcaption>Abb. 7: Detailansicht einer fehlerhaften Datei</figcaption></center>
+  <center><figcaption>Abb. 9: Detailansicht einer fehlerhaften Datei</figcaption></center>
 </figure>
