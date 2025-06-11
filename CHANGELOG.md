@@ -2,7 +2,7 @@
 
 ## Next
 
--
+- Fix: CORS für Integration in andere Anwendungen wieder erlaubt
 
 ## 2.0.0
 
