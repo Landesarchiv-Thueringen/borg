@@ -37,6 +37,7 @@ func main() {
 	initServer()
 	router := gin.Default()
 	router.MaxMultipartMemory = 5000 << 20 // 5 GiB
+	// Allow cors to integrate Borg in other applications.
 	router.ForwardedByClientIP = true
 	router.SetTrustedProxies([]string{"*"})
 	corsConfig := cors.DefaultConfig()
