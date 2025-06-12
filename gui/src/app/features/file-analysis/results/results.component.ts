@@ -59,9 +59,9 @@ export interface FilePropertyDefinition {
 }
 
 @Component({
-  selector: 'app-file-analysis-table',
-  templateUrl: './file-analysis-table.component.html',
-  styleUrls: ['./file-analysis-table.component.scss'],
+  selector: 'app-results',
+  templateUrl: './results.component.html',
+  styleUrls: ['./results.component.scss'],
   imports: [
     BreakOpportunitiesPipe,
     CommonModule,
@@ -74,7 +74,7 @@ export interface FilePropertyDefinition {
     MatTableModule,
   ],
 })
-export class FileAnalysisTableComponent implements AfterViewInit {
+export class ResultsComponent implements AfterViewInit {
   private dialog = inject(MatDialog);
 
   readonly results = input<FileResult[]>();

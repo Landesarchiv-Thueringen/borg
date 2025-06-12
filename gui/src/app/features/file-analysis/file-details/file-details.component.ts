@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FileFormatComponent } from '../file-format/file-format.component';
-import { MetadataTableComponent } from '../metadata-table/metadata-table.component';
+import { MetadataComponent } from '../metadata/metadata-table.component';
 import { FileAnalysis, RowValue } from '../results';
 
 interface DialogData {
@@ -24,7 +24,7 @@ interface DialogData {
     MatDialogModule,
     MatIconModule,
     MatTabsModule,
-    MetadataTableComponent,
+    MetadataComponent,
     FileFormatComponent,
   ],
 })

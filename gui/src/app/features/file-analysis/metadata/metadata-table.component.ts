@@ -21,10 +21,10 @@ interface Feature {
 @Component({
   selector: 'app-metadata-table',
   imports: [MatTableModule, CategoryPipe, ToolsPipe, MatSortModule],
-  templateUrl: './metadata-table.component.html',
-  styleUrl: './metadata-table.component.scss',
+  templateUrl: './metadata.component.html',
+  styleUrl: './metadata.component.scss',
 })
-export class MetadataTableComponent implements OnInit, AfterViewInit {
+export class MetadataComponent implements OnInit, AfterViewInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
   toolResults: ToolResult[] = [];
   displayedColumns: string[] = ['key', 'value', 'tools'];

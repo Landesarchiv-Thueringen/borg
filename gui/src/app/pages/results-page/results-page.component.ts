@@ -3,13 +3,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { FileAnalysisTableComponent } from '../../features/file-analysis/file-analysis-table/file-analysis-table.component';
 import { FileResult } from '../../features/file-analysis/results';
+import { ResultsComponent } from '../../features/file-analysis/results/results.component';
 import { ResultsService } from '../../services/results.service';
 
 @Component({
   selector: 'app-results-page',
-  imports: [FileAnalysisTableComponent, MatIconModule, MatButtonModule],
+  imports: [ResultsComponent, MatIconModule, MatButtonModule],
   templateUrl: './results-page.component.html',
   styleUrl: './results-page.component.scss',
 })
