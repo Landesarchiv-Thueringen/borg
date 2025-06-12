@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"encoding/xml"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -33,6 +35,7 @@ const (
 	defaultResponse = "MediaInfo API is running"
 	workDir         = "/borg/tools/magika"
 	storeDir        = "/borg/file-store"
+	TIME_OUT        = 30 * time.Second
 )
 
 var (
@@ -77,8 +80,8 @@ func getLocalizationDict(context *gin.Context) {
 	context.JSON(http.StatusOK, dict)
 }
 
-func extractMetadata(context *gin.Context) {
-	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+func extractMetadata(ginContext *gin.Context) {
+	fileStorePath := filepath.Join(storeDir, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
@@ -87,16 +90,28 @@ func extractMetadata(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"mediainfo",
 		"--Full",
 		"--Output=XML",
 		fileStorePath,
 	)
 	output, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		response := ToolResponse{
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	outputString := string(output)
 	if err != nil {
 		log.Println(err)
@@ -106,7 +121,7 @@ func extractMetadata(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	features, err := extractFeatures(outputString)
@@ -116,7 +131,7 @@ func extractMetadata(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	mimeType, ok := features["av_container:internetmediatype"]
@@ -131,7 +146,7 @@ func extractMetadata(context *gin.Context) {
 		OutputFormat: "xml",
 		Features:     features,
 	}
-	context.JSON(http.StatusOK, response)
+	ginContext.JSON(http.StatusOK, response)
 }
 
 func extractFeatures(output string) (map[string]ToolFeatureValue, error) {
