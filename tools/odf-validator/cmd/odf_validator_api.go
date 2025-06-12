@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +18,7 @@ import (
 const (
 	STORE_DIR        = "/borg/file-store"
 	DEFAULT_RESPONSE = "ODF Validator API is running"
+	TIME_OUT         = 30 * time.Second
 )
 
 type ToolResponse struct {
@@ -120,7 +124,10 @@ func validateFile(path string) (bool, string, error) {
 		return false, "", errors.New(errorMessage)
 	}
 	// -v for verbose output to extract the MIME type
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"java",
 		"-jar",
 		"third_party/odfvalidator-0.12.0-jar-with-dependencies.jar",
@@ -130,6 +137,12 @@ func validateFile(path string) (bool, string, error) {
 		path,
 	)
 	output, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		log.Println(string(output))
+		log.Println(errorMessage)
+		return false, string(output), errors.New(errorMessage)
+	}
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			// Determined the given file to be invalid.
