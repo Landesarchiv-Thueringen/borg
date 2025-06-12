@@ -22,7 +22,7 @@ tools:
   - id: "droid"
     enabled: false
     title: "DROID"
-    endpoint: "http://droid/identify-file-format"
+    endpoint: "http://droid/identify"
     featureSet:
       features:
         - key: "format:puid"

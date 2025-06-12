@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"errors"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,16 +44,14 @@ const (
 	STORE_DIR                     = "/borg/file-store"
 	SIGNATURE_FILE_NAME           = "DROID_SignatureFile_V120.xml"
 	CONTAINER_SIGNATURE_FILE_NAME = "container-signature-20240715.xml"
+	TIME_OUT                      = 30 * time.Second
 )
-
-var signatureFilePath = filepath.Join(WORK_DIR, "third_party", SIGNATURE_FILE_NAME)
-var containerSignatureFilePath = filepath.Join(WORK_DIR, "third_party", CONTAINER_SIGNATURE_FILE_NAME)
 
 func main() {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
-	router.GET("/identify-file-format", identifyFileFormat)
+	router.GET("/identify", identifyFileFormat)
 	router.Run()
 }
 
@@ -59,9 +59,14 @@ func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, DEFAULT_RESPONSE)
 }
 
+var (
+	signatureFilePath          = filepath.Join(WORK_DIR, "third_party", SIGNATURE_FILE_NAME)
+	containerSignatureFilePath = filepath.Join(WORK_DIR, "third_party", CONTAINER_SIGNATURE_FILE_NAME)
+)
+
 // identifyFileFormat executes DROID and parses the output of the command.
-func identifyFileFormat(context *gin.Context) {
-	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
+func identifyFileFormat(ginContext *gin.Context) {
+	fileStorePath := filepath.Join(STORE_DIR, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
@@ -70,10 +75,13 @@ func identifyFileFormat(context *gin.Context) {
 			ToolVersion: TOOL_VERSION,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"/bin/ash",
 		"/borg/tools/droid/third_party/droid.sh",
 		"-Ns",
@@ -90,7 +98,7 @@ func identifyFileFormat(context *gin.Context) {
 			ToolVersion: TOOL_VERSION,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	droidOutputString := string(droidOutput)
@@ -110,7 +118,7 @@ func identifyFileFormat(context *gin.Context) {
 			OutputFormat: "csv",
 			Error:        &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	features, err := extractFeatures(formatTable)
@@ -123,7 +131,7 @@ func identifyFileFormat(context *gin.Context) {
 			OutputFormat: "csv",
 			Error:        &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	response := ToolResponse{
@@ -132,7 +140,7 @@ func identifyFileFormat(context *gin.Context) {
 		OutputFormat: "csv",
 		Features:     features,
 	}
-	context.JSON(http.StatusOK, response)
+	ginContext.JSON(http.StatusOK, response)
 }
 
 // extractFeatures extracts all relevant information from parsed DROID output.
