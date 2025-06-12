@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,6 +35,7 @@ const (
 	TOOL_VERSION     = "2.1.5"
 	STORE_DIR        = "/borg/file-store"
 	DEFAULT_RESPONSE = "OOXML-Validator API is running"
+	TIME_OUT         = 30 * time.Second
 )
 
 func main() {
@@ -87,8 +91,16 @@ func validateFile(path string) (valid bool, output string, err error) {
 		log.Println(err)
 		return false, "", err
 	}
-	cmd := exec.Command("third_party/OOXMLValidatorCLI", path)
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, "third_party/OOXMLValidatorCLI", path)
 	outputBytes, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		log.Println(string(output))
+		log.Println(errorMessage)
+		return false, string(output), errors.New(errorMessage)
+	}
 	output = string(outputBytes)
 	if err != nil {
 		err = fmt.Errorf("error executing OOXML-Validator command: %w", err)
