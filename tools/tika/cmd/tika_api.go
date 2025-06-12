@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,6 +47,7 @@ const (
 	DEFAULT_RESPONSE = "Tika API is running"
 	WORK_DIR         = "/borg/tools/tika"
 	STORE_DIR        = "/borg/file-store"
+	TIME_OUT         = 30 * time.Second
 )
 
 var toolVersion string
@@ -81,8 +84,8 @@ func getToolVersion() string {
 	return matches[1]
 }
 
-func extractMetadata(context *gin.Context) {
-	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
+func extractMetadata(ginContext *gin.Context) {
+	fileStorePath := filepath.Join(STORE_DIR, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
@@ -91,10 +94,13 @@ func extractMetadata(context *gin.Context) {
 		response := ToolResponse{
 			Error: &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"java",
 		"-jar",
 		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
@@ -105,6 +111,15 @@ func extractMetadata(context *gin.Context) {
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	tikaOutput, err := cmd.Output()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		response := ToolResponse{
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	if err != nil {
 		errorMessage := fmt.Sprintf("error executing Tika command: %s", stderr.String())
 		log.Println(errorMessage)
@@ -113,12 +128,11 @@ func extractMetadata(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	tikaOutputString := string(tikaOutput)
-	log.Println(tikaOutputString)
-	processTikaOutput(context, tikaOutputString)
+	processTikaOutput(ginContext, tikaOutputString)
 }
 
 func processTikaOutput(context *gin.Context, output string) {
