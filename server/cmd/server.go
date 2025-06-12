@@ -48,7 +48,7 @@ func main() {
 	router.Use(cors.New(corsConfig))
 	router.GET("api", getDefaultResponse)
 	router.GET("api/version", getVersion)
-	router.POST("api/analyze-file", analyzeFile)
+	router.POST("api/analyze", analyzeFile)
 	router.Run()
 }
 
