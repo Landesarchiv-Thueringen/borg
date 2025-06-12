@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,10 +54,11 @@ var (
 	WELL_FORMED_LABEL    = "wohlgeformt"
 )
 
-var defaultResponse = "JHOVE API is running"
-var storeDir = "/borg/file-store"
-var wellFormedRegEx = regexp.MustCompile("Well-Formed")
-var validRegEx = regexp.MustCompile("Well-Formed and valid")
+const (
+	defaultResponse = "JHOVE API is running"
+	storeDir        = "/borg/file-store"
+	TIME_OUT        = 30 * time.Second
+)
 
 func main() {
 	router := gin.Default()
@@ -69,18 +72,18 @@ func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, defaultResponse)
 }
 
-func validateFile(context *gin.Context) {
-	module := context.Param("module")
+func validateFile(ginContext *gin.Context) {
+	module := ginContext.Param("module")
 	if module == "" {
 		errorMessage := "no JHOVE module declared"
 		log.Println(errorMessage)
 		response := ToolResponse{
 			Error: &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+	fileStorePath := filepath.Join(storeDir, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
@@ -89,10 +92,13 @@ func validateFile(context *gin.Context) {
 		response := ToolResponse{
 			Error: &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"./jhove/jhove",
 		"-m",
 		module+"-hul",
@@ -104,6 +110,14 @@ func validateFile(context *gin.Context) {
 	cmd.Stdout = &outBuffer
 	cmd.Stderr = &errBuffer
 	err = cmd.Run()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		response := ToolResponse{
+			Error: &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	if err != nil {
 		errorMessage := fmt.Sprintf("error executing JHOVE command: %s", errBuffer.String())
 		log.Println(errorMessage)
@@ -111,11 +125,16 @@ func validateFile(context *gin.Context) {
 		response := ToolResponse{
 			Error: &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	processJhoveOutput(context, outBuffer.String(), module)
+	processJhoveOutput(ginContext, outBuffer.String(), module)
 }
+
+var (
+	wellFormedRegEx = regexp.MustCompile("Well-Formed")
+	validRegEx      = regexp.MustCompile("Well-Formed and valid")
+)
 
 func processJhoveOutput(context *gin.Context, output string, module string) {
 	var parsedJhoveOutput JhoveOutput
