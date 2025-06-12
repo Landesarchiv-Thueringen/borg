@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -9,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,6 +62,7 @@ const (
 	defaultResponse = "Magika API is running"
 	workDir         = "/borg/tools/magika"
 	storeDir        = "/borg/file-store"
+	TIME_OUT        = 30 * time.Second
 )
 
 var (
@@ -74,7 +77,7 @@ func main() {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
-	router.GET("/identify-file-format", identifyFileFormat)
+	router.GET("/identify", identifyFileFormat)
 	router.Run()
 }
 
@@ -101,8 +104,8 @@ func getToolVersion() string {
 }
 
 // identifyFileFormat executes Magika and parses the output of the command.
-func identifyFileFormat(context *gin.Context) {
-	fileStorePath := filepath.Join(storeDir, context.Query("path"))
+func identifyFileFormat(ginContext *gin.Context) {
+	fileStorePath := filepath.Join(storeDir, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
@@ -111,15 +114,27 @@ func identifyFileFormat(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"magika",
 		"--json",
 		fileStorePath,
 	)
 	magikaOutput, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		response := ToolResponse{
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	magikaOutputString := string(magikaOutput)
 	if err != nil {
 		log.Println(magikaOutputString)
@@ -130,7 +145,7 @@ func identifyFileFormat(context *gin.Context) {
 			ToolOutput:  magikaOutputString,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	var data []Data
@@ -144,7 +159,7 @@ func identifyFileFormat(context *gin.Context) {
 			OutputFormat: "json",
 			Error:        &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	// one file is analyzed at a time -> only first result is relevant
@@ -160,7 +175,7 @@ func identifyFileFormat(context *gin.Context) {
 		Features:     features,
 		Score:        score,
 	}
-	context.JSON(http.StatusOK, response)
+	ginContext.JSON(http.StatusOK, response)
 }
 
 func extractFeatures(data Data) map[string]ToolFeatureValue {

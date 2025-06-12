@@ -67,7 +67,7 @@ func main() {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
-	router.GET("/identify-file-format", identifyFileFormat)
+	router.GET("/identify", identifyFileFormat)
 	router.Run()
 }
 

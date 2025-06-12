@@ -2,7 +2,7 @@ tools:
   - id: "siegfried"
     enabled: true
     title: "Siegfried"
-    endpoint: "http://siegfried/identify-file-format"
+    endpoint: "http://siegfried/identify"
     featureSet:
       features:
         - key: "format:puid"
@@ -57,7 +57,7 @@ tools:
   - id: "magika"
     enabled: true
     title: "Magika"
-    endpoint: "http://magika/identify-file-format"
+    endpoint: "http://magika/identify"
     featureSet:
       features:
         - key: "format:mimeType"
