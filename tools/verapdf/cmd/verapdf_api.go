@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -56,6 +58,7 @@ const (
 	DEFAULT_RESPONSE = "veraPDF API is running"
 	WORK_DIR         = "/borg/tools/verapdf"
 	STORE_DIR        = "/borg/file-store"
+	TIME_OUT         = 30 * time.Second
 )
 
 var toolVersion string
@@ -91,8 +94,8 @@ func getToolVersion() string {
 	return matches[1]
 }
 
-func validateFile(context *gin.Context) {
-	profile := context.Param("profile")
+func validateFile(ginContext *gin.Context) {
+	profile := ginContext.Param("profile")
 	if profile == "" {
 		errorMessage := "no veraPDF profile declared"
 		log.Println(errorMessage)
@@ -100,10 +103,10 @@ func validateFile(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
+	fileStorePath := filepath.Join(STORE_DIR, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		errorMessage := fmt.Sprintf("error processing file: %s", fileStorePath)
@@ -113,10 +116,13 @@ func validateFile(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"/bin/ash",
 		filepath.Join(WORK_DIR, "third_party/verapdf"),
 		"-f", profile,
@@ -126,6 +132,15 @@ func validateFile(context *gin.Context) {
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	veraPDFOutput, err := cmd.Output()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		response := ToolResponse{
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	// exit status 1: file for profile invalid but validation job successful
 	if err != nil && err.Error() != "exit status 1" {
 		log.Println(err.Error())
@@ -135,11 +150,11 @@ func validateFile(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	veraPDFOutputString := string(veraPDFOutput)
-	processVeraPDFOutput(context, veraPDFOutputString, profile)
+	processVeraPDFOutput(ginContext, veraPDFOutputString, profile)
 }
 
 func processVeraPDFOutput(context *gin.Context, output string, profile string) {
