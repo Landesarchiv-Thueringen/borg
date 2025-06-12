@@ -2,7 +2,13 @@
 
 ## Next
 
+-
+
+## 2.1.0
+
 - Fix: CORS für Integration in andere Anwendungen wieder erlaubt
+- Intern: Timeouts für alle Werkzeuge
+- Intern/Integration: Umbenennung Hauptendpunkt
 
 ## 2.0.0
 
