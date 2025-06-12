@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,6 +11,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,6 +57,7 @@ const (
 	DEFAULT_RESPONSE = "Siegfried API is running"
 	WORK_DIR         = "/borg/tools/siegfried"
 	STORE_DIR        = "/borg/file-store"
+	TIME_OUT         = 30 * time.Second
 )
 
 var toolVersion string
@@ -90,8 +93,8 @@ func getDefaultResponse(context *gin.Context) {
 	context.String(http.StatusOK, DEFAULT_RESPONSE)
 }
 
-func identifyFileFormat(context *gin.Context) {
-	fileStorePath := filepath.Join(STORE_DIR, context.Query("path"))
+func identifyFileFormat(ginContext *gin.Context) {
+	fileStorePath := filepath.Join(STORE_DIR, ginContext.Query("path"))
 	_, err := os.Stat(fileStorePath)
 	if err != nil {
 		log.Println(err)
@@ -100,15 +103,27 @@ func identifyFileFormat(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	cmd := exec.Command(
+	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	defer cancel()
+	cmd := exec.CommandContext(
+		ctx,
 		"./third_party/sf",
 		"-json",
 		fileStorePath,
 	)
 	output, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		response := ToolResponse{
+			ToolVersion: toolVersion,
+			Error:       &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	outputString := string(output)
 	if err != nil {
 		log.Println(err)
@@ -118,7 +133,7 @@ func identifyFileFormat(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	var result SiegfriedResult
@@ -129,7 +144,7 @@ func identifyFileFormat(context *gin.Context) {
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
 		}
-		context.JSON(http.StatusOK, response)
+		ginContext.JSON(http.StatusOK, response)
 		return
 	}
 	features := make(map[string]ToolFeatureValue)
@@ -173,5 +188,5 @@ func identifyFileFormat(context *gin.Context) {
 		OutputFormat: "json",
 		Features:     features,
 	}
-	context.JSON(http.StatusOK, response)
+	ginContext.JSON(http.StatusOK, response)
 }
