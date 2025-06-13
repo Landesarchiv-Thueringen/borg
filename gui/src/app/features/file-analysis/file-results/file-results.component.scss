@@ -27,10 +27,6 @@
   overflow: hidden;
 }
 
-.mat-mdc-row {
-  position: relative;
-}
-
 .cdk-cell.cdk-column-path,
 .cdk-cell.cdk-column-filename,
 .cdk-cell.cdk-column-mimeType {
@@ -41,6 +37,9 @@
   gap: 0.5em;
 }
 
+.mat-mdc-row {
+  position: relative;
+}
 .open-details-button {
   position: absolute;
   border-radius: 0;

@@ -1,5 +1,6 @@
 import { PercentPipe } from '@angular/common';
 import { Component, inject, input, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ interface FormatRow {
     MatRippleModule,
     BreakOpportunitiesPipe,
     ToolsPipe,
+    MatButtonModule,
   ],
   templateUrl: './file-format.component.html',
   styleUrl: './file-format.component.scss',
@@ -60,7 +62,7 @@ export class FileFormatComponent implements OnInit {
     }
   }
 
-  showResultDetails(setIndex: number, event: Event): void {
+  showResultDetails(setIndex: number): void {
     const featureSet = this.fileAnalysis().featureSets[setIndex];
     const toolResults = this.fileAnalysis().toolResults;
     if (featureSet && toolResults) {
@@ -75,11 +77,6 @@ export class FileFormatComponent implements OnInit {
         width: '70em',
         maxWidth: '80vw',
       });
-    }
-    // Remove focus after click
-    const target = event.currentTarget as HTMLElement;
-    if (target?.blur) {
-      target.blur();
     }
   }
 }
