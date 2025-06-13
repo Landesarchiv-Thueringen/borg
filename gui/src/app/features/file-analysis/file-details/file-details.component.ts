@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { FileFormatComponent } from '../file-format/file-format.component';
-import { MetadataComponent } from '../metadata/metadata-table.component';
+import { FileMetadataComponent } from '../file-metadata/file-metadata-table.component';
 import { FileAnalysis, FileResult } from '../results';
 
 export interface DialogData {
@@ -24,7 +24,7 @@ export interface DialogData {
     MatDialogModule,
     MatIconModule,
     MatTabsModule,
-    MetadataComponent,
+    FileMetadataComponent,
     FileFormatComponent,
     RouterModule,
   ],

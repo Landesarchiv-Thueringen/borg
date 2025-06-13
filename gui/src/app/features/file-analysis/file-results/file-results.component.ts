@@ -56,9 +56,9 @@ type FilterKey = keyof Status;
 type Filter = { key: FilterKey; label: string; icon: string };
 
 @Component({
-  selector: 'app-results',
-  templateUrl: './results.component.html',
-  styleUrls: ['./results.component.scss'],
+  selector: 'app-file-results',
+  templateUrl: './file-results.component.html',
+  styleUrls: ['./file-results.component.scss'],
   imports: [
     BreakOpportunitiesPipe,
     CommonModule,
@@ -71,7 +71,7 @@ type Filter = { key: FilterKey; label: string; icon: string };
     MatTableModule,
   ],
 })
-export class ResultsComponent implements AfterViewInit {
+export class FileResultsComponent implements AfterViewInit {
   readonly getDetails = input.required<(id: string) => Promise<FileAnalysis | undefined>>();
   readonly results = input<FileResult[]>();
   private resultsMap = computed(() =>

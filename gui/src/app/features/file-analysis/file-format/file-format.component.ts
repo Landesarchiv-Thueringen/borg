@@ -4,10 +4,10 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { DialogData, FormatDetailsComponent } from '../format-details/format-details.component';
 import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { FeatureValuePipe } from '../pipes/feature-value.pipe';
 import { ToolsPipe } from '../pipes/tools.pipe';
-import { DialogData, ResultDetailsComponent } from '../result-details/result-details.component';
 import { FeatureValue, FileAnalysis, ToolResult } from '../results';
 
 interface FormatRow {
@@ -69,7 +69,7 @@ export class FileFormatComponent implements OnInit {
         featureSet: featureSet,
         toolResults: toolResults,
       };
-      this.dialog.open(ResultDetailsComponent, {
+      this.dialog.open(FormatDetailsComponent, {
         data: data,
         autoFocus: false,
         width: '70em',

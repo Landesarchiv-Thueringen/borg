@@ -19,12 +19,12 @@ interface Feature {
 }
 
 @Component({
-  selector: 'app-metadata-table',
+  selector: 'app-file-metadata',
   imports: [MatTableModule, CategoryPipe, ToolsPipe, MatSortModule],
-  templateUrl: './metadata.component.html',
-  styleUrl: './metadata.component.scss',
+  templateUrl: './file-metadata.component.html',
+  styleUrl: './file-metadata.component.scss',
 })
-export class MetadataComponent implements OnInit, AfterViewInit {
+export class FileMetadataComponent implements OnInit, AfterViewInit {
   readonly result = input.required<FileResult>();
   readonly fileAnalysis = input.required<FileAnalysis>();
   toolResults: ToolResult[] = [];
