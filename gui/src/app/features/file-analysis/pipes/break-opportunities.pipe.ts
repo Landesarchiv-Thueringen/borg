@@ -9,7 +9,10 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class BreakOpportunitiesPipe implements PipeTransform {
-  transform(value: string): string {
-    return value.replaceAll('_', '_<wbr>').replaceAll('/', '/<wbr>').replaceAll('.', '.<wbr>');
+  transform(value: string | undefined): string | undefined {
+    if (value) {
+      return value.replaceAll('_', '_<wbr>').replaceAll('/', '/<wbr>').replaceAll('.', '.<wbr>');
+    }
+    return value;
   }
 }

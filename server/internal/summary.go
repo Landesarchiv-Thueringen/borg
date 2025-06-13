@@ -26,11 +26,11 @@ type Summary struct {
 	// Error means that one or more tools aborted with an error.
 	Error bool `json:"error"`
 	// PUID is the extracted PUID with the highest score.
-	PUID string `json:"puid"`
+	PUID *string `json:"puid"`
 	// MimeType is the extracted mime type with the highest score.
-	MimeType string `json:"mimeType"`
+	MimeType *string `json:"mimeType"`
 	// FormatVersion is the extracted format version with the highest score.
-	FormatVersion string `json:"formatVersion"`
+	FormatVersion *string `json:"formatVersion"`
 }
 
 func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
@@ -59,7 +59,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 		if !ok {
 			log.Fatal("PUID feature has non string value")
 		} else {
-			summary.PUID = puid
+			summary.PUID = &puid
 		}
 	}
 	mimeTypeFeature, ok := sets[0].Features["format:mimeType"]
@@ -68,7 +68,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 		if !ok {
 			log.Fatal("MIME type feature has non string value")
 		} else {
-			summary.MimeType = mimeType
+			summary.MimeType = &mimeType
 		}
 	}
 	formatVersionFeature, ok := sets[0].Features["format:version"]
@@ -77,7 +77,7 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 		if !ok {
 			log.Fatal("format version feature has non string value")
 		} else {
-			summary.FormatVersion = formatVersion
+			summary.FormatVersion = &formatVersion
 		}
 	}
 	for _, result := range toolResults {
