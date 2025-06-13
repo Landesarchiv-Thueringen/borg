@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { FileAnalysis, FileResult } from '../features/file-analysis/results';
 import { formatFileSize } from '../shared/file-size.pipe';
 import { FileUpload } from './file-analysis.service';
@@ -9,10 +8,7 @@ import { FileUpload } from './file-analysis.service';
 })
 export class ResultsService {
   analysisDetails: { [key: string]: FileAnalysis } = {};
-  get fileResults() {
-    return this.fileResultsSubject.value;
-  }
-  private fileResultsSubject = new BehaviorSubject<FileResult[]>([]);
+  fileResults = signal<FileResult[]>([]);
 
   add(fileUpload: FileUpload, analysis: FileAnalysis): void {
     const fileResult: FileResult = {
@@ -32,19 +28,11 @@ export class ResultsService {
         },
       },
     };
-    this.fileResultsSubject.next([...this.fileResultsSubject.value, fileResult]);
+    this.fileResults.set([...this.fileResults(), fileResult]);
     this.analysisDetails[fileUpload.id] = analysis;
   }
 
   async get(id: string): Promise<FileAnalysis | undefined> {
     return this.analysisDetails[id];
-  }
-
-  getAll(): Observable<FileResult[]> {
-    return this.fileResultsSubject.asObservable();
-  }
-
-  clear(): void {
-    this.fileResultsSubject.next([]);
   }
 }

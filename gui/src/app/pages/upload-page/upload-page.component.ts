@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, inject, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AfterViewInit, Component, effect, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -29,7 +28,8 @@ import { FileSizePipe } from '../../shared/file-size.pipe';
   ],
 })
 export class UploadPageComponent implements AfterViewInit {
-  private upload = inject(UploadService);
+  private readonly uploadService = inject(UploadService);
+  private readonly uploads = this.uploadService.fileUploads;
 
   dataSource: MatTableDataSource<FileUpload>;
   displayedColumns: string[];
@@ -46,15 +46,7 @@ export class UploadPageComponent implements AfterViewInit {
       'uploadProgress',
       'verificationProgress',
     ];
-    this.upload
-      .getAll()
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        // error can't occur --> no error handling
-        next: (fileUploads: FileUpload[]) => {
-          this.dataSource.data = fileUploads;
-        },
-      });
+    effect(() => (this.dataSource.data = this.uploads()));
   }
 
   ngAfterViewInit(): void {
@@ -67,8 +59,8 @@ export class UploadPageComponent implements AfterViewInit {
     const files: FileList | null = input.files;
     if (files && files.length === 1) {
       const file = files[0];
-      const fileUpload = this.upload.add(file.name, 'Einzeldatei', file.size);
-      this.upload.upload(file, fileUpload);
+      const fileUpload = this.uploadService.add(file.name, 'Einzeldatei', file.size);
+      this.uploadService.upload(file, fileUpload);
     }
   }
 
@@ -78,12 +70,12 @@ export class UploadPageComponent implements AfterViewInit {
     if (files && files.length > 1) {
       for (let fileIndex = 0; fileIndex < files.length; ++fileIndex) {
         const file = files[fileIndex];
-        const fileUpload = this.upload.add(
+        const fileUpload = this.uploadService.add(
           file.name,
           file.webkitRelativePath.replace(new RegExp('/' + file.name + '$'), ''),
           file.size,
         );
-        this.upload.upload(file, fileUpload);
+        this.uploadService.upload(file, fileUpload);
       }
     }
   }

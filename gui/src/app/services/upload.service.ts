@@ -1,7 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 import { FileAnalysis } from '../features/file-analysis/results';
 import { FileAnalysisService, FileUpload } from './file-analysis.service';
@@ -18,17 +17,7 @@ export class UploadService {
   private results = inject(ResultsService);
 
   uploadInProgress = false;
-  fileUploads: FileUpload[] = [];
-  fileUploadsSubject = new BehaviorSubject<FileUpload[]>(this.fileUploads);
-
-  constructor() {
-    this.getAll().subscribe((fileUploads: FileUpload[]) => {
-      if (fileUploads.length === 0 && this.uploadInProgress) {
-        this.uploadInProgress = false;
-        this.router.navigate(['auswertung']);
-      }
-    });
-  }
+  fileUploads = signal<FileUpload[]>([]);
 
   upload(file: File, fileUpload: FileUpload): void {
     this.uploadInProgress = true;
@@ -49,20 +38,20 @@ export class UploadService {
       path: path,
       fileSize: fileSize,
     };
-    this.fileUploads.push(fileUpload);
-    this.fileUploadsSubject.next(this.fileUploads);
+    this.fileUploads.set([...this.fileUploads(), fileUpload]);
     return fileUpload;
   }
 
-  getAll(): Observable<FileUpload[]> {
-    return this.fileUploadsSubject.asObservable();
-  }
-
   private remove(fileUpload: FileUpload): void {
-    this.fileUploads = this.fileUploads.filter((upload: FileUpload) => {
+    let uploads = this.fileUploads();
+    uploads = uploads.filter((upload) => {
       return upload.id !== fileUpload.id;
     });
-    this.fileUploadsSubject.next(this.fileUploads);
+    this.fileUploads.set([...uploads]);
+    if (uploads.length === 0 && this.uploadInProgress) {
+      this.uploadInProgress = false;
+      this.router.navigate(['auswertung']);
+    }
   }
 
   private handleHttpEvent(event: HttpEvent<FileAnalysis>, fileUpload: FileUpload): void {

@@ -113,6 +113,7 @@
     <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
   </mat-table>
+
   <div class="table-toolbar">
     <ng-content select="[toolbar-button]"></ng-content>
     <mat-paginator
