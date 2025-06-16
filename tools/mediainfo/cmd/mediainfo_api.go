@@ -35,7 +35,7 @@ const (
 	defaultResponse = "MediaInfo API is running"
 	workDir         = "/borg/tools/magika"
 	storeDir        = "/borg/file-store"
-	TIME_OUT        = 30 * time.Second
+	TIMEOUT         = 60 * time.Second
 )
 
 var (
@@ -93,7 +93,7 @@ func extractMetadata(ginContext *gin.Context) {
 		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
 	defer cancel()
 	cmd := exec.CommandContext(
 		ctx,
@@ -104,7 +104,7 @@ func extractMetadata(ginContext *gin.Context) {
 	)
 	output, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
-		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIMEOUT)
 		log.Println(errorMessage)
 		response := ToolResponse{
 			ToolVersion: toolVersion,

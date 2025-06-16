@@ -44,7 +44,7 @@ const (
 	STORE_DIR                     = "/borg/file-store"
 	SIGNATURE_FILE_NAME           = "DROID_SignatureFile_V120.xml"
 	CONTAINER_SIGNATURE_FILE_NAME = "container-signature-20240715.xml"
-	TIME_OUT                      = 30 * time.Second
+	TIMEOUT                       = 60 * time.Second
 )
 
 func main() {
@@ -78,7 +78,7 @@ func identifyFileFormat(ginContext *gin.Context) {
 		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
 	defer cancel()
 	cmd := exec.CommandContext(
 		ctx,
@@ -92,7 +92,7 @@ func identifyFileFormat(ginContext *gin.Context) {
 	)
 	droidOutput, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
-		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", timeout)
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIMEOUT)
 		log.Println(errorMessage)
 		response := ToolResponse{
 			ToolVersion: TOOL_VERSION,

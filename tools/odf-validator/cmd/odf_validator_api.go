@@ -18,7 +18,7 @@ import (
 const (
 	STORE_DIR        = "/borg/file-store"
 	DEFAULT_RESPONSE = "ODF Validator API is running"
-	TIME_OUT         = 30 * time.Second
+	TIMEOUT          = 60 * time.Second
 )
 
 type ToolResponse struct {
@@ -124,7 +124,7 @@ func validateFile(path string) (bool, string, error) {
 		return false, "", errors.New(errorMessage)
 	}
 	// -v for verbose output to extract the MIME type
-	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
 	defer cancel()
 	cmd := exec.CommandContext(
 		ctx,
@@ -138,7 +138,7 @@ func validateFile(path string) (bool, string, error) {
 	)
 	output, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
-		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIMEOUT)
 		log.Println(errorMessage)
 		return false, "", errors.New(errorMessage)
 	}

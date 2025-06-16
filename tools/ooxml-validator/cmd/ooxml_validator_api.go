@@ -35,7 +35,7 @@ const (
 	TOOL_VERSION     = "2.1.5"
 	STORE_DIR        = "/borg/file-store"
 	DEFAULT_RESPONSE = "OOXML-Validator API is running"
-	TIME_OUT         = 30 * time.Second
+	TIMEOUT          = 60 * time.Second
 )
 
 func main() {
@@ -91,12 +91,12 @@ func validateFile(path string) (valid bool, output string, err error) {
 		log.Println(err)
 		return false, "", err
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, "third_party/OOXMLValidatorCLI", path)
 	outputBytes, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
-		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIMEOUT)
 		log.Println(errorMessage)
 		return false, "", errors.New(errorMessage)
 	}

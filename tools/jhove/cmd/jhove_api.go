@@ -57,7 +57,7 @@ var (
 const (
 	defaultResponse = "JHOVE API is running"
 	storeDir        = "/borg/file-store"
-	TIME_OUT        = 30 * time.Second
+	TIMEOUT         = 60 * time.Second
 )
 
 func main() {
@@ -95,7 +95,7 @@ func validateFile(ginContext *gin.Context) {
 		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	ctx, cancel := context.WithTimeout(context.Background(), TIMEOUT)
 	defer cancel()
 	cmd := exec.CommandContext(
 		ctx,
@@ -111,7 +111,7 @@ func validateFile(ginContext *gin.Context) {
 	cmd.Stderr = &errBuffer
 	err = cmd.Run()
 	if ctx.Err() == context.DeadlineExceeded {
-		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIMEOUT)
 		log.Println(errorMessage)
 		response := ToolResponse{
 			Error: &errorMessage,
