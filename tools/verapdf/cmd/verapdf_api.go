@@ -207,6 +207,18 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 			extractedFeatures["format:puid"] = getPuidFeature("fmt/478")
 			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
 			extractedFeatures["format:version"] = getVersionFeature("PDF/A-2u")
+		case "3a":
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/479")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-3a")
+		case "3b":
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/480")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-3b")
+		case "3u":
+			extractedFeatures["format:puid"] = getPuidFeature("fmt/481")
+			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/A-3u")
 		case "ua1":
 			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
 			extractedFeatures["format:version"] = getVersionFeature("PDF/UA")

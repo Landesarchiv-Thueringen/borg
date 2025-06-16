@@ -473,6 +473,105 @@ tools:
               - feature: "format:valid"
                 value: true
 
+  - id: "verapdf_3a"
+    enabled: true
+    title: "veraPDF (PDF/A-3a-Profil)"
+    endpoint: "http://verapdf/validate/3a"
+    triggers:
+      - conditions:
+          - feature: "format:version"
+            regEx: "PDF/A-3a"
+      - conditions:
+          - feature: "format:puid"
+            regEx: "^fmt/479$" # PDF/A-3a
+    featureSet:
+      features:
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
+      weight:
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "format:valid"
+                value: true
+
+  - id: "verapdf_3b"
+    enabled: true
+    title: "veraPDF (PDF/A-3b-Profil)"
+    endpoint: "http://verapdf/validate/3b"
+    triggers:
+      - conditions:
+          - feature: "format:version"
+            regEx: "PDF/A-3b"
+      - conditions:
+          - feature: "format:puid"
+            regEx: "^fmt/480$" # PDF/A-3b
+    featureSet:
+      features:
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
+      weight:
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "format:valid"
+                value: true
+
+  - id: "verapdf_3u"
+    enabled: true
+    title: "veraPDF (PDF/A-3u-Profil)"
+    endpoint: "http://verapdf/validate/3u"
+    triggers:
+      - conditions:
+          - feature: "format:version"
+            regEx: "PDF/A-3u"
+      - conditions:
+          - feature: "format:puid"
+            regEx: "^fmt/481$" # PDF/A-3u
+    featureSet:
+      features:
+        - key: "format:puid"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:mimeType"
+          mergeCondition:
+            valueRegEx: "^[^/]+/(.+)$" # extracts the second part of the MIME type
+        - key: "format:version"
+          mergeCondition:
+            exactMatch: true
+        - key: "format:valid"
+          mergeCondition:
+            exactMatch: true
+      weight:
+        default: 0.0
+        conditional:
+          - value: 1.0
+            conditions:
+              - feature: "format:valid"
+                value: true
+
   - id: "verapdf_ua"
     enabled: true
     title: "veraPDF (PDF/UA-Profil)"
