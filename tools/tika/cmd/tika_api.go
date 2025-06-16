@@ -113,6 +113,7 @@ func extractMetadata(ginContext *gin.Context) {
 	tikaOutput, err := cmd.Output()
 	if ctx.Err() == context.DeadlineExceeded {
 		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		log.Println(errorMessage)
 		response := ToolResponse{
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,

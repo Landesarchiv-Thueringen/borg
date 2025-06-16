@@ -112,6 +112,7 @@ func validateFile(ginContext *gin.Context) {
 	err = cmd.Run()
 	if ctx.Err() == context.DeadlineExceeded {
 		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		log.Println(errorMessage)
 		response := ToolResponse{
 			Error: &errorMessage,
 		}

@@ -97,16 +97,15 @@ func validateFile(path string) (valid bool, output string, err error) {
 	outputBytes, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
 		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
-		log.Println(string(output))
 		log.Println(errorMessage)
-		return false, string(output), errors.New(errorMessage)
+		return false, "", errors.New(errorMessage)
 	}
-	output = string(outputBytes)
 	if err != nil {
 		err = fmt.Errorf("error executing OOXML-Validator command: %w", err)
 		log.Println(err)
-		return false, output, err
+		return false, "", err
 	}
+	output = string(outputBytes)
 	valid = output == "[]"
 	return valid, output, nil
 }

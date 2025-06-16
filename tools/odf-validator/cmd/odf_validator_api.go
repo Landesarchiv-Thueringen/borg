@@ -139,9 +139,8 @@ func validateFile(path string) (bool, string, error) {
 	output, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
 		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
-		log.Println(string(output))
 		log.Println(errorMessage)
-		return false, string(output), errors.New(errorMessage)
+		return false, "", errors.New(errorMessage)
 	}
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
@@ -150,11 +149,9 @@ func validateFile(path string) (bool, string, error) {
 				return false, string(output), nil
 			}
 		}
-		errorMessage := "error executing ODF-Validator command"
-		log.Println(string(output))
+		errorMessage := fmt.Sprintf("error executing ODF-Validator command: %v", err)
 		log.Println(errorMessage)
-		log.Println(err)
-		return false, string(output), errors.New(errorMessage)
+		return false, "", errors.New(errorMessage)
 	}
 	return true, string(output), nil
 }

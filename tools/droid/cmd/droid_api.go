@@ -78,7 +78,7 @@ func identifyFileFormat(ginContext *gin.Context) {
 		ginContext.JSON(http.StatusOK, response)
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), TIME_OUT)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	cmd := exec.CommandContext(
 		ctx,
@@ -91,6 +91,16 @@ func identifyFileFormat(ginContext *gin.Context) {
 		fileStorePath,
 	)
 	droidOutput, err := cmd.CombinedOutput()
+	if ctx.Err() == context.DeadlineExceeded {
+		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", timeout)
+		log.Println(errorMessage)
+		response := ToolResponse{
+			ToolVersion: TOOL_VERSION,
+			Error:       &errorMessage,
+		}
+		ginContext.JSON(http.StatusOK, response)
+		return
+	}
 	if err != nil {
 		log.Println(err)
 		errorMessage := fmt.Sprintf("error executing DROID command: %s", string(droidOutput))

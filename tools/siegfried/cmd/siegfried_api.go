@@ -117,6 +117,7 @@ func identifyFileFormat(ginContext *gin.Context) {
 	output, err := cmd.CombinedOutput()
 	if ctx.Err() == context.DeadlineExceeded {
 		errorMessage := fmt.Sprintf("Timeout exceeded after %s.", TIME_OUT)
+		log.Println(errorMessage)
 		response := ToolResponse{
 			ToolVersion: toolVersion,
 			Error:       &errorMessage,
@@ -139,6 +140,7 @@ func identifyFileFormat(ginContext *gin.Context) {
 	var result SiegfriedResult
 	err = json.Unmarshal(output, &result)
 	if err != nil {
+		log.Println(err)
 		errorMessage := err.Error()
 		response := ToolResponse{
 			ToolVersion: toolVersion,
@@ -151,6 +153,18 @@ func identifyFileFormat(ginContext *gin.Context) {
 	if len(result.FileResults) > 0 && len(result.FileResults[0].IdentMatches) > 0 {
 		match := result.FileResults[0].IdentMatches[0]
 		if match.NameSpace == "pronom" {
+			if match.Id == "UNKNOWN" {
+				errorMessage := "no identification results"
+				log.Println(errorMessage)
+				response := ToolResponse{
+					ToolVersion:  result.Version,
+					ToolOutput:   outputString,
+					OutputFormat: "json",
+					Features:     features,
+					Error:        &errorMessage,
+				}
+				ginContext.JSON(http.StatusOK, response)
+			}
 			if match.Id != "UNKNOWN" {
 				features["format:puid"] = ToolFeatureValue{
 					Value: match.Id,
