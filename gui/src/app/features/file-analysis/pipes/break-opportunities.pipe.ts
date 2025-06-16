@@ -9,8 +9,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class BreakOpportunitiesPipe implements PipeTransform {
-  transform(value: string | undefined): string | undefined {
-    if (value) {
+  transform(value: any): any {
+    if (typeof value === 'string') {
       return value.replaceAll('_', '_<wbr>').replaceAll('/', '/<wbr>').replaceAll('.', '.<wbr>');
     }
     return value;

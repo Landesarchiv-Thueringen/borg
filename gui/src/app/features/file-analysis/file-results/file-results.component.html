@@ -47,12 +47,6 @@
     <ng-container matColumnDef="path">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Pfad </mat-header-cell>
       <mat-cell *matCellDef="let row">
-        <button
-          mat-button
-          class="open-details-button"
-          (click)="openDetails(row)"
-          aria-label="Details anzeigen"
-        ></button>
         <span [innerHTML]="row.path | breakOpportunities"></span>
       </mat-cell>
     </ng-container>
@@ -107,6 +101,12 @@
         @if (row.status.error) {
           <mat-icon class="error-icon">error</mat-icon>
         }
+        <button
+          mat-button
+          class="open-details-button"
+          (click)="openDetails(row)"
+          aria-label="Details anzeigen"
+        ></button>
       </mat-cell>
     </ng-container>
 

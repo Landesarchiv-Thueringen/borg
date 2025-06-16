@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { BreakOpportunitiesPipe } from '../pipes/break-opportunities.pipe';
 import { CategoryPipe } from '../pipes/category.pipe';
 import { ToolsPipe } from '../pipes/tools.pipe';
 import { FeatureValue, FileAnalysis, FileResult, ToolResult } from '../results';
@@ -20,7 +21,7 @@ interface Feature {
 
 @Component({
   selector: 'app-file-metadata',
-  imports: [MatTableModule, CategoryPipe, ToolsPipe, MatSortModule],
+  imports: [MatTableModule, CategoryPipe, ToolsPipe, MatSortModule, BreakOpportunitiesPipe],
   templateUrl: './file-metadata.component.html',
   styleUrl: './file-metadata.component.scss',
 })
