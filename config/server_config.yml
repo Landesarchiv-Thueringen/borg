@@ -681,6 +681,21 @@ fileIdentity:
         value: true
   - conditions:
       - feature: "format:version"
+        value: "PDF/A-3a"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
+        value: "PDF/A-3b"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
+        value: "PDF/A-3u"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
         value: "PDF/UA"
       - feature: "format:valid"
         value: true
