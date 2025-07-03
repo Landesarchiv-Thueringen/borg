@@ -49,7 +49,7 @@ go work use ./tools/new-tool
 
 - Choose a version tag based on semantic versioning. In most cases, this means incrementing the minor version when there are new features and otherwise, incrementing the patch version.
 - Update `CHANGELOG.md` with the chosen version tag and any changes.
-- Update the `version` constant in server/cmd/server.go.
+- Update the version env in `compose.yml`.
 - Push any changes to `main`.
 - Draft a new [release](https://github.com/Landesarchiv-Thueringen/borg/releases) on GitHub.
   - Include the release's section of `CHANGELOG.md` as description.

@@ -46,3 +46,11 @@ Um den von Docker empfohlenen Logging-Mechanismus mit standardmäßig 5 rotieren
   "log-driver": "local"
 }
 ```
+
+## Software Bill of Materials (SBOM)
+
+Dieses Repository stellt die Software Bill of Materials (SBOM) für die neuesten Versionen aller erstellten Container-Images bereit.
+
+Sowohl menschenlesbare als auch CycloneDX-Formate sind unter `docs/sbom` verfügbar.
+
+Wenn [Docker Scout](https://docs.docker.com/scout/) installiert ist, können SBOMs mit dem Skript `scripts/generate-sbom.sh` erzeugt werden.

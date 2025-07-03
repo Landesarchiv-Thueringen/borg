@@ -20,9 +20,11 @@ tags=(
     gui
     server
     droid
+    siegfried
     tika
     jhove
     magika
+    mediainfo
     verapdf
     odf-validator
     ooxml-validator

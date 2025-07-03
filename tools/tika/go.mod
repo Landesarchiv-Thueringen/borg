@@ -1,4 +1,4 @@
-module lath/borg/tools/tika
+module lath/borg/tika-api
 
 go 1.23.2
 

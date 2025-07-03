@@ -1,4 +1,4 @@
-module lath/borg/tools/verapdf
+module lath/borg/verapdf-api
 
 go 1.23.2
 

@@ -2,7 +2,7 @@
 
 ## Next
 
--
+- Dokumentation: SBOM für Container-Images bereitgestellt
 
 ## 2.1.0
 

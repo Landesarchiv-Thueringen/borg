@@ -1,4 +1,4 @@
-module lath/borg/tools/droid
+module lath/borg/droid-api
 
 go 1.23.2
 

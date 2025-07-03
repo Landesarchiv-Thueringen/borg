@@ -1,4 +1,4 @@
-module lath/borg/tools/mediainfo
+module lath/borg/mediainfo-api
 
 go 1.24.3
 

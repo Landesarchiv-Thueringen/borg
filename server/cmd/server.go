@@ -15,10 +15,11 @@ import (
 )
 
 const (
-	VERSION          = "2.1.0"
 	DEFAULT_RESPONSE = "Borg server version %s is running"
 	FILE_STORE_PATH  = "/borg/file-store"
 )
+
+var version = os.Getenv("BORG_VERSION")
 
 type fileAnalysis struct {
 	// Summary describes the overall verification result.
@@ -33,7 +34,7 @@ type fileAnalysis struct {
 }
 
 func main() {
-	log.Printf(DEFAULT_RESPONSE, VERSION)
+	log.Printf(DEFAULT_RESPONSE, version)
 	initServer()
 	router := gin.Default()
 	router.MaxMultipartMemory = 3000 << 20 // 3 GiB
@@ -57,11 +58,11 @@ func initServer() {
 }
 
 func getDefaultResponse(c *gin.Context) {
-	c.String(http.StatusOK, fmt.Sprintf(DEFAULT_RESPONSE, VERSION))
+	c.String(http.StatusOK, fmt.Sprintf(DEFAULT_RESPONSE, version))
 }
 
 func getVersion(c *gin.Context) {
-	c.String(http.StatusOK, VERSION)
+	c.String(http.StatusOK, version)
 }
 
 func analyzeFile(c *gin.Context) {

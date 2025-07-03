@@ -1,4 +1,4 @@
-module lath/borg/tools/siegfried
+module lath/borg/siegfried-api
 
 go 1.24.3
 

@@ -1,4 +1,4 @@
-module lath/borg/tools/magika
+module lath/borg/magika-api
 
 go 1.23.4
 

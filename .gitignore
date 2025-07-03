@@ -12,8 +12,6 @@
 # allow project documentation
 !/README.md
 !/CHANGELOG.md
-!/README_DEV.md
-!doc/screenshots/*.png
 
 # allow environment file
 !/.env.example
@@ -36,3 +34,5 @@
 !/mkdocs.yml
 !docs/*.md
 !docs/img/*.png
+!/docs/sbom/*.txt
+!/docs/sbom/*.cdx

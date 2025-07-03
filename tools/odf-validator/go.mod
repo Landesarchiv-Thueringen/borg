@@ -1,4 +1,4 @@
-module lath/borg/tools/odf-validator
+module lath/borg/odf-validator-api
 
 go 1.23.2
 

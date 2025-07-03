@@ -1,4 +1,4 @@
-module lath/borg/tools/ooxml-validator
+module lath/borg/ooxml-validator-api
 
 go 1.23.2
 

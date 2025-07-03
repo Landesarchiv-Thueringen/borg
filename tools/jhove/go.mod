@@ -1,4 +1,4 @@
-module lath/borg/tools/jhove
+module lath/borg/jhove-api
 
 go 1.23.2
 
