@@ -2,7 +2,12 @@
 
 ## Next
 
+-
+
+## 2.1.1
+
 - Dokumentation: SBOM für Container-Images bereitgestellt
+- Intern: Go-Dependencies aktualisiert
 
 ## 2.1.0
 
