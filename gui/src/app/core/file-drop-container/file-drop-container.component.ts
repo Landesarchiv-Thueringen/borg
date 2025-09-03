@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { UploadService } from '../../services/upload.service';
 
 @Component({
-    selector: 'app-file-drop-container',
-    imports: [MatIconModule],
-    templateUrl: './file-drop-container.component.html',
-    styleUrl: './file-drop-container.component.scss'
+  selector: 'app-file-drop-container',
+  imports: [MatIconModule],
+  templateUrl: './file-drop-container.component.html',
+  styleUrl: './file-drop-container.component.scss',
 })
 export class FileDropContainerComponent {
   private ngZone = inject(NgZone);
@@ -58,24 +58,26 @@ export class FileDropContainerComponent {
       return;
     }
     this.router.navigate(['auswahl']);
-    const fileHandlesPromises = [...event.dataTransfer.items]
-      .filter((item) => item.kind === 'file')
-      .map((item) => item.webkitGetAsEntry());
-    for await (const handle of fileHandlesPromises) {
-      this.uploadContainedFiles(handle);
+    for (const item of event.dataTransfer.items) {
+      if (item.kind === 'file') {
+        this.uploadContainedFiles(item.webkitGetAsEntry());
+      }
     }
   }
 
-  private uploadContainedFiles(entry: FileSystemEntry | null, path: string[] = []) {
-    if (entry instanceof FileSystemFileEntry) {
-      entry.file((file) => {
+  private uploadContainedFiles(entry: FileSystemEntry | null, path: string[] = []): void {
+    if (!entry) {
+      return;
+    }
+    if ((entry as FileSystemFileEntry).isFile) {
+      (entry as FileSystemFileEntry).file((file) => {
         this.ngZone.run(() => {
           const fileUpload = this.upload.add(file.name, path.join('/') || 'Einzeldatei', file.size);
           this.upload.upload(file, fileUpload);
         });
       });
-    } else if (entry instanceof FileSystemDirectoryEntry) {
-      entry.createReader().readEntries((entries) => {
+    } else if ((entry as FileSystemDirectoryEntry).isDirectory) {
+      (entry as FileSystemDirectoryEntry).createReader().readEntries((entries) => {
         const subPath = [...path, entry.name];
         for (const subEntry of entries) {
           this.uploadContainedFiles(subEntry, subPath);

@@ -2,7 +2,7 @@
 
 ## Next
 
--
+- Fix: Drag&Drop für Chromium-basierte Webbrowser
 
 ## 2.1.1
 
