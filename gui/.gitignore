@@ -5,6 +5,7 @@ node_modules
 !/.editorconfig
 !/angular.json
 !/pnpm-lock.yaml
+!/pnpm-workspace.yaml
 !/package.json
 !/README.md
 !/tsconfig.app.json
