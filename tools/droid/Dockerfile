@@ -1,4 +1,4 @@
-FROM golang:alpine3.21 AS build
+FROM golang:alpine3.23 AS build
 ARG BORG_VERSION=${BORG_VERSION}
 WORKDIR /build
 COPY go.mod go.sum ./
@@ -6,7 +6,7 @@ RUN go mod download
 COPY cmd cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -o droid_api -ldflags "-X main.version=${BORG_VERSION}" ./cmd
 
-FROM alpine:3.21 AS extract
+FROM alpine:3.23 AS extract
 RUN apk add --no-cache unzip
 COPY third_party /third_party
 WORKDIR /third_party
@@ -14,7 +14,7 @@ RUN unzip droid-binary-6.8.1-bin.zip
 RUN rm droid-binary-6.8.1-bin.zip
 RUN chmod +x droid.sh
 
-FROM alpine:3.21 AS prod
+FROM alpine:3.23 AS prod
 RUN apk add --no-cache openjdk21
 WORKDIR /borg/tools/droid
 COPY --from=build /build/droid_api .

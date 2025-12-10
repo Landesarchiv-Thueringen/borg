@@ -1,4 +1,4 @@
-FROM node:22-alpine3.20 AS build
+FROM node:24-alpine3.23 AS build
 
 RUN corepack enable
 ENV PNPM_HOME="/pnpm"
@@ -12,6 +12,6 @@ COPY public ./public
 ARG CONFIGURATION
 RUN pnpm run build --configuration $CONFIGURATION
 
-FROM nginx:1.27-alpine3.20 AS prod
+FROM nginx:1.29-alpine3.23 AS prod
 COPY --from=build /build/dist/borg-gui /app/
 COPY build/nginx/default.conf.template /etc/nginx/templates/default.conf.template

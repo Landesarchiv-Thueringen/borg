@@ -4,6 +4,7 @@
 
 - Fix: Drag&Drop für Chromium-basierte Webbrowser
 - Intern: Abfangen von Schadsoftware durch NPM-Abhängigkeiten
+- Intern: Abhängigkeiten aktualisiert
 
 ## 2.1.1
 
