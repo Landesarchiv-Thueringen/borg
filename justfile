@@ -16,7 +16,7 @@ build-server:
 
 build-tools:
 	for tool in {{TOOLS}}; do \
-		podman build -t "{{IMAGE_PREFIX}}/$$tool:{{IMAGE_VERSION}}" "./tools/$$tool"; \
+		podman build -t "{{IMAGE_PREFIX}}/$tool:{{IMAGE_VERSION}}" "./tools/$tool"; \
 	done
 
 build-all: build-server build-gui build-tools
@@ -29,7 +29,7 @@ push-server:
 
 push-tools:
 	for tool in {{TOOLS}}; do \
-		podman push "{{IMAGE_PREFIX}}/$$tool:{{IMAGE_VERSION}}"; \
+		podman push "{{IMAGE_PREFIX}}/$tool:{{IMAGE_VERSION}}"; \
 	done
 
 push-all: push-server push-gui push-tools
