@@ -36,3 +36,6 @@
 !docs/img/*.png
 !/docs/sbom/*.txt
 !/docs/sbom/*.cdx
+
+# allow justfile for building images
+!justfile
