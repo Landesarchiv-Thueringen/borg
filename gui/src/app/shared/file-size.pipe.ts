@@ -14,6 +14,9 @@ export class FileSizePipe implements PipeTransform {
 const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
 
 export function formatFileSize(value: number): string {
+  if (value === 0) {
+    return '0 B'
+  }
   let exp = Math.floor(Math.log10(value));
   exp = exp - (exp % 3);
   const sizeMB = value / Math.pow(10, exp);
