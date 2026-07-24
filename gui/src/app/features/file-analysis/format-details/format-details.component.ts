@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
@@ -30,7 +30,6 @@ interface ToolRow {
 @Component({
   selector: 'app-format-details',
   imports: [
-    CommonModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
@@ -39,8 +38,8 @@ interface ToolRow {
     MatTabsModule,
     FeatureValuePipe,
     MatRippleModule,
-    BreakOpportunitiesPipe,
-  ],
+    BreakOpportunitiesPipe
+],
   templateUrl: './format-details.component.html',
   styleUrl: './format-details.component.scss',
 })

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -19,15 +19,14 @@ export interface DialogData {
   templateUrl: './file-details.component.html',
   styleUrls: ['./file-details.component.scss'],
   imports: [
-    CommonModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
     MatTabsModule,
     FileMetadataComponent,
     FileFormatComponent,
-    RouterModule,
-  ],
+    RouterModule
+],
 })
 export class FileDetailsComponent {
   data = inject<DialogData>(MAT_DIALOG_DATA);
