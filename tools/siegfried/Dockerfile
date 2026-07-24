@@ -10,8 +10,8 @@ FROM alpine:3.23 AS extract
 RUN apk add --no-cache unzip
 COPY third_party /third_party
 WORKDIR /third_party
-RUN unzip -j siegfried_1-11-2_linux64.zip
-RUN rm siegfried_1-11-2_linux64.zip
+RUN unzip -j siegfried_1-11-6_linux64.zip
+RUN rm siegfried_1-11-6_linux64.zip
 
 FROM alpine:3.23 AS prod
 WORKDIR /borg/tools/siegfried

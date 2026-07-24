@@ -12,4 +12,4 @@
 !Dockerfile
 
 # allow jhove jar
-!/third_party/siegfried_1-11-2_linux64.zip
+!/third_party/siegfried_1-11-6_linux64.zip
