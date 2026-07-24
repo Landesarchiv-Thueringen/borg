@@ -18,6 +18,7 @@ import (
 const (
 	STORE_DIR        = "/borg/file-store"
 	DEFAULT_RESPONSE = "ODF Validator API is running"
+	JAR_PATH         = "third_party/odfvalidator-0.13.0-jar-with-dependencies.jar"
 	TIMEOUT          = 60 * time.Second
 )
 
@@ -54,7 +55,7 @@ func getToolVersion() string {
 	cmd := exec.Command(
 		"java",
 		"-jar",
-		"third_party/odfvalidator-0.12.0-jar-with-dependencies.jar",
+		JAR_PATH,
 		"-V",
 	)
 	output, err := cmd.CombinedOutput()
@@ -130,7 +131,7 @@ func validateFile(path string) (bool, string, error) {
 		ctx,
 		"java",
 		"-jar",
-		"third_party/odfvalidator-0.12.0-jar-with-dependencies.jar",
+		JAR_PATH,
 		"-v",
 		"-c",
 		"-e",

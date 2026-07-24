@@ -6,7 +6,7 @@ RUN go mod download
 COPY cmd cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -o magika_api -ldflags "-X main.version=${BORG_VERSION}" ./cmd
 
-FROM python:3.13-slim AS prod
+FROM python:3.14-slim AS prod
 WORKDIR /borg/tools/magika
 COPY --from=build /build/magika_api .
 RUN pip install magika
