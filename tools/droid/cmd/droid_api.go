@@ -42,8 +42,8 @@ const (
 	DEFAULT_RESPONSE              = "DROID API is running"
 	WORK_DIR                      = "/borg/tools/droid"
 	STORE_DIR                     = "/borg/file-store"
-	SIGNATURE_FILE_NAME           = "DROID_SignatureFile_V120.xml"
-	CONTAINER_SIGNATURE_FILE_NAME = "container-signature-20240715.xml"
+	SIGNATURE_FILE_NAME           = "DROID_SignatureFile_V124.xml"
+	CONTAINER_SIGNATURE_FILE_NAME = "container-signature-20260119.xml"
 	TIMEOUT                       = 60 * time.Second
 )
 
