@@ -2,9 +2,22 @@
 
 ## Next
 
-- Fix: Drag&Drop für Chromium-basierte Webbrowser
-- Intern: Abfangen von Schadsoftware durch NPM-Abhängigkeiten
-- Intern: Abhängigkeiten aktualisiert
+-
+
+## 2.2.0
+
+- Feature: verbesserte Erkennung von PDF/UA-1-Dateien 
+- Fix: Korrekte Anzeige der Dateigröße bei Dateien mit 0 B
+- Fix: Verbesserte Drag-and-Drop-Unterstützung für Chromium-basierte Webbrowser
+- Intern: Schutz vor Schadsoftware in NPM-Abhängigkeiten verbessert
+- Intern: Aktualisierung des Frontends auf Angular 22
+- Intern: Aktualisierung der DROID-Signaturdateien
+- Intern: Aktualisierung von JHOVE auf Version 1.34.0
+- Intern: Aktualisierung des ODF-Validators auf Version 0.13.0
+- Intern: Aktualisierung des OOXML-Validators auf Version 2.1.6
+- Intern: Aktualisierung von Siegfried auf Version 1.11.6
+- Intern: Aktualisierung von Apache Tika auf Version 3.3.2
+- Intern: Aktualisierung von veraPDF auf Version 1.30.2
 
 ## 2.1.1
 

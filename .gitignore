@@ -12,6 +12,7 @@
 # allow project documentation
 !/README.md
 !/CHANGELOG.md
+!/LICENSE
 
 # allow environment file
 !/.env.example
