@@ -47,6 +47,7 @@ const (
 	DEFAULT_RESPONSE = "Tika API is running"
 	WORK_DIR         = "/borg/tools/tika"
 	STORE_DIR        = "/borg/file-store"
+	TIKA_PATH        = "third_party/tika-app-3.3.2.jar"
 	TIMEOUT          = 60 * time.Second
 )
 
@@ -54,6 +55,7 @@ var toolVersion string
 
 func main() {
 	toolVersion = getToolVersion()
+	log.Printf("Tika v%s is running", toolVersion)
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	router.GET("", getDefaultResponse)
@@ -69,7 +71,7 @@ func getToolVersion() string {
 	cmd := exec.Command(
 		"java",
 		"-jar",
-		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
+		filepath.Join(WORK_DIR, TIKA_PATH),
 		"--version",
 	)
 	output, err := cmd.CombinedOutput()
@@ -103,7 +105,7 @@ func extractMetadata(ginContext *gin.Context) {
 		ctx,
 		"java",
 		"-jar",
-		filepath.Join(WORK_DIR, "third_party/tika-app-2.9.2.jar"),
+		filepath.Join(WORK_DIR, TIKA_PATH),
 		"--metadata",
 		"--json",
 		fileStorePath,

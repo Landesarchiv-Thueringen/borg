@@ -8,7 +8,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o tika_api -ldflags "-X main.version=${BO
 
 FROM alpine:3.23 AS prod
 WORKDIR /borg/tools/tika
-RUN apk add --no-cache openjdk17
+RUN apk add --no-cache openjdk25
 COPY --from=build /borg/tools/tika/tika_api .
 COPY third_party third_party
 CMD ["./tika_api"]
