@@ -164,6 +164,7 @@ func identifyFileFormat(ginContext *gin.Context) {
 					Error:        &errorMessage,
 				}
 				ginContext.JSON(http.StatusOK, response)
+				return
 			}
 			if match.Id != "UNKNOWN" {
 				features["format:puid"] = ToolFeatureValue{
@@ -192,6 +193,13 @@ func identifyFileFormat(ginContext *gin.Context) {
 				features["format:name"] = ToolFeatureValue{
 					Value: match.FormatName,
 					Label: &FORMAT_NAME_LABEL,
+				}
+			}
+			// PDF/UA-1
+			if features["format:puid"].Value == "fmt/2050" {
+				features["format:version"] = ToolFeatureValue{
+					Value: "PDF/UA-1",
+					Label: &FORMAT_VERSION_LABEL,
 				}
 			}
 		}

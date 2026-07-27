@@ -579,8 +579,8 @@ tools:
     endpoint: "http://verapdf/validate/ua1"
     triggers:
       - conditions:
-          - feature: "format:mimeType" # PDF/UA has no entry in the PRONOM database
-            regEx: "pdf"
+          - feature: "format:puid"
+            regEx: "^fmt/2050$" # PDF/UA-1
     featureSet:
       features:
         - key: "format:puid"
@@ -697,5 +697,10 @@ fileIdentity:
   - conditions:
       - feature: "format:version"
         value: "PDF/UA"
+      - feature: "format:valid"
+        value: true
+  - conditions:
+      - feature: "format:version"
+        value: "PDF/UA-1"
       - feature: "format:valid"
         value: true
