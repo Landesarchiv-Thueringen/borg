@@ -32,7 +32,7 @@ var (
 )
 
 const (
-	TOOL_VERSION     = "2.1.5"
+	TOOL_VERSION     = "2.1.6"
 	STORE_DIR        = "/borg/file-store"
 	DEFAULT_RESPONSE = "OOXML-Validator API is running"
 	TIMEOUT          = 60 * time.Second
