@@ -20,7 +20,7 @@ tools:
         default: 0.75
 
   - id: "droid"
-    enabled: true
+    enabled: false
     title: "DROID"
     endpoint: "http://droid/identify"
     featureSet:
