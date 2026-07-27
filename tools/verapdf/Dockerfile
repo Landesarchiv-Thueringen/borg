@@ -7,14 +7,14 @@ COPY cmd cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -o verapdf_api -ldflags "-X main.version=${BORG_VERSION}" ./cmd
 
 FROM alpine:3.23 AS extract
-RUN apk add --no-cache unzip openjdk17
+RUN apk add --no-cache unzip openjdk25
 COPY third_party /third_party
 WORKDIR /third_party
 RUN unzip verapdf-installer.zip
-RUN sh -c '/bin/echo -e "1\n/third_party/verapdf\nY\nO\n1\nY\nY\nN\n1\nY\n\n" | ./verapdf-greenfield-1.26.2/verapdf-install'
+RUN sh -c '/bin/echo -e "1\n/third_party/verapdf\nO\n1\nN\nY\nN\nN\n1\nN\n" | ./verapdf-greenfield-1.30.2/verapdf-install'
 
 FROM alpine:3.23 AS prod
-RUN apk add --no-cache openjdk17
+RUN apk add --no-cache openjdk25
 WORKDIR /borg/tools/verapdf
 COPY --from=build /build/verapdf_api .
 COPY --from=extract /third_party/verapdf ./third_party

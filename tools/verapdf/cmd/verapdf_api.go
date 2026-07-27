@@ -39,7 +39,7 @@ type Report struct {
 }
 
 type Job struct {
-	ValidationResult ValidationResult `json:"validationResult"`
+	ValidationResults []ValidationResult `json:"validationResult"`
 }
 
 type ValidationResult struct {
@@ -181,9 +181,10 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 		OutputFormat: "json",
 		Features:     extractedFeatures,
 	}
-	if len(veraPDFOutput.Report.Jobs) > 0 {
+	if len(veraPDFOutput.Report.Jobs) > 0 && len(veraPDFOutput.Report.Jobs[0].ValidationResults) > 0 {
+		result := veraPDFOutput.Report.Jobs[0].ValidationResults[0]
 		extractedFeatures["format:valid"] = ToolFeatureValue{
-			Value: veraPDFOutput.Report.Jobs[0].ValidationResult.Compliant,
+			Value: result.Compliant,
 			Label: &VALID_LABEL,
 		}
 		switch profile {
@@ -221,7 +222,7 @@ func processVeraPDFOutput(context *gin.Context, output string, profile string) {
 			extractedFeatures["format:version"] = getVersionFeature("PDF/A-3u")
 		case "ua1":
 			extractedFeatures["format:mimeType"] = getMimeTypeFeature("application/pdf")
-			extractedFeatures["format:version"] = getVersionFeature("PDF/UA")
+			extractedFeatures["format:version"] = getVersionFeature("PDF/UA-1")
 		}
 	}
 	context.JSON(http.StatusOK, response)
