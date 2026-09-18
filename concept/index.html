@@ -1,135 +1,982 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="de" >
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Konzept - Borg</title>
-    <link rel="stylesheet" href="../css/theme.css" />
-    <link rel="stylesheet" href="../css/theme_extra.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+<!DOCTYPE html><html lang="de" class="no-js"><head>
     
-      <script>
-        // Current page data
-        var mkdocs_page_name = "Konzept";
-        var mkdocs_page_input_path = "concept.md";
-        var mkdocs_page_url = null;
-      </script>
-    
-    <!--[if lt IE 9]>
-      <script src="../js/html5shiv.min.js"></script>
-    <![endif]-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-      <script>hljs.highlightAll();</script> 
- <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
-    html.glightbox-open { overflow: initial; height: 100%; }
-    .gslide-title { margin-top: 0px; user-select: text; }
-    .gslide-desc { color: #666; user-select: text; }
-    .gslide-image img { background: white; }</style> <script src="../assets/javascripts/glightbox.min.js"></script></head>
-
-<body class="wy-body-for-nav" role="document">
-
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
-    <div class="wy-side-scroll">
-      <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> Borg
-        </a>
-      </div>
-
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigationsmenü">
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../user_manual/">Benutzerhandbuch</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../config/">Konfiguration</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../development/">Development (en)</a>
-                </li>
-              </ul>
-      </div>
-    </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-      <nav class="wy-nav-top" role="navigation" aria-label="Mobile Navigationsmenü">
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">Borg</a>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../user_manual/">
+      
+      
+        <link rel="next" href="../config/">
+      
+      
         
-      </nav>
-      <div class="wy-nav-content">
-        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
-  <ul class="wy-breadcrumbs">
-    <li><a href=".." class="icon icon-home" aria-label="Dokumentation"></a></li>
-      <li class="breadcrumb-item active">Konzept</li>
-    <li class="wy-breadcrumbs-aside">
-    </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-            <div class="section" itemprop="articleBody">
-              
-                <h1 id="konzept">Konzept</h1>
-<p>Borg ist ein Server der eine minimale REST-API bereitstellt um beliebige Dateien zu analysieren. Die Analyse besteht aus Formaterkennung, Metadatenextraktion und Formatvalidierung.</p>
-<h2 id="motivation">Motivation</h2>
-<p>Die Formaterkennung und -validierung von unbekannten Dateien ist ein komplexes Problem. Aufgrund der Komplexität kann kein einzelnes Programm das Problemfeld vollständig lösen. In der Regel sind Anwendungen darauf spezialisiert, entweder Dateien mit unbekannten Formaten zu identifizieren oder eine Formatfamilie bzw. eine kleine Gruppe von Dateiformaten zu validieren.
-Um eine möglichst umfassende Abdeckung bei der Identifizierung und Validierung von Dateiformaten zu erreichen, ist es daher notwendig, mehrere Programme miteinander zu kombinieren. Es gibt bereits vereinzelt Programme, die mehrere Werkzeuge für die Formaterkennung und -validierung einbinden. Diese eingebundenen Werkzeuge werden in der Regel direkt integriert oder lokal ausgeführt.
-Für Borg wurde ein anderer Ansatz gewählt. Die Werkzeuge werden nicht direkt integriert, sondern werden in eigenen Containern ausgeführt und über eine Web-API angesprochen. Das verringert die Abhängigkeit von Systemvorraussetzungen der verwendeten Werkzeuge.</p>
-<h2 id="werkzeugserver">Werkzeugserver</h2>
-<p>Die integrierten Werkzeuge werden containerisiert betrieben.</p>
-<h2 id="eigenschaftsmengen">Eigenschaftsmengen</h2>
-<p><em>PUID</em>, <em>MIME-Type</em>, <em>Formatversion</em> und <em>Validität</em> sind die zentralen Eigenschaften zur Bestimmung des Dateityps.</p>
-<p>Eigenschaftsmengen können nur zusammengeführt werden, wenn mindestens eine Bedingung erfüllt wird.</p>
-              
-            </div>
-          </div><footer>
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Konzept - Borg</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
 
-  <hr/>
 
-  <div role="contentinfo">
-    <!-- Copyright etc -->
-  </div>
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="../css/katex.css">
+    
+      <link rel="stylesheet" href="../css/docs.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
 
-  Erzeugt mit <a href="https://www.mkdocs.org/">MkDocs</a> mit einem <a href="https://github.com/readthedocs/sphinx_rtd_theme">Thema</a> von <a href="https://readthedocs.org">Read the Docs</a>.
-</footer>
-          
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#konzept" class="md-skip">
+          Zum Inhalt
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Kopfzeile">
+    <a href=".." title="Borg" class="md-header__button md-logo" aria-label="Borg" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Borg
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Konzept
+            
+          </span>
         </div>
       </div>
-
-    </section>
-
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Landesarchiv-Thueringen/borg" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
   </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
 
-  <div class="rst-versions" role="note" aria-label="Versionen">
-  <span class="rst-current-version" data-toggle="rst-current-version">
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Borg" class="md-nav__button md-logo" aria-label="Borg" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Borg
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Landesarchiv-Thueringen/borg" title="Zum Repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
     
-        <span>
-          <a href="https://github.com/Landesarchiv-Thueringen/borg" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
-        </span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
     
+  
+    Installation
+  
+
     
   </span>
-</div>
-    <script src="../js/jquery-3.6.0.min.js"></script>
-    <script>var base_url = "..";</script>
-    <script src="../js/theme_extra.js"></script>
-    <script src="../js/theme.js"></script>
-    <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
-    </script>
+  
+  
 
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user_manual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benutzerhandbuch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konzept
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konzept
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#1-begriffsklarung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Begriffsklärung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-ablauf-der-formatverifikation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ablauf der Formatverifikation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-werkzeugauswahl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Werkzeugauswahl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-werkzeugausgaben" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Werkzeugausgaben
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-extraktion-von-attributen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Extraktion von Attributen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-vereinigung-auf-attributebene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Vereinigung auf Attributebene
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-vereinigung-von-attributmengen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Vereinigung von Attributmengen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-bewertung-von-ergebnismengen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Bewertung von Ergebnismengen
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konfiguration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development (en)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Inhaltsverzeichnis">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Inhaltsverzeichnis
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#1-begriffsklarung" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Begriffsklärung
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-ablauf-der-formatverifikation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ablauf der Formatverifikation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-werkzeugauswahl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Werkzeugauswahl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-werkzeugausgaben" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Werkzeugausgaben
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-extraktion-von-attributen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Extraktion von Attributen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-vereinigung-auf-attributebene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Vereinigung auf Attributebene
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-vereinigung-von-attributmengen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Vereinigung von Attributmengen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-bewertung-von-ergebnismengen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Bewertung von Ergebnismengen
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="konzept">Konzept</h1>
+<p>Dieses Konzept soll die theoretischen Grundlagen für die Funktionsweise von Borg beschreiben. Es dient dazu, die zentralen Zusammenhänge, Prinzipien und Annahmen der Anwendung nachvollziehbar darzustellen.</p>
+<h2 id="1-begriffsklarung">1. Begriffsklärung</h2>
+<table>
+<thead>
+<tr>
+<th>Begriff</th>
+<th>Erklärung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attribut</td>
+<td>aus einem Werkzeugerbnis extrahierte Eigenschaft bspw. PUID</td>
+</tr>
+<tr>
+<td>Attributmenge</td>
+<td>alle aus einem Werkzeugerbnis extrahierten Eigenschaften</td>
+</tr>
+<tr>
+<td>Ergebnissmenge</td>
+<td>kumulierte Attributmengen, die ein Dateiergebnis repräsentieren</td>
+</tr>
+<tr>
+<td>Gesamtergebnis</td>
+<td>Ergebnismenge mit der höchsten Bewertung</td>
+</tr>
+<tr>
+<td>Werkzeug</td>
+<td>Programm für die Formaterkennung, -validierung oder Metadatenextraktion</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-ablauf-der-formatverifikation">2. Ablauf der Formatverifikation</h2>
+<p>Die Formatverifikation mit Borg erfolgt nach dem folgenden Ablauf:</p>
+<ol>
+<li>Ein Client übermittelt eine Datei zur Formatverifikation an Borg.</li>
+<li>Borg führt alle generischen Werkzeuge (s. <a href="#3-werkzeugauswahl">Kap. 3</a>) aus und übermittelt ihnen die Datei zur Analyse.</li>
+<li>Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. <a href="#5-extraktion-von-attributen">Kap. 5</a>) und übermitteln ihre Ergebnisse an Borg.</li>
+<li>Auf Grundlage der Erkennungsergebnisse wählt Borg weitere Werkzeuge aus (s. <a href="#3-werkzeugauswahl">Kap. 3</a>).</li>
+<li>Borg führt die ausgewählten spezialisierten Werkzeuge aus.</li>
+<li>Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. <a href="#5-extraktion-von-attributen">Kap. 5</a>) und übermitteln ihre Ergebnisse an Borg.</li>
+<li>Borg führt die Ergebnisse der aller Werkzeuge zusammen (s. <a href="#7-vereinigung-von-attributmengen">Kap. 7</a>).</li>
+<li>Borg bewertet die zusammengeführten Ergebnisse (s. <a href="#8-bewertung-von-ergebnismengen">Kap. 8</a>).</li>
+<li>Das am besten bewertete Ergebnis wird als Gesamtergebnis festgelegt.</li>
+<li>Borg übermittelt das Gesamtergebnis, die extrahierten Metadaten, sowie die Originalausgaben Ausgaben der Werkzeuge an den Client.</li>
+</ol>
+<pre class="mermaid"><code>sequenceDiagram
+  autonumber
+  actor Client
+  Client-&gt;&gt;Borg: identifiziere Datei
+  Borg-&gt;&gt;Erkennungswerkzeug: identifiziere Datei
+  Erkennungswerkzeug-&gt;&gt;Borg: PUID, MIME-Type, Formatversion
+  Borg-&gt;&gt;Borg: Werkzeugauswahl
+  Borg-&gt;&gt;Validator: validiere Datei
+  Validator-&gt;&gt;Borg: PUID, MIME-Type, Formatversion, Validierung
+  Borg-&gt;&gt;Borg: Vereinigung von Attributmengen
+  Borg-&gt;&gt;Borg: Bewertung von Ergebnismengen
+  Borg-&gt;&gt;Borg: Auswahl Gesamtergebnis
+  Borg-&gt;&gt;Client: Dateiformat, Metadaten</code></pre>
+<center><figcaption>Abb. 1: Ablauf der Formatverifikation mit Borg</figcaption></center>
+
+<h2 id="3-werkzeugauswahl">3. Werkzeugauswahl</h2>
+<p>Für jede Datei sollen alle Werkzeuge ausgeführt werden, die Informationen zu der Datei ermitteln können. Dabei wird zwischen generischen und spezialisierten Werkzeugen unterschieden. Bei generischen Werkzeugen spielt das Dateiformat keine Rolle (bspw. Formaterkennungswerkzeuge), während spezialisierte Werkzeuge nur für eine Auswahl von Dateiformaten Informationen ermitteln können. Zu den spezialisierten Werkzeugen zählen beispielsweise Validatoren.</p>
+<p>Die generischen Werkzeuge werden für alle Dateien ausgeführt. Für Validatoren und andere spezialisierte Werkzeuge, beispielsweise MediaInfo, werden hingegen Bedingungen für die Ausführung festgelegt (s. Abb. 2). Die Werkzeugausführung erfolgt daher grundsätzlich in zwei Phasen: Zunächst werden die generischen Werkzeuge ausgeführt. Anschließend wird anhand ihrer Ergebnisse ermittelt, welche spezialisierten Werkzeuge ausgeführt werden. Die Ausführungsbedingung eines spezialisierten Werkzeugs gilt als erfüllt, sobald ein generisches Werkzeug die hierfür erforderlichen Ergebnisse ermittelt hat.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"verapdf_1b"</span>
+<span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"veraPDF</span><span class="nv"> </span><span class="s">(PDF/A-1b-Profil)"</span>
+<span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">"http://verapdf/validate/1b"</span>
+<span class="nt">triggers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">conditions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">feature</span><span class="p">:</span><span class="w"> </span><span class="s">"format:version"</span>
+<span class="w">        </span><span class="nt">regEx</span><span class="p">:</span><span class="w"> </span><span class="s">"PDF/A-1b"</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">conditions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">feature</span><span class="p">:</span><span class="w"> </span><span class="s">"format:puid"</span>
+<span class="w">        </span><span class="nt">regEx</span><span class="p">:</span><span class="w"> </span><span class="s">"^fmt/354$"</span><span class="w"> </span><span class="c1"># PDF/A-1b</span>
+</code></pre></div>
+<center><figcaption>Abb. 2: Bedingungen für die Ausführung von Siegfried</figcaption></center>
+
+<h2 id="4-werkzeugausgaben">4. Werkzeugausgaben</h2>
+<p>Die Werkzeugausgaben sind sehr heterogen (s. Vergleich Abb. 3 und 4). Eine simple Zusammenführung ist initial ohne weitere Verarbeitungsschritte nicht möglich.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e077dbcb-2b5c-41c8-810b-8a69d5c47fbf_Information_Anfragen_und_Benutzer-20.10.23.pdf"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"filesize"</span><span class="p">:</span><span class="w"> </span><span class="mi">179666</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"modified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-09T06:55:13Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"matches"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"ns"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pronom"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fmt/2050"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PDF/UA Portable Document Format"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"mime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/pdf"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"class"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Page Description"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"basis"</span><span class="p">:</span><span class="w"> </span><span class="s2">"extension match pdf; byte match at [[0 8] [170470 30]]"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"warning"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<center><figcaption>Abb. 3: Werkzeugausgabe von Siegfried</figcaption></center>
+
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"pdf:PDFVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.7"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"xmp:CreatorTool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Microsoft® Word 2019"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pdf:docinfo:title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Informationen zum Umgang mit personenbezogenen Daten gemäß Artikel 12 Datenschutz-Grundverordnung"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pdf:hasXFA"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"dc:format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/pdf; version=1.7"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pdf:docinfo:creator_tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Microsoft® Word 2019"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"access_permission:fill_in_form"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pdf:hasCollection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"pdf:encrypted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"dc:title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Informationen zum Umgang mit personenbezogenen Daten gemäß Artikel 12 Datenschutz-Grundverordnung"</span><span class="p">,</span>
+<span class="w">  </span><span class="err">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<center><figcaption>Abb. 4: Werkzeugausgabe von Tika</figcaption></center>
+
+<h2 id="5-extraktion-von-attributen">5. Extraktion von Attributen</h2>
+<p>Um eine Vergleichbarkeit der Ergebnisse zu ermöglichen, müssen geeignete Attribute aus dem Gesamtergebnis extrahiert werden (s. Abb. 5 und 6). Attribute eignen sich besonders für die Verknüpfung von Werkzeugausgaben, wenn die Werte sich über mehrere Werkzeuge gleichen. Ein Beispiel für ein sehr gut geeignetes Attribut ist die <em>PUID</em>. Diese sollte über alle Werkzeugergebnisse, wenn das gleiche Format erkannt wurde, identisch sein. Der <em>MIME-Type</em> ist relativ gut geeignet. Die Werkzeuge liefern häufig zumindest ähnliche Werte für den <em>MIME-Type</em>. Auch wenn gelegentlich kleinere Abweichungen auftreten, sollte zumindest der Subtyp übereinstimmen. Beispielsweise sind für PDF-Dateien sowohl <em>text/pdf</em>, als auch <em>application/pdf</em> mögliche Werte. Der Formatname ist für den Vergleich von Werkzeugausgaben überhaupt nicht geeignet. Dieser unterscheidet sich in allen Werkzeugen.</p>
+<figure>
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/concept_1.png" data-desc-position="bottom"><img alt="Auswertung" loading="lazy" src="../img/concept_1.png"></a>
+<br>
+<center>
+<figcaption>Abb. 5: Extrahierte Eigenschaften von Siegfried</figcaption>
+</center>
+</figure>
+<figure>
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/concept_2.png" data-desc-position="bottom"><img alt="Auswertung" loading="lazy" src="../img/concept_2.png"></a>
+<br>
+<center>
+<figcaption>Abb. 6: Extrahierte Eigenschaften von Tika</figcaption>
+</center>
+</figure>
+<h2 id="6-vereinigung-auf-attributebene">6. Vereinigung auf Attributebene</h2>
+<p>Um ein Gesamtergebnis zu ermitteln, müssen die von den verschiedenen Werkzeugen extrahierten Attributwerte sinnvoll zusammengeführt werden. Im einfachsten Fall liefern alle Werkzeuge für dasselbe Attribut denselben Wert. Die zentrale Frage ist jedoch, wie mit unterschiedlichen Werten umgegangen werden soll.</p>
+<p>Eine Methode besteht darin, einen Wert auszuwählen und dabei bestimmte Werkzeuge für einzelne Attribute zu bevorzugen. So könnte beispielsweise grundsätzlich der von DROID ermittelte MIME-Type übernommen werden. Liefert DROID keinen Wert, könnte stattdessen das Ergebnis von JHOVE herangezogen werden. Der Nachteil dieser Methode besteht darin, dass stets das priorisierte Werkzeug ausschlaggebend ist, selbst dann, wenn mehrere andere Werkzeuge denselben abweichenden Wert ermittelt haben.</p>
+<p>Um diesem Problem entgegenzuwirken, können die Werkzeuge über die von ihnen ermittelten Werte abstimmen. Dadurch kann die Mehrheit die Entscheidung eines einzelnen Werkzeugs überstimmen. Zusätzlich können die Werkzeuge unterschiedlich gewichtet werden, sodass sie nicht alle gleichermaßen in das Gesamtergebnis eingehen. Diese Methode hat jedoch die Schwäche, dass theoretisch nicht zusammengehörige Attributwerte in das Gesamtergebnis einfließen können. So könnte beispielsweise eine PUID ermittelt werden, die nicht zum festgestellten MIME-Type passt.</p>
+<p>Diesem Problem kann begegnet werden, indem alle von den Werkzeugen extrahierten Eigenschaften als untrennbare Einheit betrachtet werden.</p>
+<h2 id="7-vereinigung-von-attributmengen">7. Vereinigung von Attributmengen</h2>
+<p>Statt zu versuchen Werkzeugergebnisse auf Attributebene zusammenzuführen, werden die Attributmengen (Menge aller extrahierten Attribute von einem Werkzeug) der Werkzeuge zusammengeführt, wenn davon auszugehen ist, dass die Werkzeuge das gleiche Dateiformat ermittelt haben. Dafür werden für jedes Werkzeug Bedingungen festgelegt, wann die eigene Attributmenge mit einer anderen zusammengeführt werden kann. Wenn eine Bedingung nicht erfüllt wird, können die Attributmengen nicht vereinigt werden. Die Bedingungen werden beidseitig geprüft. Das bedeutet, dass beide Attributmengen die Bedingung der anderen erfüllen müssen. Besitzt eine Attributmenge das Attribut für eine Bedingung nicht, so gilt die Bedingung als erfüllt. Beispielsweise werden für Siegfried 3 Bedingungen konfiguriert (s. Abb. 7), damit die Attributmenge mit einer anderen vereinigt werden kann.</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"siegfried"</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Siegfried"</span>
+<span class="w">    </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">"http://siegfried/identify"</span>
+<span class="w">    </span><span class="nt">featureSet</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">features</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"format:puid"</span>
+<span class="w">          </span><span class="nt">mergeCondition</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">exactMatch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"format:mimeType"</span>
+<span class="w">          </span><span class="nt">mergeCondition</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">valueRegEx</span><span class="p">:</span><span class="w"> </span><span class="s">"^[^/]+/(.+)$"</span><span class="w"> </span><span class="c1"># extracts the second part of the MIME type</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"format:version"</span>
+<span class="w">          </span><span class="nt">mergeCondition</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">exactMatch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">"format:name"</span>
+<span class="w">          </span><span class="nt">mergeOrder</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">weight</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.75</span>
+</code></pre></div>
+<center><figcaption>Abb. 7: Standardkonfiguration von Siegfried</figcaption></center>
+
+<p><strong>Bedingungen für die Vereinigung mit Siegfried</strong></p>
+<ol>
+<li>PUID muss exakt identisch sein</li>
+<li>Subtype des MIME-Types muss identisch sein (application/pdf --&gt; pdf)</li>
+<li>Formatversion muss exakt identisch sein</li>
+</ol>
+<p><strong>1. Beispiel Vereinigung ist möglich</strong></p>
+<pre class="mermaid"><code>graph LR
+  A[Siegfried] --&gt; B((fmt/478));
+  A[Siegfried] --&gt; C((application/pdf));
+  A[Siegfried] --&gt; D((PDF/A-2u));
+  A[Siegfried] &lt;--&gt; E((Tika));
+  E[Tika] --&gt; F((text/pdf));
+  E[Tika] --&gt; G((Dokumententitel));
+  H[Vereinigung] --&gt; I((fmt/478));
+  H[Vereinigung] --&gt; J((application/pdf));
+  H[Vereinigung] --&gt; K((PDF/A-2u));
+  H[Vereinigung] --&gt; L((Dokumententitel));
+
+  classDef mimetype fill:#FFBE91,stroke:#FFBE91
+  classDef puid fill:#FFDDB0,stroke:#FFDDB0
+  classDef version fill:#FFFCE1,stroke:#FFFCE1
+  classDef title fill:#FFEDB9,stroke:#FFEDB9
+  classDef tool fill:#CFEBFF,stroke:#CFEBFF
+
+  class B puid
+  class I puid
+  class C mimetype
+  class F mimetype
+  class J mimetype
+  class D version
+  class K version
+  class A tool
+  class E tool
+  class H tool
+  class G title
+  class L title</code></pre>
+<p><strong>2. Beispiel Vereinigung ist NICHT möglich</strong></p>
+<pre class="mermaid"><code>graph LR
+  A[Siegfried] --&gt; B((fmt/478));
+  A[Siegfried] --&gt; C((application/pdf));
+  A[Siegfried] --&gt; D((PDF/A-2u));
+  E[DROID] --&gt; F((fmt/477));
+  E[DROID] --&gt; G((application/pdf));
+  E[DROID] --&gt; H((PDF/A-2b));
+
+  classDef mimetype fill:#FFBE91,stroke:#FFBE91
+  classDef puid fill:#FFDDB0,stroke:#FFDDB0
+  classDef version fill:#FFFCE1,stroke:#FFFCE1
+  classDef tool fill:#CFEBFF,stroke:#CFEBFF
+
+  class B puid
+  class F puid
+  class C mimetype
+  class G mimetype
+  class D version
+  class H version
+  class A tool
+  class E tool</code></pre>
+<p>Die Attributmengen aller Werkzeuge werden nacheinander miteinander vereinigt. Die hinzugefügte Attributmenge überschreibt dabei alle Werte der bisherigen Vereinigung. Es können Ausnahmen festgelegt werden, wenn der originale Wert bei er Vereinigung bestehen bleiben soll. In der Standardkonfiguration von DROID und Siegfried wird bspw. festgelegt, dass der Formatname von diesen Werkzeugen bei der Vereinigung erhalten bleiben soll, weil die Qualität des Attributs bei diesen Werkzeugen besser ist.</p>
+<p>Formatvalidatoren extrahieren oft keine eigenen Formatattribute. Um die Attributmengen der Validatoren mit denen der Erkennungswerkzeuge vereinigen zu können, werden die Attributmengen der Validatoren angereichert. Diesen Mengen werden Formateigenschaften für das validierte Dateiformat hinzugefügt.</p>
+<p>Am Ende entstehen eine oder mehrere Ergebnismengen. Mehrere Ergebnismengen entstehen, wenn nicht alle Attributmengen miteinander vereinigt werden können. In dem Fall ist davon auszugehen, dass die Werkzeuge unterschiedliche Formate erkannt haben (s. Abb. 8).</p>
+<figure>
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/file_details_2_cut.png" data-desc-position="bottom"><img alt="Auswertung" loading="lazy" src="../img/file_details_2_cut.png"></a>
+<br>
+<center>
+<figcaption>Abb. 8: Mehrere erkannte Dateiformate für eine Datei</figcaption>
+</center>
+</figure>
+<h2 id="8-bewertung-von-ergebnismengen">8. Bewertung von Ergebnismengen</h2>
+<p>Um ein Gesamtergebnis auswählen zu können, wenn es mehrere Ergebnismengen bzw. erkannte Dateiformate gibt, wird für jede Ergebnismenge eine Bewertung berechnet. Qualitativere Ergebnisse sollen entsprechend besser bewertet werden. Jedes Werkzeug stimmt dafür mit einer festgelegten Gewichtung für alle Ergebnismengen mit denen die eigenen Attributmengen vereinigt wurde. <strong>Die Ergebnismenge mit der höchsten Bewertung wird zum Gesamtergebnis.</strong> Für jedes Werkzeug kann eine Standardgewichtung und beliebig viele bedingte Gewichtungen definiert werden.</p>
+<h3 id="bedingte-gewichtung">Bedingte Gewichtung</h3>
+<p>Für Validatoren wird eine Standardgewichtung von 0.0 und eine bedingte Gewichtung von 1.0, falls das Ergebnis valide ist, definiert (s. Abb. 9). Ein negative Validierung, hat wenig Aussagekraft über die geprüfte Datei, eine positive ist hingegen eine Garantie, dass das Dateiformat korrekt erkannt wurde.</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"verapdf_1a"</span>
+<span class="w">      </span><span class="nt">weight</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">        </span><span class="nt">conditional</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">            </span><span class="nt">conditions</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">feature</span><span class="p">:</span><span class="w"> </span><span class="s">"format:valid"</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<center><figcaption>Abb. 9: Standardkonfiguration veraPDF: PDF/A-1a</figcaption></center>
+
+<h3 id="bindungsstarke">Bindungsstärke</h3>
+<p>Bei der Vereinigung von Attributmengen, werden die Gewichtungen addiert. Es ist aber nicht sinnvoll, dass die Attributmenge, die hinzukommt, immer mit der vollen Gewichtung integriert wird. Attributmengen, die die Bedingungen für eine Vereinigung nicht erfüllen können, weil die geforderten Attribute nicht enthalten sind, werden trotzdem vereinigt. Es würde das Ergebnis aber verfälschen, wenn sich dadurch die Bewertung der vereinigten Attributmenge verbessert. Manche Werkzeuge extrahieren nur wenig Format-spezifische Attribute. Magika kann beispielsweise nur den MIME-Type erkennen. Auch hier wäre es verfälschend, wenn die Magika-Gewichtung vollständig, in die Bewertung der Attributmenge eingeht, nur weil der MIME-Type identisch ist. Im Vergleich ist die Attributmenge eines Validators viel aussagekräftiger für die Bewertung, wenn bspw. PUID, MIME-Type, Formatversion und Validierung enthalten sind.</p>
+<p>Das Konzept der Bindungsstärke soll diesem Problem entgegenwirken. Die zugrunde liegende Idee besteht darin, dass ähnliche Ergebnismengen viele gemeinsame Attribute aufweisen. Im Anwendungskontext wird dies durch die bei der Vereinigung erfüllten Bedingungen ausgedrückt. Jede erfüllte Bedingung erhöht die Bindungsstärke zwischen den Attributmengen. Mit zunehmender Bindungsstärke steigt der Einfluss der integrierten Attributmenge auf die Bewertung.</p>
+<h3 id="berechnung-der-bewertung">Berechnung der Bewertung</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Bedeutung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(A_i\)</span></td>
+<td>einzelne Attributmenge</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(E_i\)</span></td>
+<td>einzelne Ergebnismenge</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(G_{\text{w}}\)</span></td>
+<td>Gewichtung des Werkzeugs einer Attributmenge</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(n_i\)</span></td>
+<td>Anzahl der erfüllten Bedingungen für die Vereinigung der Attributsmengen</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{A}_{\text{vereinigt}}\)</span></td>
+<td>Menge der für das Ergebnis vereinigten Attributmengen</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(G(A_{\text{i}})\)</span></td>
+<td>Gewichtung einer Attributmenge</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(B(E_{\text{i}})\)</span></td>
+<td>Bewertung einer Ergebnismenge</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(B_{\text{norm}}\)</span></td>
+<td>normalisierte Bewertung einer Ergebnismenge im Intervall von 0 bis 1</td>
+</tr>
+</tbody>
+</table>
+<h4 id="1-berechnung-der-gewichtung-einer-attributsmenge">1. Berechnung der Gewichtung einer Attributsmenge</h4>
+<div class="arithmatex">\[
+G(A_i) = \min\left(0{,}25 \cdot n_i,\; 1\right) \cdot G_{\text{W}}
+\]</div>
+<h4 id="2-berechnung-der-bewertung-einer-ergebnismenge">2. Berechnung der Bewertung einer Ergebnismenge</h4>
+<div class="arithmatex">\[
+B(E_j) = \sum_{A_i \in \mathcal{A}_{\mathrm{vereinigt}}}G(A_i)
+\]</div>
+<h4 id="3-berechnung-der-normalisierten-bewertung-einer-ergebnismenge">3. Berechnung der normalisierten Bewertung einer Ergebnismenge</h4>
+<div class="arithmatex">\[
+B_{\text{norm}}=\frac{B(E_{\text{j}})}{\sum_{E_j \in \mathcal{E}} B(E_j)}
+\]</div>
+<h3 id="uberschreiben-der-bewertung">Überschreiben der Bewertung</h3>
+<p>Es gibt Fälle, in denen die berechnete Bewertung nicht den Erwartungen entspricht. Es ist nicht ungewöhnlich, dass eine Datei gleichzeitig die Anforderungen mehrerer Dateiformate erfüllt. Eine valide PDF/UA-Datei (ISO 32000-1) ist beispielsweise immer auch eine valide PDF-1.7-Datei. Borg erkennt in diesem Fall beide Dateiformate (s. Abb. 9).</p>
+<figure>
+  <a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../img/file_details_2_cut.png" data-desc-position="bottom"><img alt="Auswertung" loading="lazy" src="../img/file_details_2_cut.png"></a>
+<br>
+<center>
+<figcaption>Abb. 9: Erkannte Dateiformate für eine PDF/UA-Datei</figcaption>
+</center>
+</figure>
+<p>Die meisten Werkzeuge erkennen PDF-1.7, nicht jedoch PDF/UA, als Dateiformat. Daher fällt die Bewertung der Ergebnismenge für PDF-1.7 höher aus als diejenige für PDF/UA. Um solche Sonderfälle zu behandeln, können Bedingungen zum Überschreiben der Bewertung definiert werden. Sind die Bedingungen für eine Ergebnismenge erfüllt, wird deren Bewertung auf 1,0 angehoben. Die Bewertungen der übrigen Ergebnismengen werden entsprechend auf 0,0 gesetzt. Um PDF/UA aufzuwerten wird zwei Bedingungen für die Ergebnismenge definiert (s. Abb. 10): </p>
+<ol>
+<li>Die Ergebnismenge muss die Formatversion PDF/UA enthalten.</li>
+<li>Ein Validator muss das Dateiformat bestätigt haben.</li>
+</ol>
+<p>Wenn beide Bedingungen erfüllt sind, wird die Ergebnismenge „PDF 1.7“ mit 0,0 bewertet, während die Ergebnismenge „PDF/UA“ eine Bewertung von 1,0 erhält.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">fileIdentity</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">conditions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">feature</span><span class="p">:</span><span class="w"> </span><span class="s">"format:version"</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"PDF/UA"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">feature</span><span class="p">:</span><span class="w"> </span><span class="s">"format:valid"</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<center><figcaption>Abb. 10: Überschreiben der Bewertung von PDF/UA</figcaption></center>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "In Zwischenablage kopiert", "clipboard.copy": "In Zwischenablage kopieren", "search.result.more.one": "1 weiteres Suchergebnis auf dieser Seite", "search.result.more.other": "# weitere Suchergebnisse auf dieser Seite", "search.result.none": "Keine Suchergebnisse", "search.result.one": "1 Suchergebnis", "search.result.other": "# Suchergebnisse", "search.result.placeholder": "Suchbegriff eingeben", "search.result.term.missing": "Es fehlt", "select.version": "Version ausw\u00e4hlen"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../js/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  
 <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
-</script></body>
-</html>
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
