@@ -8,7 +8,7 @@ Dieses Konzept soll die theoretischen Grundlagen für die Funktionsweise von Bor
 | -------------- | ------------------------------------------------------------------------ |
 | Attribut       | aus einem Werkzeugerbnis extrahierte Eigenschaft bspw. PUID              |
 | Attributmenge  | alle aus einem Werkzeugerbnis extrahierten Eigenschaften                 |
-| Ergebnissmenge | kumulierte Attributmengen, die ein Dateiergebnis repräsentieren          |
+| Ergebnismenge  | kumulierte Attributmengen, die ein Dateiergebnis repräsentieren          |
 | Gesamtergebnis | Ergebnismenge mit der höchsten Bewertung                                 |
 | Werkzeug       | Programm für die Formaterkennung, -validierung oder Metadatenextraktion  |
 
