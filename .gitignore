@@ -35,6 +35,8 @@
 !/mkdocs.yml
 !docs/*.md
 !docs/img/*.png
+!docs/css/*.css
+!docs/js/*.js
 !/docs/sbom/*.txt
 !/docs/sbom/*.cdx
 

@@ -5,22 +5,42 @@ edit_uri: ""
 nav:
   - installation.md
   - user_manual.md
-  # - concept.md
+  - concept.md
   - config.md
   - Development (en): development.md
 
 not_in_nav: index.md
 
 theme:
-  name: readthedocs
+  name: material
   navigation_depth: 2
-  locale: de
+  language: de
 
 markdown_extensions:
+  - toc:
+      toc_depth: 2
   - attr_list
   - md_in_html
   - admonition
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.blocks.caption
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - js/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
+  - css/katex.css
+  - css/docs.css
 
 plugins:
   - glightbox

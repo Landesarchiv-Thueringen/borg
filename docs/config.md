@@ -1,6 +1,6 @@
 # Konfiguration
 
-Das Verhalten des Borg-Servers wird mittels eine [Konfigurationsdatei](https://github.com/Landesarchiv-Thueringen/borg/blob/main/config/server_config.yml) eingestellt. Die Datei bestimmt, wie die Werkzeuge angesprochen werden, unter welchen Bedingungen Validatoren ausgeführt werden und wie einzelne Werkzeugergebnisse gewichtet werden.
+Das Verhalten des Borg-Servers wird mittels einer [Konfigurationsdatei](https://github.com/Landesarchiv-Thueringen/borg/blob/main/config/server_config.yml) eingestellt. Die Datei bestimmt, wie die Werkzeuge angesprochen werden, unter welchen Bedingungen Validatoren ausgeführt werden und wie einzelne Werkzeugergebnisse gewichtet werden.
 
 Die Konfigurationsdatei wird beim Start des Servers gelesen.
 

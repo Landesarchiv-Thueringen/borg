@@ -71,7 +71,7 @@ mkdocs serve
 
 - mkdocs
 - python-pymdown-extensions
-- mkdocs-glightbox (AUR)
+- mkdocs-glightbox (pip)
 
 ### Deploy
 
