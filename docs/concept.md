@@ -1,33 +1,36 @@
 # Konzept
 
-Dieses Konzept soll die theoretischen Grundlagen für die Funktionsweise von Borg beschreiben. Es dient dazu, die zentralen Zusammenhänge, Prinzipien und Annahmen der Anwendung nachvollziehbar darzustellen.
-
 ## 1. Begriffsklärung
 
-| Begriff        | Erklärung                                                                |
-| -------------- | ------------------------------------------------------------------------ |
-| Attribut       | aus einem Werkzeugerbnis extrahierte Eigenschaft bspw. PUID              |
-| Attributmenge  | alle aus einem Werkzeugerbnis extrahierten Eigenschaften                 |
-| Ergebnismenge  | kumulierte Attributmengen, die ein Dateiergebnis repräsentieren          |
-| Gesamtergebnis | Ergebnismenge mit der höchsten Bewertung                                 |
-| Werkzeug       | Programm für die Formaterkennung, -validierung oder Metadatenextraktion  |
+| Begriff                     | Definition                                                               |
+| --------------------------- | ------------------------------------------------------------------------ |
+| Attribut                    | aus einem Werkzeugergebnis extrahierte Eigenschaft (bspw. PUID)          |
+| Attributmenge               | alle aus einem Werkzeugergebnis extrahierten Eigenschaften               |
+| Ergebnismenge               | zusammengeführte Attributmengen, die ein Dateiergebnis repräsentieren    |
+| Gesamtergebnis              | die von Borg am höchsten bewertete Ergebnismenge                         |
+| Werkzeug                    | Programm für die Formaterkennung, -validierung oder Metadatenextraktion  |
+| Werkzeugausgaben            | unverarbeite Ausgaben der Werkzeuge                                      |
 
 ## 2. Ablauf der Formatverifikation
 
 Die Formatverifikation mit Borg erfolgt nach dem folgenden Ablauf:
 
 1. Ein Client übermittelt eine Datei zur Formatverifikation an Borg.
-2. Borg führt alle generischen Werkzeuge (s. [Kap. 3](#3-werkzeugauswahl)) aus und übermittelt ihnen die Datei zur Analyse.
-3. Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. [Kap. 5](#5-extraktion-von-attributen)) und übermitteln ihre Ergebnisse an Borg.
-4. Auf Grundlage der Erkennungsergebnisse wählt Borg weitere Werkzeuge aus (s. [Kap. 3](#3-werkzeugauswahl)).
+2. Borg führt alle formatunabhängigen Werkzeuge aus und übermittelt ihnen die Datei zur Analyse.
+3. Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. [5. Extraktion von Attributen](#5-extraktion-von-attributen)) und übermitteln ihre Ergebnisse an Borg.
+4. Auf Grundlage der Erkennungsergebnisse wählt Borg weitere Werkzeuge aus (s. [3. Werkzeugauswahl](#3-werkzeugauswahl)).
 5. Borg führt die ausgewählten spezialisierten Werkzeuge aus.
-6. Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. [Kap. 5](#5-extraktion-von-attributen)) und übermitteln ihre Ergebnisse an Borg.
-7. Borg führt die Ergebnisse der aller Werkzeuge zusammen (s. [Kap. 7](#7-vereinigung-von-attributmengen)).
-8. Borg bewertet die zusammengeführten Ergebnisse (s. [Kap. 8](#8-bewertung-von-ergebnismengen)).
+6. Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. [5. Extraktion von Attributen](#5-extraktion-von-attributen)) und übermitteln ihre Ergebnisse an Borg.
+7. Borg führt die Ergebnisse der aller Werkzeuge zusammen (s. [7. Vereinigung von Attributmengen](#7-vereinigung-von-attributmengen)).
+8. Borg bewertet die zusammengeführten Ergebnisse (s. [8. Bewertung von Ergebnismengen](#8-bewertung-von-ergebnismengen)).
 9. Das am besten bewertete Ergebnis wird als Gesamtergebnis festgelegt.
 10. Borg übermittelt das Gesamtergebnis, die extrahierten Metadaten, sowie die Originalausgaben Ausgaben der Werkzeuge an den Client.
 
 ``` mermaid
+---
+config:
+  theme: redux-color
+---
 sequenceDiagram
   autonumber
   actor Client
@@ -46,9 +49,9 @@ sequenceDiagram
 
 ## 3. Werkzeugauswahl
 
-Für jede Datei sollen alle Werkzeuge ausgeführt werden, die Informationen zu der Datei ermitteln können. Dabei wird zwischen generischen und spezialisierten Werkzeugen unterschieden. Bei generischen Werkzeugen spielt das Dateiformat keine Rolle (bspw. Formaterkennungswerkzeuge), während spezialisierte Werkzeuge nur für eine Auswahl von Dateiformaten Informationen ermitteln können. Zu den spezialisierten Werkzeugen zählen beispielsweise Validatoren.
+Für jede Datei werden alle geeigneten Werkzeuge ausgeführt. Dabei wird zwischen formatunabhängigen und spezialisierten Werkzeugen unterschieden. Formatunabhängige Werkzeuge werden für alle Dateitypen eingesetzt (insb. Formaterkennungswerkzeuge), während spezialisierte Werkzeuge nur für eine Auswahl von Dateiformaten Informationen ermitteln können (insb. Validatoren).
 
-Die generischen Werkzeuge werden für alle Dateien ausgeführt. Für Validatoren und andere spezialisierte Werkzeuge, beispielsweise MediaInfo, werden hingegen Bedingungen für die Ausführung festgelegt (s. Abb. 2). Die Werkzeugausführung erfolgt daher grundsätzlich in zwei Phasen: Zunächst werden die generischen Werkzeuge ausgeführt. Anschließend wird anhand ihrer Ergebnisse ermittelt, welche spezialisierten Werkzeuge ausgeführt werden. Die Ausführungsbedingung eines spezialisierten Werkzeugs gilt als erfüllt, sobald ein generisches Werkzeug die hierfür erforderlichen Ergebnisse ermittelt hat.
+Die Werkzeugausführung erfolgt in zwei Phasen: Zunächst werden die formatunabhängigen Werkzeuge ausgeführt. Anschließend wird anhand ihrer Ergebnisse ermittelt, welche spezialisierten Werkzeuge ausgeführt werden. Die von den formatunabhängigen Werkzeugen ermittelten Attribute können als Bedingung für die spezialisierten Werkzeuge verwendet werden. Die Ausführungsbedingung gilt als erfüllt, sobald ein beliebiges formatunabhängiges Werkzeug die hierfür erforderlichen Ergebnisse ermittelt, unabhängig von ggf. widersprüchlichen Ergebnissen anderer Werkzeuge. Die Ergebnisse der formatunabhängigen Werkzeuge werden dementsprechend zu diesem Zeitpunkt nicht zusammengeführt. 
 
 ```yaml
 id: "verapdf_1b"
@@ -110,7 +113,7 @@ Die Werkzeugausgaben sind sehr heterogen (s. Vergleich Abb. 3 und 4). Eine simpl
 
 ## 5. Extraktion von Attributen
 
-Um eine Vergleichbarkeit der Ergebnisse zu ermöglichen, müssen geeignete Attribute aus dem Gesamtergebnis extrahiert werden (s. Abb. 5 und 6). Attribute eignen sich besonders für die Verknüpfung von Werkzeugausgaben, wenn die Werte sich über mehrere Werkzeuge gleichen. Ein Beispiel für ein sehr gut geeignetes Attribut ist die *PUID*. Diese sollte über alle Werkzeugergebnisse, wenn das gleiche Format erkannt wurde, identisch sein. Der *MIME-Type* ist relativ gut geeignet. Die Werkzeuge liefern häufig zumindest ähnliche Werte für den *MIME-Type*. Auch wenn gelegentlich kleinere Abweichungen auftreten, sollte zumindest der Subtyp übereinstimmen. Beispielsweise sind für PDF-Dateien sowohl *text/pdf*, als auch *application/pdf* mögliche Werte. Der Formatname ist für den Vergleich von Werkzeugausgaben überhaupt nicht geeignet. Dieser unterscheidet sich in allen Werkzeugen.
+Um eine Vergleichbarkeit der Ergebnisse zu ermöglichen, müssen geeignete Attribute aus der Attributmenge extrahiert werden (s. Abb. 5 und 6). Attribute eignen sich besonders für die Verknüpfung von Werkzeugausgaben, wenn die Werte sich über mehrere Werkzeuge gleichen. Ein Beispiel für ein sehr gut geeignetes Attribut ist die *PUID*. Diese sollte über alle Werkzeugergebnisse, wenn das gleiche Format erkannt wurde, identisch sein. Der *MIME-Type* ist relativ gut geeignet. Die Werkzeuge liefern häufig zumindest ähnliche Werte für den *MIME-Type*. Auch wenn gelegentlich kleinere Abweichungen auftreten, sollte zumindest der Subtyp übereinstimmen. Beispielsweise sind für PDF-Dateien sowohl *text/pdf*, als auch *application/pdf* mögliche Werte. Der Formatname ist für den Vergleich von Werkzeugausgaben überhaupt nicht geeignet. Dieser unterscheidet sich in allen Werkzeugen.
 
 <figure markdown="span">
   ![Auswertung](img/concept_1.png){ loading=lazy }
