@@ -628,16 +628,20 @@
 <ol>
 <li>Ein Client übermittelt eine Datei zur Formatverifikation an Borg.</li>
 <li>Borg führt alle formatunabhängigen Werkzeuge aus und übermittelt ihnen die Datei zur Analyse.</li>
-<li>Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. <a href="#5-extraktion-von-attributen">Kap. 5</a>) und übermitteln ihre Ergebnisse an Borg.</li>
-<li>Auf Grundlage der Erkennungsergebnisse wählt Borg weitere Werkzeuge aus (s. <a href="#3-werkzeugauswahl">Kap. 3</a>).</li>
+<li>Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. <a href="#5-extraktion-von-attributen">5. Extraktion von Attributen</a>) und übermitteln ihre Ergebnisse an Borg.</li>
+<li>Auf Grundlage der Erkennungsergebnisse wählt Borg weitere Werkzeuge aus (s. <a href="#3-werkzeugauswahl">3. Werkzeugauswahl</a>).</li>
 <li>Borg führt die ausgewählten spezialisierten Werkzeuge aus.</li>
-<li>Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. <a href="#5-extraktion-von-attributen">Kap. 5</a>) und übermitteln ihre Ergebnisse an Borg.</li>
-<li>Borg führt die Ergebnisse der aller Werkzeuge zusammen (s. <a href="#7-vereinigung-von-attributmengen">Kap. 7</a>).</li>
-<li>Borg bewertet die zusammengeführten Ergebnisse (s. <a href="#8-bewertung-von-ergebnismengen">Kap. 8</a>).</li>
+<li>Die Werkzeuge analysieren die Datei, extrahieren Metadaten (s. <a href="#5-extraktion-von-attributen">5. Extraktion von Attributen</a>) und übermitteln ihre Ergebnisse an Borg.</li>
+<li>Borg führt die Ergebnisse der aller Werkzeuge zusammen (s. <a href="#7-vereinigung-von-attributmengen">7. Vereinigung von Attributmengen</a>).</li>
+<li>Borg bewertet die zusammengeführten Ergebnisse (s. <a href="#8-bewertung-von-ergebnismengen">8. Bewertung von Ergebnismengen</a>).</li>
 <li>Das am besten bewertete Ergebnis wird als Gesamtergebnis festgelegt.</li>
 <li>Borg übermittelt das Gesamtergebnis, die extrahierten Metadaten, sowie die Originalausgaben Ausgaben der Werkzeuge an den Client.</li>
 </ol>
-<pre class="mermaid"><code>sequenceDiagram
+<pre class="mermaid"><code>---
+config:
+  theme: redux-color
+---
+sequenceDiagram
   autonumber
   actor Client
   Client-&gt;&gt;Borg: identifiziere Datei
