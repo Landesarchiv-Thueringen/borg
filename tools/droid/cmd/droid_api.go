@@ -191,6 +191,8 @@ func extractFeatures(formatTable [][]string) (map[string]ToolFeatureValue, error
 	mimeType, err := extractFeature("MIME_TYPE", formatTable[1], keyMap)
 	if err == nil {
 		if mimeType != "" {
+			// if multiple MIME types are found, return just the first
+			mimeType = strings.Split(mimeType, ",")[0]
 			features["format:mimeType"] = ToolFeatureValue{
 				Value: mimeType,
 				Label: &MIME_TYPE_LABEL,
