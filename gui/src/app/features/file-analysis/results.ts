@@ -26,6 +26,7 @@ export interface Summary {
   error: boolean;
   puid: string | null;
   mimeType: string | null;
+  formatName: string | null;
   formatVersion: string | null;
 }
 

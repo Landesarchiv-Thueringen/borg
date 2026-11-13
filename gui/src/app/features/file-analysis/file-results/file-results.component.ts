@@ -29,9 +29,10 @@ const columns = [
   'path',
   'filename',
   'fileSize',
+  'formatName',
+  'formatVersion',
   'puid',
   'mimeType',
-  'formatVersion',
   'status',
 ] as const;
 
@@ -40,6 +41,7 @@ interface ResultRow {
   filename: string;
   path: string | null;
   fileSize: string | null;
+  formatName: string | null;
   puid: string | null;
   mimeType: string | null;
   formatVersion: string | null;
@@ -156,6 +158,7 @@ export class FileResultsComponent implements AfterViewInit {
           ? (result.additionalMetadata['general:fileSize'].value as string)
           : null,
         puid: result.summary.puid,
+        formatName: result.summary.formatName,
         mimeType: result.summary.mimeType,
         formatVersion: result.summary.formatVersion,
         status: {
@@ -181,7 +184,7 @@ export class FileResultsComponent implements AfterViewInit {
       this.dialog.open(FileDetailsComponent, {
         data: data,
         autoFocus: false,
-        width: '80em',
+        width: '90em',
         maxWidth: '80vw',
       });
     } else {

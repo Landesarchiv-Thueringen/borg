@@ -1,8 +1,9 @@
 <h3>Erkannte Dateiformate</h3>
 <mat-table [dataSource]="rows" class="mat-elevation-z8">
-  <!-- PUID Column -->
-  <ng-container matColumnDef="puid">
-    <mat-header-cell *matHeaderCellDef> PUID </mat-header-cell>
+
+  <!-- name column -->
+  <ng-container matColumnDef="formatName">
+    <mat-header-cell *matHeaderCellDef> Formatname </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <button
         mat-button
@@ -10,11 +11,25 @@
         (click)="showResultDetails(element.setIndex)"
         aria-label="Details anzeigen"
       ></button>
-      {{ element.puid | featureValue }}
+      <span
+        [innerHTML]="element.formatName ? (element.formatName.value | breakOpportunities) : ''"
+      ></span>
     </mat-cell>
   </ng-container>
 
-  <!-- MIME type Column -->
+  <!-- format version column -->
+  <ng-container matColumnDef="formatVersion">
+    <mat-header-cell *matHeaderCellDef> Formatversion </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.formatVersion | featureValue }} </mat-cell>
+  </ng-container>
+
+  <!-- PUID column -->
+  <ng-container matColumnDef="puid">
+    <mat-header-cell *matHeaderCellDef> PUID </mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.puid | featureValue }}</mat-cell>
+  </ng-container>
+
+  <!-- MIME type column -->
   <ng-container matColumnDef="mimeType">
     <mat-header-cell *matHeaderCellDef> MIME-Type </mat-header-cell>
     <mat-cell *matCellDef="let element">
@@ -24,13 +39,7 @@
     </mat-cell>
   </ng-container>
 
-  <!-- format version Column -->
-  <ng-container matColumnDef="formatVersion">
-    <mat-header-cell *matHeaderCellDef> Formatversion </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.formatVersion | featureValue }} </mat-cell>
-  </ng-container>
-
-  <!-- valid Column -->
+  <!-- valid column -->
   <ng-container matColumnDef="valid">
     <mat-header-cell *matHeaderCellDef> Valide </mat-header-cell>
     <mat-cell *matCellDef="let element">

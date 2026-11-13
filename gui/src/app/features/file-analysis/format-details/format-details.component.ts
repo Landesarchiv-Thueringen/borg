@@ -22,6 +22,7 @@ interface ToolRow {
   toolName: string;
   puid: ToolFeatureValue | undefined;
   mimeType: ToolFeatureValue | undefined;
+  formatName: ToolFeatureValue | undefined;
   formatVersion: ToolFeatureValue | undefined;
   valid: ToolFeatureValue | undefined;
   error: boolean;
@@ -39,7 +40,7 @@ interface ToolRow {
     FeatureValuePipe,
     MatRippleModule,
     BreakOpportunitiesPipe
-],
+  ],
   templateUrl: './format-details.component.html',
   styleUrl: './format-details.component.scss',
 })
@@ -49,13 +50,15 @@ export class FormatDetailsComponent implements OnInit {
   private readonly featureSet: FeatureSet = this.data.featureSet;
   private readonly toolResults: ToolResult[] = this.data.toolResults;
   readonly rows: ToolRow[] = [];
-  displayedColumns: string[] = ['tool', 'puid', 'mimeType', 'formatVersion', 'valid'];
+  displayedColumns: string[] = [
+    'tool', 'formatName', 'formatVersion', 'puid', 'mimeType', 'valid'];
 
   ngOnInit() {
     this.rows.push({
       toolName: 'Gesamtergebnis',
       puid: this.featureSet.features['format:puid'],
       mimeType: this.featureSet.features['format:mimeType'],
+      formatName: this.featureSet.features['format:name'],
       formatVersion: this.featureSet.features['format:version'],
       valid: this.featureSet.features['format:valid'],
       error: false,
@@ -80,6 +83,7 @@ export class FormatDetailsComponent implements OnInit {
       toolName: tr.title,
       puid: tr.features['format:puid'],
       mimeType: tr.features['format:mimeType'],
+      formatName: tr.features['format:name'],
       formatVersion: tr.features['format:version'],
       valid: tr.features['format:valid'],
       error: !!tr.error,

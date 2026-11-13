@@ -65,6 +65,18 @@
       <mat-cell *matCellDef="let row"> {{ row.fileSize }} </mat-cell>
     </ng-container>
 
+    <!-- format name column -->
+    <ng-container matColumnDef="formatName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Formatname </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ row.formatName }} </mat-cell>
+    </ng-container>
+
+    <!-- format version column -->
+    <ng-container matColumnDef="formatVersion">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Formatversion </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ row.formatVersion }} </mat-cell>
+    </ng-container>
+
     <!-- PUID column -->
     <ng-container matColumnDef="puid">
       <mat-header-cell *matHeaderCellDef mat-sort-header> PUID </mat-header-cell>
@@ -77,12 +89,6 @@
       <mat-cell *matCellDef="let row">
         <span [innerHTML]="row.mimeType | breakOpportunities"></span>
       </mat-cell>
-    </ng-container>
-
-    <!-- format version column -->
-    <ng-container matColumnDef="formatVersion">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Formatversion </mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ row.formatVersion }} </mat-cell>
     </ng-container>
 
     <!-- status column -->

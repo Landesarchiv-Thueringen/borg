@@ -41,7 +41,15 @@ export class FileFormatComponent implements OnInit {
   readonly fileAnalysis = input.required<FileAnalysis>();
   toolResults: ToolResult[] = [];
   resultUncertain: boolean = false;
-  displayedColumns: string[] = ['puid', 'mimeType', 'formatVersion', 'valid', 'tools', 'score'];
+  displayedColumns: string[] = [
+    'formatName',
+    'formatVersion',
+    'puid',
+    'mimeType',
+    'valid',
+    'tools',
+    'score',
+  ];
   rows: FormatRow[] = [];
 
   ngOnInit(): void {
@@ -53,6 +61,7 @@ export class FileFormatComponent implements OnInit {
           setIndex: index,
           puid: set.features['format:puid'],
           mimeType: set.features['format:mimeType'],
+          formatName: set.features['format:name'],
           formatVersion: set.features['format:version'],
           valid: set.features['format:valid'],
           score: set.score,

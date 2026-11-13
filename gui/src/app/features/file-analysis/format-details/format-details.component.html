@@ -18,13 +18,25 @@
       </mat-cell>
     </ng-container>
 
-    <!-- PUID Column -->
+    <!-- format name column -->
+    <ng-container matColumnDef="formatName">
+      <mat-header-cell *matHeaderCellDef> Formatname </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.formatName | featureValue }} </mat-cell>
+    </ng-container>
+
+    <!-- format version column -->
+    <ng-container matColumnDef="formatVersion">
+      <mat-header-cell *matHeaderCellDef> Formatversion </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.formatVersion | featureValue }} </mat-cell>
+    </ng-container>
+
+    <!-- PUID column -->
     <ng-container matColumnDef="puid">
       <mat-header-cell *matHeaderCellDef> PUID </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{ element.puid | featureValue }} </mat-cell>
     </ng-container>
 
-    <!-- MIME type Column -->
+    <!-- MIME type column -->
     <ng-container matColumnDef="mimeType">
       <mat-header-cell *matHeaderCellDef> MIME-Type </mat-header-cell>
       <mat-cell *matCellDef="let element">
@@ -34,13 +46,7 @@
       </mat-cell>
     </ng-container>
 
-    <!-- format version Column -->
-    <ng-container matColumnDef="formatVersion">
-      <mat-header-cell *matHeaderCellDef> Formatversion </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{ element.formatVersion | featureValue }} </mat-cell>
-    </ng-container>
-
-    <!-- valid Column -->
+    <!-- valid column -->
     <ng-container matColumnDef="valid">
       <mat-header-cell *matHeaderCellDef> Valide </mat-header-cell>
       <mat-cell *matCellDef="let element">

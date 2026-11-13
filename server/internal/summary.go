@@ -25,6 +25,8 @@ type Summary struct {
 	ValidityConflict bool `json:"validityConflict"`
 	// Error means that one or more tools aborted with an error.
 	Error bool `json:"error"`
+	// FormatName the extracted format name with the highest score.
+	FormatName *string `json:"formatName"`
 	// PUID is the extracted PUID with the highest score.
 	PUID *string `json:"puid"`
 	// MimeType is the extracted mime type with the highest score.
@@ -69,6 +71,15 @@ func GetSummary(sets []FeatureSet, toolResults []ToolResult) Summary {
 			log.Fatal("MIME type feature has non string value")
 		} else {
 			summary.MimeType = &mimeType
+		}
+	}
+	formatNameFeature, ok := sets[0].Features["format:name"]
+	if ok {
+		formatName, ok := formatNameFeature.Value.(string)
+		if !ok {
+			log.Fatal("format name feature has non string value")
+		} else {
+			summary.FormatName = &formatName
 		}
 	}
 	formatVersionFeature, ok := sets[0].Features["format:version"]
