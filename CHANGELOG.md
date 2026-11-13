@@ -2,7 +2,12 @@
 
 ## Next
 
--
+- 
+
+## 2.3.0
+
+- Feature: Anzeige des Formatnamens in Übersichten
+- Fix: Vereinigung von Ergebnismengen, wenn DROID mehrere MIME-Typen erkannt hat
 
 ## 2.2.0
 
