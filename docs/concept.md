@@ -297,7 +297,7 @@ $$
 B_{\text{norm}}=\frac{B(E_{\text{j}})}{\sum_{E_j \in \mathcal{E}} B(E_j)}
 $$
 
-### Überschreiben der Bewertung
+### Bedingte Nachbewertung von Ergebnismengen
 
 Es gibt Fälle, in denen die berechnete Bewertung nicht den Erwartungen entspricht. Es ist nicht ungewöhnlich, dass eine Datei gleichzeitig die Anforderungen mehrerer Dateiformate erfüllt. Eine valide PDF/UA-Datei (ISO 32000-1) ist beispielsweise immer auch eine valide PDF-1.7-Datei. Borg erkennt in diesem Fall beide Dateiformate (s. Abb. 9).
 

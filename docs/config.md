@@ -12,7 +12,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 
 | Werkzeug                  | Bedingung                                                                                                   |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| DROID                     | wird immer ausgeführt (aus Performancegründen standardmäßig deaktiviert)                                    |
+| DROID                     | aus Performancegründen standardmäßig deaktiviert                                                            |
 | Siegfried                 | wird immer ausgeführt                                                                                       |
 | Tika                      | wird immer ausgeführt                                                                                       |
 | Magika                    | wird immer ausgeführt                                                                                       |
@@ -44,3 +44,17 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 | veraPDF         | 0%           | 100%                | Datei ist valide                                |
 | ODF Validator   | 0%           | 100%                | Datei ist valide                                |
 | OOXML Validator | 0%           | 100%                | Datei ist valide                                |
+
+### Bedingte Nachbewertung von Ergebnismengen
+
+| Bedingung                                                                                       | Bewertung     |
+| ----------------------------------------------------------------------------------------------- | ------------- |
+| Formatversion entspricht _PDF/A-1a_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/A-1b_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/A-2a_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/A-2b_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/A-3a_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/A-3b_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/A-3u_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
+| Formatversion entspricht _PDF/UA_ und es gibt ein gültiges Validationsergebnis für das Format   | 100%          |
+| Formatversion entspricht _PDF/UA-1_ und es gibt ein gültiges Validationsergebnis für das Format | 100%          |
