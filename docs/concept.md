@@ -24,7 +24,7 @@ Die Formatverifikation mit Borg erfolgt nach dem folgenden Ablauf:
 7. Borg führt die Ergebnisse der aller Werkzeuge zusammen (s. [7. Vereinigung von Attributmengen](#7-vereinigung-von-attributmengen)).
 8. Borg bewertet die zusammengeführten Ergebnisse (s. [8. Bewertung von Ergebnismengen](#8-bewertung-von-ergebnismengen)).
 9. Das am besten bewertete Ergebnis wird als Gesamtergebnis festgelegt.
-10. Borg übermittelt das Gesamtergebnis, die extrahierten Metadaten, sowie die Originalausgaben Ausgaben der Werkzeuge an den Client.
+10. Borg übermittelt das Gesamtergebnis, die extrahierten Metadaten, sowie die unveränderten Ausgaben der Werkzeuge an den Client.
 
 ``` mermaid
 ---
