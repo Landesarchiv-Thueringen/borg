@@ -27,7 +27,7 @@ Borg wird mit einer bereits funktionalen Konfiguration ausgeliefert. Diese stell
 | veraPDF (PDF/A-2a-Profil) | PUID entspricht PDF/A-2a oder Formatversion entspricht PDF/A-2a                                             |
 | veraPDF (PDF/A-2b-Profil) | PUID entspricht PDF/A-2b oder Formatversion entspricht PDF/A-2b                                             |
 | veraPDF (PDF/A-2u-Profil) | PUID entspricht PDF/A-2u oder Formatversion entspricht PDF/A-2u                                             |
-| veraPDF (PDF/UA-Profile)  | MIME-Type enthält pdf, nach aktuellen Stand keine PUID verfügbar                                            |
+| veraPDF (PDF/UA-Profile)  | PUID entspricht PDF/UA-1                                                                                    |
 | ODF Validator             | MIME-Type beginnt mit application/vnd.oasis.opendocument.                                                   |
 | OOXML Validator           | MIME-Type beginnt mit application/vnd.openxmlformats-officedocument.                                        |
 
